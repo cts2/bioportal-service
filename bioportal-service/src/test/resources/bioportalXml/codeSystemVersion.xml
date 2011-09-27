@@ -1,0 +1,60 @@
+<success>
+	<accessedResource>/bioportal/virtual/ontology/1104</accessedResource>
+	<accessDate>2011-06-27 14:06:33.767 PDT</accessDate>
+	<data>
+		<ontologyBean>
+			<id>44450</id>
+			<ontologyId>1104</ontologyId>
+			<virtualViewIds>
+				<int>2017</int>
+				<int>2022</int>
+				<int>2001</int>
+				<int>2002</int>
+				<int>2000</int>
+				<int>2003</int>
+			</virtualViewIds>
+			<internalVersionNumber>14</internalVersionNumber>
+			<userId>38142</userId>
+			<versionNumber>3.2.1</versionNumber>
+			<isRemote>0</isRemote>
+			<statusId>3</statusId>
+			<dateCreated>2010-08-31 13:09:49.0 PDT</dateCreated>
+			<dateReleased>2010-08-31 00:00:00.0 PDT</dateReleased>
+			<isManual>1</isManual>
+			<displayLabel>Biomedical Resource Ontology</displayLabel>
+			<description>
+				A controlled terminology of resources, which is used to improve the
+				sensitivity and specificity of web searches.
+</description>
+			<abbreviation>BRO</abbreviation>
+			<format>OWL-FULL</format>
+			<contactName>Trish Whetzel, Csongor Nyulas, Natasha Noy</contactName>
+			<contactEmail>bro-discuss@googlegroups.com</contactEmail>
+			<homepage>http://www.ncbcs.org/biositemaps/</homepage>
+			<documentation>http://www.ncbcs.org/biositemaps/</documentation>
+			<urn>
+				http://bioontology.org/ontologies/SoftwareResourceOntology.owl#|??
+</urn>
+			<isFoundry>0</isFoundry>
+			<synonymSlot>http://www.w3.org/2004/02/skos/core#altLabel</synonymSlot>
+			<preferredNameSlot>http://www.w3.org/2004/02/skos/core#prefLabel</preferredNameSlot>
+			<documentationSlot>
+				http://bioontology.org/ontologies/biositemap.owl#definition
+</documentationSlot>
+			<userAcl />
+			<isView>false</isView>
+			<categoryIds>
+				<int>5059</int>
+			</categoryIds>
+			<groupIds>
+				<int>6011</int>
+			</groupIds>
+			<filenames>
+				<string>BRO_v3.2.1.owl</string>
+			</filenames>
+			<filePath>/1104/14</filePath>
+			<hasViews />
+			<viewOnOntologyVersionId />
+		</ontologyBean>
+	</data>
+</success>

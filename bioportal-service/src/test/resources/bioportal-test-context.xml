@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_FALLBACK" />
+		<property name="searchSystemEnvironment" value="true" />
+	</bean>
+	
+	<bean class="edu.mayo.cts2.framework.plugin.util.test.EnvironmentVariableSettingBean">
+		<property name="name" value="cts2.config.dir" />
+		<property name="value" value="${java.io.tmpdir}" />
+	</bean>
+
+	<import resource="classpath:bioportal-context.xml" />
+
+</beans>

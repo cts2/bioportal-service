@@ -1,0 +1,401 @@
+<success>
+	<accessedResource>/bioportal/search/Boxing</accessedResource>
+	<accessDate>2011-07-18 06:13:57.467 PDT</accessDate>
+	<data>
+		<page>
+			<pageNum>1</pageNum>
+			<numPages>1</numPages>
+			<pageSize>25</pageSize>
+			<numResultsPage>25</numResultsPage>
+			<numResultsTotal>25</numResultsTotal>
+			<contents class="org.ncbo.stanford.bean.search.SearchResultListBean">
+				<searchResultList>
+					<searchBean>
+						<ontologyVersionId>44860</ontologyVersionId>
+						<ontologyId>1553</ontologyId>
+						<ontologyDisplayLabel>ICD10CM</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>
+							http://purl.bioontology.org/ontology/ICD10CM/Y93.71
+</conceptId>
+						<conceptIdShort>Y93.71</conceptIdShort>
+						<preferredName>Boxing</preferredName>
+						<contents>Boxing</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>44776</ontologyVersionId>
+						<ontologyId>1351</ontologyId>
+						<ontologyDisplayLabel>Medical Subject Headings
+						</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>http://purl.bioontology.org/ontology/MSH/D001914
+						</conceptId>
+						<conceptIdShort>D001914</conceptIdShort>
+						<preferredName>Boxing</preferredName>
+						<contents>Boxing</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>45339</ontologyVersionId>
+						<ontologyId>1499</ontologyId>
+						<ontologyDisplayLabel>NCI Metathesaurus</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>http://purl.bioontology.org/ontology/NCIM/C0006080
+						</conceptId>
+						<conceptIdShort>C0006080</conceptIdShort>
+						<preferredName>Boxing</preferredName>
+						<contents>Boxing</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>44777</ontologyVersionId>
+						<ontologyId>1353</ontologyId>
+						<ontologyDisplayLabel>SNOMED Clinical Terms</ontologyDisplayLabel>
+						<recordType>csynonym</recordType>
+						<objectType>class</objectType>
+						<conceptId>29506000</conceptId>
+						<conceptIdShort>29506000</conceptIdShort>
+						<preferredName>Boxing</preferredName>
+						<contents>Boxing</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>43069</ontologyVersionId>
+						<ontologyId>2059</ontologyId>
+						<ontologyDisplayLabel>ICD9 for Health Ontology Mapper
+						</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>
+							http://purl.bioontology.org/ontology/HOM-ICD9CM/MM_CLASS_18165
+						</conceptId>
+						<conceptIdShort>MM_CLASS_18165</conceptIdShort>
+						<preferredName>Boxing (E008.0)</preferredName>
+						<contents>Boxing (E008.0)</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>43071</ontologyVersionId>
+						<ontologyId>2071</ontologyId>
+						<ontologyDisplayLabel>HOM-ICD9</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>
+							http://purl.bioontology.org/ontology/HOM-ICD9CM/MM_CLASS_19835
+						</conceptId>
+						<conceptIdShort>MM_CLASS_19835</conceptIdShort>
+						<preferredName>Boxing (E008.0)</preferredName>
+						<contents>Boxing (E008.0)</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>45939</ontologyVersionId>
+						<ontologyId>1397</ontologyId>
+						<ontologyDisplayLabel>Gazetteer</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>http://purl.org/obo/owl/GAZ#GAZ_00129391</conceptId>
+						<conceptIdShort>GAZ:00129391</conceptIdShort>
+						<preferredName>Boxing County</preferredName>
+						<contents>Boxing County</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>42295</ontologyVersionId>
+						<ontologyId>1427</ontologyId>
+						<ontologyDisplayLabel>Read Codes, Clinical Terms Version 3 (CTV3)
+						</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>http://purl.bioontology.org/ontology/RCD/Xa2yz
+						</conceptId>
+						<conceptIdShort>Xa2yz</conceptIdShort>
+						<preferredName>Boxing ring</preferredName>
+						<contents>Boxing ring</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>44777</ontologyVersionId>
+						<ontologyId>1353</ontologyId>
+						<ontologyDisplayLabel>SNOMED Clinical Terms</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>285079000</conceptId>
+						<conceptIdShort>285079000</conceptIdShort>
+						<preferredName>Boxing ring</preferredName>
+						<contents>Boxing ring</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>45339</ontologyVersionId>
+						<ontologyId>1499</ontologyId>
+						<ontologyDisplayLabel>NCI Metathesaurus</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>http://purl.bioontology.org/ontology/NCIM/C0562985
+						</conceptId>
+						<conceptIdShort>C0562985</conceptIdShort>
+						<preferredName>Boxing ring</preferredName>
+						<contents>Boxing ring</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>42765</ontologyVersionId>
+						<ontologyId>1484</ontologyId>
+						<ontologyDisplayLabel>
+							International Classification of External Causes of Injuries
+						</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>http://who.int/iceci#S.1.12.02</conceptId>
+						<conceptIdShort>S.1.12.02</conceptIdShort>
+						<preferredName>S.1.12.02 Boxing</preferredName>
+						<contents>S.1.12.02 Boxing</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>43040</ontologyVersionId>
+						<ontologyId>2038</ontologyId>
+						<ontologyDisplayLabel>iceci-details_for_activity O1-O2 S1-S2
+						</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>http://who.int/iceci#S.1.12.02</conceptId>
+						<conceptIdShort>S.1.12.02</conceptIdShort>
+						<preferredName>S.1.12.02 Boxing</preferredName>
+						<contents>S.1.12.02 Boxing</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>42295</ontologyVersionId>
+						<ontologyId>1427</ontologyId>
+						<ontologyDisplayLabel>Read Codes, Clinical Terms Version 3 (CTV3)
+						</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>http://purl.bioontology.org/ontology/RCD/6931.
+						</conceptId>
+						<conceptIdShort>6931.</conceptIdShort>
+						<preferredName>Boxing medical examination</preferredName>
+						<contents>Boxing medical examination</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>44777</ontologyVersionId>
+						<ontologyId>1353</ontologyId>
+						<ontologyDisplayLabel>SNOMED Clinical Terms</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>171356009</conceptId>
+						<conceptIdShort>171356009</conceptIdShort>
+						<preferredName>Boxing medical examination</preferredName>
+						<contents>Boxing medical examination</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>45339</ontologyVersionId>
+						<ontologyId>1499</ontologyId>
+						<ontologyDisplayLabel>NCI Metathesaurus</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>http://purl.bioontology.org/ontology/NCIM/C0420094
+						</conceptId>
+						<conceptIdShort>C0420094</conceptIdShort>
+						<preferredName>Boxing medical examination</preferredName>
+						<contents>Boxing medical examination</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>42157</ontologyVersionId>
+						<ontologyId>1416</ontologyId>
+						<ontologyDisplayLabel>SNOMED Terminos Clinicos
+						</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>
+							http://purl.bioontology.org/ontology/SCTSPA/148572000
+</conceptId>
+						<conceptIdShort>148572000</conceptIdShort>
+						<preferredName>Boxing medical examination</preferredName>
+						<contents>Boxing medical examination</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>44777</ontologyVersionId>
+						<ontologyId>1353</ontologyId>
+						<ontologyDisplayLabel>SNOMED Clinical Terms</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>256615003</conceptId>
+						<conceptIdShort>256615003</conceptIdShort>
+						<preferredName>Dental wax - carding or boxing-in</preferredName>
+						<contents>Dental wax - carding or boxing-in</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>45339</ontologyVersionId>
+						<ontologyId>1499</ontologyId>
+						<ontologyDisplayLabel>NCI Metathesaurus</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>http://purl.bioontology.org/ontology/NCIM/C0440241
+						</conceptId>
+						<conceptIdShort>C0440241</conceptIdShort>
+						<preferredName>Dental wax - carding or boxing-in</preferredName>
+						<contents>Dental wax - carding or boxing-in</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>42765</ontologyVersionId>
+						<ontologyId>1484</ontologyId>
+						<ontologyDisplayLabel>
+							International Classification of External Causes of Injuries
+						</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>http://who.int/iceci#S.1.12.08</conceptId>
+						<conceptIdShort>S.1.12.08</conceptIdShort>
+						<preferredName>S.1.12.08 Kick-boxing</preferredName>
+						<contents>S.1.12.08 Kick-boxing</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>43040</ontologyVersionId>
+						<ontologyId>2038</ontologyId>
+						<ontologyDisplayLabel>iceci-details_for_activity O1-O2 S1-S2
+						</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>http://who.int/iceci#S.1.12.08</conceptId>
+						<conceptIdShort>S.1.12.08</conceptIdShort>
+						<preferredName>S.1.12.08 Kick-boxing</preferredName>
+						<contents>S.1.12.08 Kick-boxing</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>42295</ontologyVersionId>
+						<ontologyId>1427</ontologyId>
+						<ontologyDisplayLabel>Read Codes, Clinical Terms Version 3 (CTV3)
+						</ontologyDisplayLabel>
+						<recordType>csynonym</recordType>
+						<objectType>class</objectType>
+						<conceptId>http://purl.bioontology.org/ontology/RCD/TG104
+						</conceptId>
+						<conceptIdShort>TG104</conceptIdShort>
+						<preferredName>Accidentally knocked down while boxing
+						</preferredName>
+						<contents>Accident knocked down-boxing</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>45339</ontologyVersionId>
+						<ontologyId>1499</ontologyId>
+						<ontologyDisplayLabel>NCI Metathesaurus</ontologyDisplayLabel>
+						<recordType>csynonym</recordType>
+						<objectType>class</objectType>
+						<conceptId>http://purl.bioontology.org/ontology/NCIM/C0417893
+						</conceptId>
+						<conceptIdShort>C0417893</conceptIdShort>
+						<preferredName>Accidentally knocked down while boxing (event)
+						</preferredName>
+						<contents>Knocked down while boxing</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>44777</ontologyVersionId>
+						<ontologyId>1353</ontologyId>
+						<ontologyDisplayLabel>SNOMED Clinical Terms</ontologyDisplayLabel>
+						<recordType>csynonym</recordType>
+						<objectType>class</objectType>
+						<conceptId>148572000</conceptId>
+						<conceptIdShort>148572000</conceptIdShort>
+						<preferredName>Boxing medical examination</preferredName>
+						<contents>Boxing medical examination (procedure)</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>42295</ontologyVersionId>
+						<ontologyId>1427</ontologyId>
+						<ontologyDisplayLabel>Read Codes, Clinical Terms Version 3 (CTV3)
+						</ontologyDisplayLabel>
+						<recordType>csynonym</recordType>
+						<objectType>class</objectType>
+						<conceptId>http://purl.bioontology.org/ontology/RCD/X79WK
+						</conceptId>
+						<conceptIdShort>X79WK</conceptIdShort>
+						<preferredName>Dental wax - carding or boxing-in</preferredName>
+						<contents>Dental wax - card/boxing</contents>
+					</searchBean>
+					<searchBean>
+						<ontologyVersionId>44777</ontologyVersionId>
+						<ontologyId>1353</ontologyId>
+						<ontologyDisplayLabel>SNOMED Clinical Terms</ontologyDisplayLabel>
+						<recordType>apreferredname</recordType>
+						<objectType>class</objectType>
+						<conceptId>217854008</conceptId>
+						<conceptIdShort>217854008</conceptIdShort>
+						<preferredName>Accidentally knocked down while boxing
+						</preferredName>
+						<contents>Accidentally knocked down while boxing</contents>
+					</searchBean>
+				</searchResultList>
+				<ontologyHitList>
+					<ontologyHitBean>
+						<ontologyVersionId>44776</ontologyVersionId>
+						<ontologyId>1351</ontologyId>
+						<ontologyDisplayLabel>Medical Subject Headings
+						</ontologyDisplayLabel>
+						<numHits>1</numHits>
+					</ontologyHitBean>
+					<ontologyHitBean>
+						<ontologyVersionId>44777</ontologyVersionId>
+						<ontologyId>1353</ontologyId>
+						<ontologyDisplayLabel>SNOMED Clinical Terms</ontologyDisplayLabel>
+						<numHits>6</numHits>
+					</ontologyHitBean>
+					<ontologyHitBean>
+						<ontologyVersionId>45939</ontologyVersionId>
+						<ontologyId>1397</ontologyId>
+						<ontologyDisplayLabel>Gazetteer</ontologyDisplayLabel>
+						<numHits>1</numHits>
+					</ontologyHitBean>
+					<ontologyHitBean>
+						<ontologyVersionId>42157</ontologyVersionId>
+						<ontologyId>1416</ontologyId>
+						<ontologyDisplayLabel>SNOMED Terminos Clinicos
+						</ontologyDisplayLabel>
+						<numHits>1</numHits>
+					</ontologyHitBean>
+					<ontologyHitBean>
+						<ontologyVersionId>42295</ontologyVersionId>
+						<ontologyId>1427</ontologyId>
+						<ontologyDisplayLabel>Read Codes, Clinical Terms Version 3 (CTV3)
+						</ontologyDisplayLabel>
+						<numHits>4</numHits>
+					</ontologyHitBean>
+					<ontologyHitBean>
+						<ontologyVersionId>42765</ontologyVersionId>
+						<ontologyId>1484</ontologyId>
+						<ontologyDisplayLabel>
+							International Classification of External Causes of Injuries
+						</ontologyDisplayLabel>
+						<numHits>2</numHits>
+					</ontologyHitBean>
+					<ontologyHitBean>
+						<ontologyVersionId>45339</ontologyVersionId>
+						<ontologyId>1499</ontologyId>
+						<ontologyDisplayLabel>NCI Metathesaurus</ontologyDisplayLabel>
+						<numHits>5</numHits>
+					</ontologyHitBean>
+					<ontologyHitBean>
+						<ontologyVersionId>44860</ontologyVersionId>
+						<ontologyId>1553</ontologyId>
+						<ontologyDisplayLabel>ICD10CM</ontologyDisplayLabel>
+						<numHits>1</numHits>
+					</ontologyHitBean>
+					<ontologyHitBean>
+						<ontologyVersionId>43040</ontologyVersionId>
+						<ontologyId>2038</ontologyId>
+						<ontologyDisplayLabel>iceci-details_for_activity O1-O2 S1-S2
+						</ontologyDisplayLabel>
+						<numHits>2</numHits>
+					</ontologyHitBean>
+					<ontologyHitBean>
+						<ontologyVersionId>43069</ontologyVersionId>
+						<ontologyId>2059</ontologyId>
+						<ontologyDisplayLabel>ICD9 for Health Ontology Mapper
+						</ontologyDisplayLabel>
+						<numHits>1</numHits>
+					</ontologyHitBean>
+					<ontologyHitBean>
+						<ontologyVersionId>43071</ontologyVersionId>
+						<ontologyId>2071</ontologyId>
+						<ontologyDisplayLabel>HOM-ICD9</ontologyDisplayLabel>
+						<numHits>1</numHits>
+					</ontologyHitBean>
+				</ontologyHitList>
+			</contents>
+		</page>
+	</data>
+</success>
