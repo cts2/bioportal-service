@@ -41,7 +41,7 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.util.BioportalConstants;
 public class ValueSetDefinitionTransform extends AbstractBioportalOntologyVersionTransformTemplate<ValueSetDefinition, ValueSetDefinitionDirectoryEntry> {
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#createNewResourceVersion()
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#createNewResourceVersion()
 	 */
 	@Override
 	protected ValueSetDefinition createNewResourceVersion() {
@@ -49,7 +49,7 @@ public class ValueSetDefinitionTransform extends AbstractBioportalOntologyVersio
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#setName(org.cts2.core.ResourceVersionDescription, java.lang.String)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#setName(org.cts2.core.ResourceVersionDescription, java.lang.String)
 	 */
 	@Override
 	protected ValueSetDefinition setName(ValueSetDefinition resource,
@@ -59,7 +59,7 @@ public class ValueSetDefinitionTransform extends AbstractBioportalOntologyVersio
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#getName(org.cts2.core.ResourceVersionDescription)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#getName(org.cts2.core.ResourceVersionDescription)
 	 */
 	@Override
 	protected String getName(ValueSetDefinition resource) {
@@ -67,7 +67,7 @@ public class ValueSetDefinitionTransform extends AbstractBioportalOntologyVersio
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#getResourceName(java.lang.String)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#getResourceName(java.lang.String)
 	 */
 	@Override
 	protected String getResourceName(String ontologyId) {
@@ -75,7 +75,7 @@ public class ValueSetDefinitionTransform extends AbstractBioportalOntologyVersio
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#getResourceVersionName(java.lang.String, java.lang.String)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#getResourceVersionName(java.lang.String, java.lang.String)
 	 */
 	@Override
 	protected String getResourceVersionName(String ontologyId,
@@ -84,7 +84,7 @@ public class ValueSetDefinitionTransform extends AbstractBioportalOntologyVersio
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#setName(org.cts2.core.ResourceVersionDescriptionDirectoryEntry, java.lang.String)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#setName(org.cts2.core.ResourceVersionDescriptionDirectoryEntry, java.lang.String)
 	 */
 	@Override
 	protected ValueSetDefinitionDirectoryEntry setName(
@@ -94,7 +94,7 @@ public class ValueSetDefinitionTransform extends AbstractBioportalOntologyVersio
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#getAbout(java.lang.String, java.lang.String)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#getAbout(java.lang.String, java.lang.String)
 	 */
 	@Override
 	protected String getAbout(String ontologyVersionId, String name) {
@@ -102,7 +102,7 @@ public class ValueSetDefinitionTransform extends AbstractBioportalOntologyVersio
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#getHref(java.lang.String, java.lang.String)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#getHref(java.lang.String, java.lang.String)
 	 */
 	@Override
 	protected String getHref(String resourceName, String resourceVersionName) {
@@ -110,7 +110,7 @@ public class ValueSetDefinitionTransform extends AbstractBioportalOntologyVersio
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#decorateResourceVersionSummary(org.w3c.dom.Node, java.lang.String, org.cts2.core.ResourceVersionDescriptionDirectoryEntry)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#decorateResourceVersionSummary(org.w3c.dom.Node, java.lang.String, org.cts2.core.ResourceVersionDescriptionDirectoryEntry)
 	 */
 	@Override
 	protected ValueSetDefinitionDirectoryEntry decorateResourceVersionSummary(
@@ -131,7 +131,7 @@ public class ValueSetDefinitionTransform extends AbstractBioportalOntologyVersio
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#decorateResourceVersionSummary(org.cts2.core.ResourceVersionDescription, org.cts2.core.ResourceVersionDescriptionDirectoryEntry)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#decorateResourceVersionSummary(org.cts2.core.ResourceVersionDescription, org.cts2.core.ResourceVersionDescriptionDirectoryEntry)
 	 */
 	@Override
 	protected ValueSetDefinitionDirectoryEntry decorateResourceVersionSummary(
@@ -142,7 +142,7 @@ public class ValueSetDefinitionTransform extends AbstractBioportalOntologyVersio
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#decorateResourceVersion(org.w3c.dom.Node, java.lang.String, org.cts2.core.ResourceVersionDescription)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#decorateResourceVersion(org.w3c.dom.Node, java.lang.String, org.cts2.core.ResourceVersionDescription)
 	 */
 	@Override
 	protected ValueSetDefinition decorateResourceVersion(Node node,
@@ -160,7 +160,7 @@ public class ValueSetDefinitionTransform extends AbstractBioportalOntologyVersio
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#createNewResourceVersionSummary()
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#createNewResourceVersionSummary()
 	 */
 	@Override
 	protected ValueSetDefinitionDirectoryEntry createNewResourceVersionSummary() {

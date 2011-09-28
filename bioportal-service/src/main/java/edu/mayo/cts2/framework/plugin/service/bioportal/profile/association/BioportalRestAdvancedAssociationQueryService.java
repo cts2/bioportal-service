@@ -65,7 +65,7 @@ public class BioportalRestAdvancedAssociationQueryService
 	private AssociationTransform associationTransform;
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.association.AdvancedAssociationQueryService#getAssociationGraph(edu.mayo.cts2.sdk.service.profile.entitydescription.id.EntityDescriptionId, edu.mayo.cts2.framework.model.association.types.GraphDirection, long)
+	 * @see edu.mayo.cts2.framework.service.profile.association.AdvancedAssociationQueryService#getAssociationGraph(edu.mayo.cts2.framework.service.profile.entitydescription.id.EntityDescriptionId, edu.mayo.cts2.framework.model.association.types.GraphDirection, long)
 	 */
 	public AssociationGraph getAssociationGraph(
 			EntityDescriptionId id,
@@ -126,7 +126,7 @@ public class BioportalRestAdvancedAssociationQueryService
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.AbstractQueryService#registerMatchAlgorithmReferences()
+	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerMatchAlgorithmReferences()
 	 */
 	@Override
 	protected List<? extends MatchAlgorithmReference> getAvailableMatchAlgorithmReferences() {
@@ -134,7 +134,7 @@ public class BioportalRestAdvancedAssociationQueryService
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.AbstractQueryService#registerModelAttributeReferences()
+	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerModelAttributeReferences()
 	 */
 	@Override
 	protected List<? extends ModelAttributeReference> getAvailableModelAttributeReferences() {
@@ -142,7 +142,7 @@ public class BioportalRestAdvancedAssociationQueryService
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.AbstractQueryService#registerPredicateReferences()
+	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerPredicateReferences()
 	 */
 	@Override
 	protected List<? extends PredicateReference> getAvailablePredicateReferences() {

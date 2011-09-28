@@ -49,7 +49,7 @@ public class ValueSetTransform extends AbstractBioportalOntologyTransformTemplat
 	};
 	
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#createNewResource()
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#createNewResource()
 	 */
 	@Override
 	protected ValueSetCatalogEntry createNewResource() {
@@ -57,7 +57,7 @@ public class ValueSetTransform extends AbstractBioportalOntologyTransformTemplat
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#setName(org.cts2.core.AbstractResourceDescription, java.lang.String)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#setName(org.cts2.core.AbstractResourceDescription, java.lang.String)
 	 */
 	@Override
 	protected ValueSetCatalogEntry setName(
@@ -69,7 +69,7 @@ public class ValueSetTransform extends AbstractBioportalOntologyTransformTemplat
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getName(org.cts2.core.AbstractResourceDescription)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getName(org.cts2.core.AbstractResourceDescription)
 	 */
 	@Override
 	protected String getName(ValueSetCatalogEntry resource) {
@@ -77,7 +77,7 @@ public class ValueSetTransform extends AbstractBioportalOntologyTransformTemplat
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getName(java.lang.String)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getName(java.lang.String)
 	 */
 	@Override
 	protected String getName(String ontologyId) {
@@ -85,7 +85,7 @@ public class ValueSetTransform extends AbstractBioportalOntologyTransformTemplat
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#setName(org.cts2.core.AbstractResourceDescriptionDirectoryEntry, java.lang.String)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#setName(org.cts2.core.AbstractResourceDescriptionDirectoryEntry, java.lang.String)
 	 */
 	@Override
 	protected ValueSetCatalogEntrySummary setName(
@@ -97,7 +97,7 @@ public class ValueSetTransform extends AbstractBioportalOntologyTransformTemplat
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getSummaryNodeFilter()
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getSummaryNodeFilter()
 	 */
 	@Override
 	protected NodeFilter getSummaryNodeFilter() {
@@ -105,7 +105,7 @@ public class ValueSetTransform extends AbstractBioportalOntologyTransformTemplat
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getAbout(java.lang.String, java.lang.String)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getAbout(java.lang.String, java.lang.String)
 	 */
 	@Override
 	protected String getAbout(String name) {		
@@ -113,7 +113,7 @@ public class ValueSetTransform extends AbstractBioportalOntologyTransformTemplat
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getHref(java.lang.String)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getHref(java.lang.String)
 	 */
 	@Override
 	protected String getHref(String name) {
@@ -121,7 +121,7 @@ public class ValueSetTransform extends AbstractBioportalOntologyTransformTemplat
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#decorateSummary(org.w3c.dom.Node, org.cts2.core.AbstractResourceDescriptionDirectoryEntry)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#decorateSummary(org.w3c.dom.Node, org.cts2.core.AbstractResourceDescriptionDirectoryEntry)
 	 */
 	@Override
 	protected ValueSetCatalogEntrySummary decorateSummary(Node node,
@@ -135,7 +135,7 @@ public class ValueSetTransform extends AbstractBioportalOntologyTransformTemplat
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#decorateSummary(org.cts2.core.AbstractResourceDescription, org.cts2.core.AbstractResourceDescriptionDirectoryEntry)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#decorateSummary(org.cts2.core.AbstractResourceDescription, org.cts2.core.AbstractResourceDescriptionDirectoryEntry)
 	 */
 	@Override
 	protected ValueSetCatalogEntrySummary decorateSummary(
@@ -145,7 +145,7 @@ public class ValueSetTransform extends AbstractBioportalOntologyTransformTemplat
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#decorateResource(org.w3c.dom.Node, org.cts2.core.AbstractResourceDescription)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#decorateResource(org.w3c.dom.Node, org.cts2.core.AbstractResourceDescription)
 	 */
 	@Override
 	protected ValueSetCatalogEntry decorateResource(Node node,
@@ -160,7 +160,7 @@ public class ValueSetTransform extends AbstractBioportalOntologyTransformTemplat
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#createNewResourceSummary()
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#createNewResourceSummary()
 	 */
 	@Override
 	protected ValueSetCatalogEntrySummary createNewResourceSummary() {

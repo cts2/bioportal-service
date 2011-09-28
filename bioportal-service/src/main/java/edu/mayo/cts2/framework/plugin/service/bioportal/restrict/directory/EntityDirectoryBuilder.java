@@ -61,7 +61,7 @@ public class EntityDirectoryBuilder extends AbstractCallbackDirectoryBuilder<Ent
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.filter.directory.AbstractDirectoryBuilder#restrict(org.cts2.core.FilterComponent)
+	 * @see edu.mayo.cts2.framework.plugin.filter.directory.AbstractDirectoryBuilder#restrict(org.cts2.core.FilterComponent)
 	 */
 	@Override
 	public EntityDirectoryBuilder restrict(
@@ -70,7 +70,7 @@ public class EntityDirectoryBuilder extends AbstractCallbackDirectoryBuilder<Ent
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.filter.directory.AbstractDirectoryBuilder#restrict(org.cts2.service.core.Query)
+	 * @see edu.mayo.cts2.framework.plugin.filter.directory.AbstractDirectoryBuilder#restrict(org.cts2.service.core.Query)
 	 */
 	@Override
 	public EntityDirectoryBuilder restrict(Query query) {

@@ -50,7 +50,7 @@ public class CodeSystemTransform extends AbstractBioportalOntologyTransformTempl
 	
 	
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#createNewResource()
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#createNewResource()
 	 */
 	@Override
 	protected CodeSystemCatalogEntry createNewResource() {
@@ -58,7 +58,7 @@ public class CodeSystemTransform extends AbstractBioportalOntologyTransformTempl
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#setName(org.cts2.core.AbstractResourceDescription, java.lang.String)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#setName(org.cts2.core.AbstractResourceDescription, java.lang.String)
 	 */
 	@Override
 	protected CodeSystemCatalogEntry setName(
@@ -69,7 +69,7 @@ public class CodeSystemTransform extends AbstractBioportalOntologyTransformTempl
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getName(org.cts2.core.AbstractResourceDescription)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getName(org.cts2.core.AbstractResourceDescription)
 	 */
 	@Override
 	protected String getName(CodeSystemCatalogEntry resource) {
@@ -77,7 +77,7 @@ public class CodeSystemTransform extends AbstractBioportalOntologyTransformTempl
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getName(java.lang.String)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getName(java.lang.String)
 	 */
 	@Override
 	protected String getName(String ontologyId) {
@@ -85,7 +85,7 @@ public class CodeSystemTransform extends AbstractBioportalOntologyTransformTempl
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#setName(org.cts2.core.AbstractResourceDescriptionDirectoryEntry, java.lang.String)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#setName(org.cts2.core.AbstractResourceDescriptionDirectoryEntry, java.lang.String)
 	 */
 	@Override
 	protected CodeSystemCatalogEntrySummary setName(
@@ -96,14 +96,14 @@ public class CodeSystemTransform extends AbstractBioportalOntologyTransformTempl
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getAbout(java.lang.String)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getAbout(java.lang.String)
 	 */
 	protected String getAbout(String codeSystemName){	
 		return this.getIdentityConverter().getCodeSystemAbout(codeSystemName, BioportalConstants.DEFAULT_ONTOLOGY_ABOUT);
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getHref(java.lang.String)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getHref(java.lang.String)
 	 */
 	@Override
 	protected String getHref(String name) {
@@ -111,7 +111,7 @@ public class CodeSystemTransform extends AbstractBioportalOntologyTransformTempl
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getSummaryNodeFilter()
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getSummaryNodeFilter()
 	 */
 	@Override
 	protected NodeFilter getSummaryNodeFilter() {
@@ -119,7 +119,7 @@ public class CodeSystemTransform extends AbstractBioportalOntologyTransformTempl
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#createNewResourceSummary()
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#createNewResourceSummary()
 	 */
 	@Override
 	protected CodeSystemCatalogEntrySummary createNewResourceSummary() {
@@ -127,7 +127,7 @@ public class CodeSystemTransform extends AbstractBioportalOntologyTransformTempl
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#decorateSummary(org.w3c.dom.Node, org.cts2.core.AbstractResourceDescriptionDirectoryEntry)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#decorateSummary(org.w3c.dom.Node, org.cts2.core.AbstractResourceDescriptionDirectoryEntry)
 	 */
 	@Override
 	protected CodeSystemCatalogEntrySummary decorateSummary(
@@ -155,7 +155,7 @@ public class CodeSystemTransform extends AbstractBioportalOntologyTransformTempl
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#decorateSummary(org.cts2.core.AbstractResourceDescription, org.cts2.core.AbstractResourceDescriptionDirectoryEntry)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#decorateSummary(org.cts2.core.AbstractResourceDescription, org.cts2.core.AbstractResourceDescriptionDirectoryEntry)
 	 */
 	@Override
 	protected CodeSystemCatalogEntrySummary decorateSummary(
@@ -166,7 +166,7 @@ public class CodeSystemTransform extends AbstractBioportalOntologyTransformTempl
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#decorateResource(org.w3c.dom.Node, org.cts2.core.AbstractResourceDescription)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#decorateResource(org.w3c.dom.Node, org.cts2.core.AbstractResourceDescription)
 	 */
 	@Override
 	protected CodeSystemCatalogEntry decorateResource(

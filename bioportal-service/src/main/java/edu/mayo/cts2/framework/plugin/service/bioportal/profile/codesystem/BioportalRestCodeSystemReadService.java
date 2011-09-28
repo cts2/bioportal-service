@@ -57,7 +57,7 @@ public class BioportalRestCodeSystemReadService
 	private IdentityConverter identityConverter;
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.CodeSystemService#doesCodeSystemExist(java.lang.String)
+	 * @see edu.mayo.cts2.framework.plugin.service.CodeSystemService#doesCodeSystemExist(java.lang.String)
 	 */
 	public boolean exists(String codeSystemName) {
 		String ontologyId = this.identityConverter
@@ -74,7 +74,7 @@ public class BioportalRestCodeSystemReadService
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.ReadService#read(java.lang.Object)
+	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
 	public CodeSystemCatalogEntry read(String codeSystemName) {

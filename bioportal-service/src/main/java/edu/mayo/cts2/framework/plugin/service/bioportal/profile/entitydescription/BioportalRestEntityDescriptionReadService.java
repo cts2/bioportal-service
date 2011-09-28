@@ -67,7 +67,7 @@ public class BioportalRestEntityDescriptionReadService
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.ReadService#read(java.lang.Object)
+	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
 	public EntityDescription read(EntityDescriptionId id) {
@@ -91,7 +91,7 @@ public class BioportalRestEntityDescriptionReadService
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.ReadService#exists(java.lang.Object)
+	 * @see edu.mayo.cts2.framework.service.profile.ReadService#exists(java.lang.Object)
 	 */
 	@Override
 	public boolean exists(EntityDescriptionId identifier) {

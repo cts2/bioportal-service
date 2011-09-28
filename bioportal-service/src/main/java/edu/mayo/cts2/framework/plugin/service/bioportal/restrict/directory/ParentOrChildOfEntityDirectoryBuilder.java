@@ -66,7 +66,7 @@ public class ParentOrChildOfEntityDirectoryBuilder extends AbstractRemovingDirec
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.filter.directory.AbstractRemovingDirectoryBuilder#transformResults(java.util.List)
+	 * @see edu.mayo.cts2.framework.filter.directory.AbstractRemovingDirectoryBuilder#transformResults(java.util.List)
 	 */
 	@Override
 	protected List<EntityDirectoryEntry> transformResults(

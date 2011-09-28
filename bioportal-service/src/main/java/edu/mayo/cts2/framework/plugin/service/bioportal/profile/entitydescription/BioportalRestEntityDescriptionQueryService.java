@@ -355,7 +355,7 @@ public class BioportalRestEntityDescriptionQueryService
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.QueryService#getPropertyReference(java.lang.String)
+	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getPropertyReference(java.lang.String)
 	 */
 	public PredicateReference getPropertyReference(String nameOrUri) {
 		// TODO Auto-generated method stub
@@ -363,7 +363,7 @@ public class BioportalRestEntityDescriptionQueryService
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.AbstractQueryService#registerPredicateReferences()
+	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerPredicateReferences()
 	 */
 	@Override
 	protected List<? extends PredicateReference> getAvailablePredicateReferences() {
@@ -371,7 +371,7 @@ public class BioportalRestEntityDescriptionQueryService
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.AbstractQueryService#registerMatchAlgorithmReferences()
+	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerMatchAlgorithmReferences()
 	 */
 	@Override
 	protected List<MatchAlgorithmReference> getAvailableMatchAlgorithmReferences() {
@@ -379,7 +379,7 @@ public class BioportalRestEntityDescriptionQueryService
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.AbstractQueryService#registerModelAttributeReferences()
+	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerModelAttributeReferences()
 	 */
 	@Override
 	protected List<ModelAttributeReference> getAvailableModelAttributeReferences() {
@@ -577,7 +577,7 @@ public class BioportalRestEntityDescriptionQueryService
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.QueryService#getResourceSummaries(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object, edu.mayo.cts2.sdk.service.command.Page)
+	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getResourceSummaries(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object, edu.mayo.cts2.framework.service.command.Page)
 	 */
 	@Override
 	public DirectoryResult<EntityDirectoryEntry> getResourceSummaries(
@@ -603,7 +603,7 @@ public class BioportalRestEntityDescriptionQueryService
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.QueryService#getResourceList(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object, edu.mayo.cts2.sdk.service.command.Page)
+	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getResourceList(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object, edu.mayo.cts2.framework.service.command.Page)
 	 */
 	@Override
 	public DirectoryResult<EntityDescription> getResourceList(
@@ -615,7 +615,7 @@ public class BioportalRestEntityDescriptionQueryService
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.QueryService#count(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object)
+	 * @see edu.mayo.cts2.framework.service.profile.QueryService#count(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object)
 	 */
 	@Override
 	public int count(

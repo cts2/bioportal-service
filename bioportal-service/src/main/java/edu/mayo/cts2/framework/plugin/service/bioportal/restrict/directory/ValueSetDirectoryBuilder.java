@@ -87,7 +87,7 @@ public class ValueSetDirectoryBuilder extends AbstractRemovingDirectoryBuilder<V
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.filter.directory.AbstractRemovingDirectoryBuilder#transformResults(java.util.List)
+	 * @see edu.mayo.cts2.framework.filter.directory.AbstractRemovingDirectoryBuilder#transformResults(java.util.List)
 	 */
 	@Override
 	protected List<ValueSetCatalogEntrySummary> transformResults(
@@ -103,7 +103,7 @@ public class ValueSetDirectoryBuilder extends AbstractRemovingDirectoryBuilder<V
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.filter.directory.AbstractDirectoryBuilder#restrict(edu.mayo.cts2.framework.model.core.FilterComponent)
+	 * @see edu.mayo.cts2.framework.filter.directory.AbstractDirectoryBuilder#restrict(edu.mayo.cts2.framework.model.core.FilterComponent)
 	 */
 	@Override
 	public ValueSetDirectoryBuilder restrict(
@@ -161,7 +161,7 @@ public class ValueSetDirectoryBuilder extends AbstractRemovingDirectoryBuilder<V
 		}
 		
 		/* (non-Javadoc)
-		 * @see edu.mayo.cts2.sdk.filter.directory.AbstractDirectoryBuilder.Restriction#passRestriction(java.lang.Object)
+		 * @see edu.mayo.cts2.framework.filter.directory.AbstractDirectoryBuilder.Restriction#passRestriction(java.lang.Object)
 		 */
 		public boolean passRestriction(ValueSetCatalogEntry candidate) {
 			String valueSetName = candidate.getValueSetName();

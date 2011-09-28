@@ -57,7 +57,7 @@ public class BioportalRestCodeSystemVersionReadService
 	private IdentityConverter identityConverter;
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.ReadService#read(java.lang.Object)
+	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
 	public CodeSystemVersionCatalogEntry read(String codeSystemVersionName) {
@@ -71,7 +71,7 @@ public class BioportalRestCodeSystemVersionReadService
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.ReadService#exists(java.lang.Object)
+	 * @see edu.mayo.cts2.framework.service.profile.ReadService#exists(java.lang.Object)
 	 */
 	@Override
 	public boolean exists(String codeSystemVersionName) {
@@ -89,7 +89,7 @@ public class BioportalRestCodeSystemVersionReadService
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.codesystemversion.CodeSystemVersionReadService#existsCodeSystemVersionForCodeSystem(java.lang.String, java.lang.String)
+	 * @see edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService#existsCodeSystemVersionForCodeSystem(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public boolean existsCodeSystemVersionForCodeSystem(String codeSystemName,
@@ -98,7 +98,7 @@ public class BioportalRestCodeSystemVersionReadService
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.codesystemversion.CodeSystemVersionReadService#getCodeSystemVersionForCodeSystem(java.lang.String, java.lang.String)
+	 * @see edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService#getCodeSystemVersionForCodeSystem(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public CodeSystemVersionCatalogEntry getCodeSystemVersionForCodeSystem(
@@ -107,7 +107,7 @@ public class BioportalRestCodeSystemVersionReadService
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.codesystemversion.CodeSystemVersionReadService#existsVersionId(java.lang.String, java.lang.String)
+	 * @see edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService#existsVersionId(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public boolean existsVersionId(String codeSystemName,

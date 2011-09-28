@@ -57,7 +57,7 @@ public class BioportalRestValueSetDefinitionReadService
 	private IdentityConverter identityConverter;
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.ReadService#read(java.lang.Object)
+	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
 	public ValueSetDefinition read(String valueSetDefinitionDocumentUri) {
@@ -72,7 +72,7 @@ public class BioportalRestValueSetDefinitionReadService
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.service.profile.ReadService#exists(java.lang.Object)
+	 * @see edu.mayo.cts2.framework.service.profile.ReadService#exists(java.lang.Object)
 	 */
 	@Override
 	public boolean exists(String valueSetDefinitionDocumentUri) {

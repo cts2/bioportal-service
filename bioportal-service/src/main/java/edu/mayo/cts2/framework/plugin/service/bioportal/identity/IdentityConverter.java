@@ -470,7 +470,7 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.rest.CacheObserver#onCodeSystemsChangeEvent(java.util.List)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.rest.CacheObserver#onCodeSystemsChangeEvent(java.util.List)
 	 */
 	public void onCodeSystemsChangeEvent(List<String> changedOntologyIds) {
 		this.cacheNameAndId();

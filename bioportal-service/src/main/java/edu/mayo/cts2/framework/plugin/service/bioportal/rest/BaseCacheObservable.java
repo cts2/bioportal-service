@@ -37,14 +37,14 @@ public class BaseCacheObservable implements CacheObservable {
 	private Set<CacheObserver> observers = new HashSet<CacheObserver>();
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.rest.CacheObservable#addObserver(edu.mayo.cts2.sdk.plugin.service.bioportal.rest.CacheObserver)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.rest.CacheObservable#addObserver(edu.mayo.cts2.framework.plugin.service.bioportal.rest.CacheObserver)
 	 */
 	public void addObserver(CacheObserver o) {
 		this.observers.add(o);
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.sdk.plugin.service.bioportal.rest.CacheObservable#removeObserver(edu.mayo.cts2.sdk.plugin.service.bioportal.rest.CacheObserver)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.rest.CacheObservable#removeObserver(edu.mayo.cts2.framework.plugin.service.bioportal.rest.CacheObserver)
 	 */
 	public void removeObserver(CacheObserver o) {
 		this.observers.remove(o);
