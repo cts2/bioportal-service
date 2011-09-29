@@ -104,8 +104,6 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 
 	private String cachePath;
 	
-	private String updateLogPath;
-	
 	public static final String PROPERTIES_NAME = "properties";
 	public static final String PROPERTIES_URI = ExternalCts2Constants.buildModelAttributeUri(PROPERTIES_NAME);
 	public static final ModelAttributeReference PROPERTIES = new ModelAttributeReference();
@@ -578,12 +576,8 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
     	if(StringUtils.isBlank(this.cachePath)){
     		this.cachePath = this.cts2Config.getContextConfigDirectory() + File.separator + "cache";
     	}
-	    String cacheFilePath = 
-	    		this.cachePath + "/cache.out";
-	    this.updateLogPath = 
-	    		this.cachePath + "/updateLog.out";
- 
-		File file = new File(cacheFilePath);
+
+		File file = getCacheFile();
 		if(file.exists()){
 			log.info("Loading stored XML cache from:" + file.getPath());
 
@@ -591,11 +585,14 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 			ObjectInputStream ois = null;
 			
 			try {
-			fis = new FileInputStream(this.cachePath);
+			fis = new FileInputStream(file);
 		    ois = new ObjectInputStream(fis);
 
 				this.cache = (Map<String,String>) ois.readObject();
 			} catch (Exception e) {
+				log.warn("There was an error reading the existing cache file at: " + file.getPath()
+						+ ".", e);
+				
 				FileUtils.forceDelete(file);
 				
 				log.info("Creating new cache - " + file.getPath());
@@ -613,12 +610,29 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 			}  
 		} else {	
 			log.info("Creating new cache - " + file.getPath());
-
+			
+			file.getParentFile().mkdirs();
+			file.createNewFile();
+			
 			this.cache = new HashMap<String,String>();
 		}
 		
 		this.startRssChangeTimer();
 	}
+    
+    private File getCacheFile(){
+    	String cacheFilePath = 
+	    		this.cachePath + "/cache.out";
+    	
+    	return new File(cacheFilePath);
+    }
+    
+    private File getUpdateLogFile(){
+	    String updateLogPath = 
+	    		this.cachePath + "/updateLog.out";
+	    
+	    return new File(updateLogPath);
+    }
     
     /**
      * Start rss change timer.
@@ -717,7 +731,8 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 		log.info("Writing cache");
 
 		if (this.cache instanceof Serializable) {
-			File file = new File(this.cachePath);
+			
+			File file = this.getCacheFile();
 			FileOutputStream fos = new FileOutputStream(file);
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			oos.writeObject((Serializable) this.cache);
@@ -733,7 +748,7 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	 * @return the last update
 	 */
 	protected Date getLastUpdate(){
-		File file = new File(this.updateLogPath);
+		File file = this.getUpdateLogFile();
 		if(! file.exists()){
 			return null;
 		} else {
@@ -757,11 +772,13 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	private void writeUpdateLog(Date lastUpdate) {
 		log.info("Writing update log");
 		
-		File file = new File(this.updateLogPath);
+		File file = this.getUpdateLogFile();
 		
 		try {
 			if(! file.exists()){
 				log.info("Creating new update log file at: " + file.getPath());
+				file.getParentFile().mkdirs();
+				file.createNewFile();
 			}
 
 			byte[] data = SerializationUtils.serialize(lastUpdate);
