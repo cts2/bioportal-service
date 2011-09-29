@@ -43,8 +43,6 @@ public class BioportalConstants {
 	public static final String BIOPORTAL_ONTOLOGYVERSION_ID_NAME = "ontologyVersionId";
 	public static final String BIOPORTAL_ONTOLOGYVERSION_ID_ABOUT = "http://id.bioontology.org/predicate/ontologyVersionId";
 	
-	public static final String BIOPORTAL_CONFIG_DIRECTORY = "bioportal";
-	
 	/**
 	 * Instantiates a new bioportal constants.
 	 */

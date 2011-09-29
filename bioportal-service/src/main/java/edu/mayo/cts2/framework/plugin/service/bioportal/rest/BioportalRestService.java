@@ -58,13 +58,12 @@ import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 
 import edu.mayo.cts2.framework.core.config.Cts2Config;
-import edu.mayo.cts2.framework.plugin.service.bioportal.util.BioportalConstants;
-import edu.mayo.cts2.framework.service.command.Page;
-import edu.mayo.cts2.framework.service.constant.ExternalCts2Constants;
-import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
+import edu.mayo.cts2.framework.service.command.Page;
+import edu.mayo.cts2.framework.service.constant.ExternalCts2Constants;
+import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 
 /**
  * The Class BioportalRestService.
@@ -466,6 +465,7 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	 *
 	 * @param filter the filter
 	 * @return the bioportal query string for filter
+	 * 
 	 */
 	private String getBioportalQueryStringForFilter(FilterComponent filter) {
 		StringBuffer sb = new StringBuffer();
@@ -575,12 +575,15 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
      */
     @SuppressWarnings("unchecked")
 	public void afterPropertiesSet() throws IOException {
-    	cachePath = 
-    		this.cts2Config.getConfigDirectory() + "/" + BioportalConstants.BIOPORTAL_CONFIG_DIRECTORY + "/cache.out";
-    	updateLogPath = 
-    		this.cts2Config.getConfigDirectory() + "/" + BioportalConstants.BIOPORTAL_CONFIG_DIRECTORY + "/updateLog.out";
-    	
-		File file = new File(this.cachePath);
+    	if(StringUtils.isBlank(this.cachePath)){
+    		this.cachePath = this.cts2Config.getContextConfigDirectory() + File.separator + "cache";
+    	}
+	    String cacheFilePath = 
+	    		this.cachePath + "/cache.out";
+	    this.updateLogPath = 
+	    		this.cachePath + "/updateLog.out";
+ 
+		File file = new File(cacheFilePath);
 		if(file.exists()){
 			log.info("Loading stored XML cache from:" + file.getPath());
 
@@ -784,5 +787,13 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	 */
 	public int getCacheUpdatePeriod() {
 		return cacheUpdatePeriod;
+	}
+
+	public String getCachePath() {
+		return cachePath;
+	}
+
+	public void setCachePath(String cachePath) {
+		this.cachePath = cachePath;
 	}
 }

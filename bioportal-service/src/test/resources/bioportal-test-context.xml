@@ -13,6 +13,12 @@
 		<property name="name" value="cts2.config.dir" />
 		<property name="value" value="${java.io.tmpdir}" />
 	</bean>
+	
+	
+	<bean class="edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService">
+		<property name="cachePath" value="src/test/resources/cache" />
+	
+	</bean>
 
 	<import resource="classpath:bioportal-context.xml" />
 

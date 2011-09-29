@@ -6,11 +6,11 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
+import edu.mayo.cts2.framework.core.config.ConfigConstants
 import edu.mayo.cts2.framework.core.config.Cts2Config
 import edu.mayo.cts2.framework.core.config.Cts2TestConfigFactory
 import edu.mayo.cts2.framework.model.core.FilterComponent
 import edu.mayo.cts2.framework.model.core.URIAndEntityName
-import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import groovy.mock.interceptor.*
 
 class BioportalRestServiceTest {
@@ -20,7 +20,7 @@ class BioportalRestServiceTest {
 	@Before
 	void setUp(){
 		String path = System.getProperty("java.io.tmpdir") + File.separator + UUID.randomUUID();
-		System.setProperty(Cts2Config.CTS2_CONFIG_DIRECTORY_ENV_VARIABLE, path)
+		System.setProperty(ConfigConstants.CTS2_CONFIG_DIRECTORY_ENV_VARIABLE, path)
 		String context = UUID.randomUUID();
 		def factory = new Cts2TestConfigFactory(context:context) 
 		
@@ -33,7 +33,7 @@ class BioportalRestServiceTest {
 	
 	@After
 	void tearDown(){
-		System.clearProperty(Cts2Config.CTS2_CONFIG_DIRECTORY_ENV_VARIABLE)
+		System.clearProperty(ConfigConstants.CTS2_CONFIG_DIRECTORY_ENV_VARIABLE)
 	}
 
 	@Test
