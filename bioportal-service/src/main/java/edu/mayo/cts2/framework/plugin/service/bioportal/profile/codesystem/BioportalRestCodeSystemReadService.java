@@ -84,4 +84,9 @@ public class BioportalRestCodeSystemReadService
 
 		return this.codeSystemTransform.transformResource(xml);
 	}
+
+	@Override
+	public CodeSystemCatalogEntry readByUri(String uri) {
+		throw new UnsupportedOperationException();
+	}
 }

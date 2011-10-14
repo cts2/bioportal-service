@@ -33,7 +33,7 @@ import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.SyndFeedInput;
 import com.sun.syndication.io.XmlReader;
 
-import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RestException;
+import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
 
 /**
  * The Class BioportalRssFeedClient.
@@ -60,7 +60,7 @@ public class BioportalRssFeedClient {
 			feed = input.build(new XmlReader(new URL(BIOPORTAL_RSS_URL)));
 			log.debug(feed);
 		} catch (Exception e) {
-			throw new UnspecifiedCts2RestException(e, 500);
+			throw new UnspecifiedCts2RuntimeException(e, 500);
 		} 
 		
 		 return feed;

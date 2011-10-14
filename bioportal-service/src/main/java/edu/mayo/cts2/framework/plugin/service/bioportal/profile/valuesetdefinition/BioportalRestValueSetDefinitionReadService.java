@@ -89,4 +89,9 @@ public class BioportalRestValueSetDefinitionReadService
 
 		return true;
 	}
+
+	@Override
+	public ValueSetDefinition readByUri(String uri) {
+		throw new UnsupportedOperationException();
+	}
 }

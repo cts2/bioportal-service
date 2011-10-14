@@ -114,4 +114,9 @@ public class BioportalRestCodeSystemVersionReadService
 			String officialResourceVersionId) {
 		throw new UnsupportedOperationException();
 	}
+
+	@Override
+	public CodeSystemVersionCatalogEntry readByUri(String uri) {
+		throw new UnsupportedOperationException();
+	}
 }

@@ -97,4 +97,9 @@ public class BioportalRestEntityDescriptionReadService
 	public boolean exists(EntityDescriptionId identifier) {
 		throw new UnsupportedOperationException();
 	}
+
+	@Override
+	public EntityDescription readByUri(String uri) {
+		throw new UnsupportedOperationException();
+	}
 }

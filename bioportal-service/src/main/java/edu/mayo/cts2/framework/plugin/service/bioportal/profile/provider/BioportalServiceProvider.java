@@ -35,17 +35,15 @@ import edu.mayo.cts2.framework.service.provider.AbstractSpringServiceProvider;
  */
 public class BioportalServiceProvider extends AbstractSpringServiceProvider {
 
-	/* (non-Javadoc)
-	 * @see org.cts2.rest.service.provider.AbstractSpringServiceProvider#getApplicationContext()
-	 */
 	@Override
-	protected ApplicationContext getApplicationContext() {
-		return new ClassPathXmlApplicationContext("bioportal-context.xml");
+	protected ApplicationContext getApplicationContext(ApplicationContext parent) {
+		return new ClassPathXmlApplicationContext(new String[]{"bioportal-context.xml"}, parent);
 	}
 
 	@Override
-	protected ApplicationContext getIntegrationTestApplicationContext() {
-		//Test context is the same for now.
-		return new ClassPathXmlApplicationContext("bioportal-context.xml");
+	protected ApplicationContext getIntegrationTestApplicationContext(
+			ApplicationContext parent) {
+		return new ClassPathXmlApplicationContext(new String[]{"bioportal-test-context.xml"}, parent);
 	}
+
 }

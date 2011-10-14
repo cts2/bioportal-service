@@ -40,7 +40,7 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RestException;
+import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
@@ -214,7 +214,7 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 				}
 			}
 		} catch (Exception e) {
-			throw new UnspecifiedCts2RestException(e, 500);
+			throw new UnspecifiedCts2RuntimeException(e, 500);
 		}
 	}
 	
@@ -257,7 +257,7 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 			}
 
 		} catch (Exception e) {
-			throw new UnspecifiedCts2RestException(e, 500);
+			throw new UnspecifiedCts2RuntimeException(e, 500);
 		}
 	}
 	
@@ -365,7 +365,7 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 			}
 			
 		} catch (Exception e) {
-			throw new UnspecifiedCts2RestException(e, 500);
+			throw new UnspecifiedCts2RuntimeException(e, 500);
 		}
 	}
 	
@@ -385,7 +385,7 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 			this.codeSystemAboutToName.put(about, name);
 			
 		} catch (Exception e) {
-			throw new UnspecifiedCts2RestException(e, 500);
+			throw new UnspecifiedCts2RuntimeException(e, 500);
 		}
 	}
 	
@@ -408,7 +408,7 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 			this.ontologyVersionIdToName.put(ontologyVersionId, name);
 
 		} catch (Exception e) {
-			throw new UnspecifiedCts2RestException(e, 500);
+			throw new UnspecifiedCts2RuntimeException(e, 500);
 		}
 	}
 
@@ -432,7 +432,7 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 				}
 
 			} catch (Exception e) {
-				throw new UnspecifiedCts2RestException(e, 500);
+				throw new UnspecifiedCts2RuntimeException(e, 500);
 			}
 	}
 	
@@ -465,7 +465,7 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 
 			return sb.toString().replaceAll("\\.", "-");
 		} catch (Exception e) {
-			throw new UnspecifiedCts2RestException(e, 500);
+			throw new UnspecifiedCts2RuntimeException(e, 500);
 		}
 	}
 
@@ -500,7 +500,7 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 			
 			return urn;
 		} catch(Exception e){
-			throw new UnspecifiedCts2RestException(e, 500);
+			throw new UnspecifiedCts2RuntimeException(e, 500);
 		}
 	}
 	

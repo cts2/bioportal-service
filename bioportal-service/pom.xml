@@ -6,10 +6,11 @@
 	<parent>
 		<groupId>edu.mayo.cts2.framework</groupId>
 		<artifactId>base-service-plugin</artifactId>
-		<version>0.1.0-SNAPSHOT</version>
+		<version>0.2.2-SNAPSHOT</version>
 	</parent>
 
 	<properties>
+		<develpment.framework.version>0.2.2-SNAPSHOT</develpment.framework.version>
 		<service.provider.class>
 		edu.mayo.cts2.framework.plugin.service.bioportal.profile.provider.BioportalServiceProvider
 		</service.provider.class>
@@ -109,13 +110,13 @@
 		<dependency>
 			<groupId>edu.mayo.cts2.framework</groupId>
 			<artifactId>service</artifactId>
-			<version>0.1.0-SNAPSHOT</version>
+			<version>${develpment.framework.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>edu.mayo.cts2.framework</groupId>
 			<artifactId>core</artifactId>
-			<version>0.1.0-SNAPSHOT</version>
+			<version>${develpment.framework.version}</version>
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>

@@ -7,8 +7,6 @@ import org.junit.Before
 import org.junit.Test
 
 import edu.mayo.cts2.framework.core.config.ConfigConstants
-import edu.mayo.cts2.framework.core.config.Cts2Config
-import edu.mayo.cts2.framework.core.config.Cts2TestConfigFactory
 import edu.mayo.cts2.framework.model.core.FilterComponent
 import edu.mayo.cts2.framework.model.core.URIAndEntityName
 import groovy.mock.interceptor.*
@@ -16,21 +14,7 @@ import groovy.mock.interceptor.*
 class BioportalRestServiceTest {
 	
 	def service = new BioportalRestService()
-	
-	@Before
-	void setUp(){
-		String path = System.getProperty("java.io.tmpdir") + File.separator + UUID.randomUUID();
-		System.setProperty(ConfigConstants.CTS2_CONFIG_DIRECTORY_ENV_VARIABLE, path)
-		String context = UUID.randomUUID();
-		def factory = new Cts2TestConfigFactory(context:context) 
-		
-		try {
-			service.cts2Config = factory.getObject();
-		} catch (e) {
-			//
-		}
-	}
-	
+
 	@After
 	void tearDown(){
 		System.clearProperty(ConfigConstants.CTS2_CONFIG_DIRECTORY_ENV_VARIABLE)

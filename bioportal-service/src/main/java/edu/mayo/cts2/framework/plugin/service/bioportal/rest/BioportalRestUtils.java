@@ -31,7 +31,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
-import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RestException;
+import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
 import edu.mayo.cts2.framework.service.command.Page;
 
 /**
@@ -48,7 +48,7 @@ public class BioportalRestUtils {
 		try{
 		DOCUMENT_BUILDER = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
 		} catch(Exception e){
-			throw new UnspecifiedCts2RestException(e);
+			throw new UnspecifiedCts2RuntimeException(e);
 		}
 	}
 	
@@ -77,7 +77,7 @@ public class BioportalRestUtils {
 				doc = DOCUMENT_BUILDER.parse(inputStream);
 			}
 		} catch (Exception e) {
-			throw new UnspecifiedCts2RestException(e);
+			throw new UnspecifiedCts2RuntimeException(e);
 		} 
 		
 		return doc;

@@ -51,13 +51,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 
-import edu.mayo.cts2.framework.core.config.Cts2Config;
+import edu.mayo.cts2.framework.core.config.PluginConfig;
 import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
@@ -70,7 +69,6 @@ import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-@Component
 public class BioportalRestService extends BaseCacheObservable implements InitializingBean {
 	
 	private static Log log = LogFactory.getLog(BioportalRestService.class);
@@ -79,7 +77,7 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	private BioportalRssFeedClient bioportalRssFeedClient;
 	
 	@Resource
-	private Cts2Config cts2Config;
+	private PluginConfig pluginConfig;
 	
 	private Map<String,String> cache = new HashMap<String,String>();
 	
@@ -574,7 +572,7 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
     @SuppressWarnings("unchecked")
 	public void afterPropertiesSet() throws IOException {
     	if(StringUtils.isBlank(this.cachePath)){
-    		this.cachePath = this.cts2Config.getContextConfigDirectory() + File.separator + "cache";
+    		this.cachePath = this.pluginConfig.getWorkDirectory().getPath() + File.separator + "cache";
     	}
 
 		File file = getCacheFile();

@@ -74,4 +74,9 @@ public class BioportalRestValueSetReadService
 	public boolean exists(String identifier) {
 		throw new UnsupportedOperationException();
 	}
+
+	@Override
+	public ValueSetCatalogEntry readByUri(String uri) {
+		throw new UnsupportedOperationException();
+	}
 }
