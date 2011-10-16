@@ -28,7 +28,7 @@
 	</developers>
 
 	<scm>
-		<developerConnection>scm:git:git@github.com:cts2/cts2-framework.git</developerConnection>
+		<developerConnection>scm:git:git@github.com:cts2/bioportal-service.git</developerConnection>
 	</scm>
 
 	<properties>
