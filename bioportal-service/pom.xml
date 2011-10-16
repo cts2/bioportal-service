@@ -8,6 +8,28 @@
 		<artifactId>base-service-plugin</artifactId>
 		<version>0.2.2-SNAPSHOT</version>
 	</parent>
+	
+	<groupId>edu.mayo.cts2.framework</groupId>
+	<artifactId>bioportal-service</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+	<name>bioportal-service</name>
+	
+	<developers>
+		<developer>
+			<id>kevin</id>
+			<name>Kevin Peterson</name>
+			<email>kevin.peterson@mayo.edu</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+			<organization>Mayo Clinic</organization>
+			<timezone>-5</timezone>
+		</developer>
+	</developers>
+
+	<scm>
+		<developerConnection>scm:git:git@github.com:cts2/cts2-framework.git</developerConnection>
+	</scm>
 
 	<properties>
 		<develpment.framework.version>0.2.2-SNAPSHOT</develpment.framework.version>
@@ -15,11 +37,6 @@
 		edu.mayo.cts2.framework.plugin.service.bioportal.profile.provider.BioportalServiceProvider
 		</service.provider.class>
 	</properties>
-	
-	<groupId>edu.mayo.cts2.framework</groupId>
-	<artifactId>bioportal-service</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
-	<name>bioportal-service</name>
 
 	<distributionManagement>
 		<site>
