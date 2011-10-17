@@ -36,19 +36,13 @@ import edu.mayo.cts2.framework.filter.match.ContainsMatcher;
 import edu.mayo.cts2.framework.filter.match.ExactMatcher;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
 import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.service.command.Page;
-import edu.mayo.cts2.framework.service.command.restriction.AssociationQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
-import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
-import edu.mayo.cts2.framework.service.profile.association.AssociationQueryService;
-import edu.mayo.cts2.framework.service.profile.entitydescription.id.EntityDescriptionId;
 import edu.mayo.cts2.framework.model.association.Association;
 import edu.mayo.cts2.framework.model.association.AssociationDirectoryEntry;
 import edu.mayo.cts2.framework.model.core.FilterComponent;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
+import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
@@ -56,6 +50,12 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioporta
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory.ParentOrChildOfEntityDirectoryBuilder;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.AssociationTransform;
+import edu.mayo.cts2.framework.service.command.Page;
+import edu.mayo.cts2.framework.service.command.restriction.AssociationQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
+import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
+import edu.mayo.cts2.framework.service.profile.association.AssociationQueryService;
+import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionName;
 
 /**
  * The Class BioportalRestAssociationQueryService.
@@ -229,40 +229,20 @@ public class BioportalRestAssociationQueryService
 			Query query, 
 			FilterComponent filterComponent,
 			Page page,
-			EntityDescriptionId id) {
+			EntityDescriptionName id) {
 
 		String codeSystemName = this.identityConverter.
-				codeSystemVersionNameCodeSystemName(id.getCodeSystemVersion());
+				codeSystemVersionNameCodeSystemName(id.getCodeSystemVersionName());
 		
 		return this.doGetAssociationsOfEntity(
 				codeSystemName,
-				id.getCodeSystemVersion(), 
-				id.getName().getName(),
+				id.getCodeSystemVersionName(), 
+				id.getResourceId().getName(),
 				CHILDREN_PREDICATE,
 				filterComponent,
 				page);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.association.AssociationQueryService#getParentAssociationsOfEntity(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, edu.mayo.cts2.framework.service.command.Page, edu.mayo.cts2.framework.service.profile.entitydescription.id.EntityDescriptionId)
-	 */
-	@Override
-	public DirectoryResult<EntityDirectoryEntry> getParentAssociationsOfEntity(
-			Query query, 
-			FilterComponent filterComponent, 
-			Page page,
-			EntityDescriptionId id) {
-		String codeSystemName = this.identityConverter.
-				codeSystemVersionNameCodeSystemName(id.getCodeSystemVersion());
-
-		return this.doGetAssociationsOfEntity(
-				codeSystemName,
-				id.getCodeSystemVersion(), 
-				id.getName().getName(),
-				PARENT_PREDICATE,
-				filterComponent,
-				page);
-	}
 
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.service.profile.association.AssociationQueryService#getSourceOfAssociationsOfEntity(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, edu.mayo.cts2.framework.service.command.Page, edu.mayo.cts2.framework.service.profile.entitydescription.id.EntityDescriptionId)
@@ -272,22 +252,22 @@ public class BioportalRestAssociationQueryService
 			Query query,
 			FilterComponent filterComponent, 
 			Page page,
-			EntityDescriptionId id) {
+			EntityDescriptionName id) {
 		
 		String ontologyVersionId = 
 			this.identityConverter.codeSystemVersionNameToOntologyVersionId(
-					id.getCodeSystemVersion());
+					id.getCodeSystemVersionName());
 		
 		String codeSystemName = this.identityConverter.
-				codeSystemVersionNameCodeSystemName(id.getCodeSystemVersion());
+				codeSystemVersionNameCodeSystemName(id.getCodeSystemVersionName());
 
 		final String xml = this.bioportalRestService.
-			getEntityByOntologyVersionIdAndEntityId(ontologyVersionId, id.getName().getName());
+			getEntityByOntologyVersionIdAndEntityId(ontologyVersionId, id.getResourceId().getName());
 	
 		return this.associationTransform.transformSubjectOfAssociationsForEntity(
 				xml, 
 				codeSystemName, 
-				id.getCodeSystemVersion());
+				id.getCodeSystemVersionName());
 	}
 
 	/* (non-Javadoc)

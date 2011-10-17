@@ -30,12 +30,6 @@ import javax.annotation.Resource;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Component;
 
-import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
-import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestQueryService;
-import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
-import edu.mayo.cts2.framework.plugin.service.bioportal.transform.AssociationTransform;
-import edu.mayo.cts2.framework.service.profile.association.AdvancedAssociationQueryService;
-import edu.mayo.cts2.framework.service.profile.entitydescription.id.EntityDescriptionId;
 import edu.mayo.cts2.framework.model.association.AssociationGraph;
 import edu.mayo.cts2.framework.model.association.GraphNode;
 import edu.mayo.cts2.framework.model.association.types.GraphDirection;
@@ -44,6 +38,12 @@ import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.core.types.AssociationDirection;
+import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
+import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestQueryService;
+import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
+import edu.mayo.cts2.framework.plugin.service.bioportal.transform.AssociationTransform;
+import edu.mayo.cts2.framework.service.profile.association.AdvancedAssociationQueryService;
+import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionName;
 
 /**
  * The Class BioportalRestAdvancedAssociationQueryService.
@@ -68,15 +68,15 @@ public class BioportalRestAdvancedAssociationQueryService
 	 * @see edu.mayo.cts2.framework.service.profile.association.AdvancedAssociationQueryService#getAssociationGraph(edu.mayo.cts2.framework.service.profile.entitydescription.id.EntityDescriptionId, edu.mayo.cts2.framework.model.association.types.GraphDirection, long)
 	 */
 	public AssociationGraph getAssociationGraph(
-			EntityDescriptionId id,
+			EntityDescriptionName id,
 			GraphDirection direction,
 			long depth) {	
 		
-		String codeSystemVersionName = id.getCodeSystemVersion();
+		String codeSystemVersionName = id.getCodeSystemVersionName();
 		String codeSystemName = this.identityConverter.
 				codeSystemVersionNameCodeSystemName(codeSystemVersionName);
 		
-		ScopedEntityName focusEntityName = id.getName();
+		ScopedEntityName focusEntityName = id.getResourceId();
 		
 		if(depth != 1){
 			throw new UnsupportedOperationException("Only depth of '1' is allowed.");

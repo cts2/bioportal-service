@@ -27,15 +27,15 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Component;
 
-import edu.mayo.cts2.framework.model.util.RestModelUtils;
-import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService;
-import edu.mayo.cts2.framework.service.profile.entitydescription.id.EntityDescriptionId;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
+import edu.mayo.cts2.framework.model.util.RestModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.EntityDescriptionTransform;
+import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService;
+import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionName;
 
 /**
  * The Class BioportalRestEntityDescriptionReadService.
@@ -70,12 +70,12 @@ public class BioportalRestEntityDescriptionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
-	public EntityDescription read(EntityDescriptionId id) {
-		String codeSystemVersionName = id.getCodeSystemVersion();
+	public EntityDescription read(EntityDescriptionName id) {
+		String codeSystemVersionName = id.getCodeSystemVersionName();
 		String codeSystemName = this.identityConverter.
 				codeSystemVersionNameCodeSystemName(codeSystemVersionName);
 		
-		ScopedEntityName entityName = id.getName();
+		ScopedEntityName entityName = id.getResourceId();
 		
 		String ontologyId = this.identityConverter
 				.codeSystemNameToOntologyId(codeSystemName);
@@ -94,7 +94,7 @@ public class BioportalRestEntityDescriptionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#exists(java.lang.Object)
 	 */
 	@Override
-	public boolean exists(EntityDescriptionId identifier) {
+	public boolean exists(EntityDescriptionName identifier) {
 		throw new UnsupportedOperationException();
 	}
 

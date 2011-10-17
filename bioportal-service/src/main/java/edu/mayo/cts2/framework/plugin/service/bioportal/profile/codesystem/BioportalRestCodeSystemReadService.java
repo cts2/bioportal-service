@@ -29,12 +29,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 
+import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.CodeSystemTransform;
+import edu.mayo.cts2.framework.service.name.Name;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService;
-import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 
 /**
  * The Class BioportalRestCodeSystemReadService.
@@ -59,9 +60,9 @@ public class BioportalRestCodeSystemReadService
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.plugin.service.CodeSystemService#doesCodeSystemExist(java.lang.String)
 	 */
-	public boolean exists(String codeSystemName) {
+	public boolean exists(Name codeSystemName) {
 		String ontologyId = this.identityConverter
-				.codeSystemNameToOntologyId(codeSystemName);
+				.codeSystemNameToOntologyId(codeSystemName.getResourceId());
 
 		try {
 			this.bioportalRestService
@@ -77,8 +78,8 @@ public class BioportalRestCodeSystemReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
-	public CodeSystemCatalogEntry read(String codeSystemName) {
-		String ontologyId = this.identityConverter.codeSystemNameToOntologyId(codeSystemName);
+	public CodeSystemCatalogEntry read(Name codeSystemName) {
+		String ontologyId = this.identityConverter.codeSystemNameToOntologyId(codeSystemName.getResourceId());
 		
 		String xml = this.bioportalRestService.getLatestOntologyVersionByOntologyId(ontologyId);
 

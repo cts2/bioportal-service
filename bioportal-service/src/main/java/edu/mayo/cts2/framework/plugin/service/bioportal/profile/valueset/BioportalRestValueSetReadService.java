@@ -28,12 +28,13 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.ValueSetTransform;
+import edu.mayo.cts2.framework.service.name.Name;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetReadService;
-import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
 
 /**
  * The Class BioportalRestValueSetReadService.
@@ -59,8 +60,8 @@ public class BioportalRestValueSetReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
-	public ValueSetCatalogEntry read(String valueSetName) {
-		String ontologyId = this.identityConverter.valueSetNameToOntologyId(valueSetName);
+	public ValueSetCatalogEntry read(Name valueSetName) {
+		String ontologyId = this.identityConverter.valueSetNameToOntologyId(valueSetName.getResourceId());
 		
 		String xml = this.bioportalRestService.getLatestOntologyVersionByOntologyId(ontologyId);
 
@@ -71,7 +72,7 @@ public class BioportalRestValueSetReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#exists(java.lang.Object)
 	 */
 	@Override
-	public boolean exists(String identifier) {
+	public boolean exists(Name identifier) {
 		throw new UnsupportedOperationException();
 	}
 

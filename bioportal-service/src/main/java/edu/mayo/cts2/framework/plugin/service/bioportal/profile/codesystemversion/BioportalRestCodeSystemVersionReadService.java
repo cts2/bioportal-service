@@ -29,12 +29,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 
+import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.CodeSystemVersionTransform;
+import edu.mayo.cts2.framework.service.name.Name;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
-import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 
 /**
  * The Class BioportalRestCodeSystemVersionReadService.
@@ -60,10 +61,10 @@ public class BioportalRestCodeSystemVersionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
-	public CodeSystemVersionCatalogEntry read(String codeSystemVersionName) {
+	public CodeSystemVersionCatalogEntry read(Name codeSystemVersionName) {
 		String ontologyVersionId = 
 			this.identityConverter.codeSystemVersionNameToOntologyVersionId(
-					codeSystemVersionName);
+					codeSystemVersionName.getResourceId());
 		
 		String xml = this.bioportalRestService.getOntologyByOntologyVersionId(ontologyVersionId);
 
@@ -74,9 +75,9 @@ public class BioportalRestCodeSystemVersionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#exists(java.lang.Object)
 	 */
 	@Override
-	public boolean exists(String codeSystemVersionName) {
+	public boolean exists(Name codeSystemVersionName) {
 		String ontologyVersionId = this.identityConverter
-				.codeSystemVersionNameToOntologyVersionId(codeSystemVersionName);
+				.codeSystemVersionNameToOntologyVersionId(codeSystemVersionName.getResourceId());
 
 		try {
 			this.bioportalRestService
