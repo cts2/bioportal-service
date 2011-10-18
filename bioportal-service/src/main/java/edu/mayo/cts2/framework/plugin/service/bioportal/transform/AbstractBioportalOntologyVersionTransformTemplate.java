@@ -35,18 +35,19 @@ import java.util.Map;
 import org.apache.commons.collections.map.LRUMap;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import com.google.common.collect.Iterables;
 
-import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.core.EntryDescription;
 import edu.mayo.cts2.framework.model.core.OntologySyntaxReference;
 import edu.mayo.cts2.framework.model.core.Property;
 import edu.mayo.cts2.framework.model.core.ResourceVersionDescription;
 import edu.mayo.cts2.framework.model.core.ResourceVersionDescriptionDirectoryEntry;
 import edu.mayo.cts2.framework.model.core.SourceAndNotation;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.util.BioportalConstants;
 
@@ -262,7 +263,13 @@ public abstract class AbstractBioportalOntologyVersionTransformTemplate<R extend
 		List<Node> nodeList = TransformUtils.getNodeListWithPath(doc, "success.data.list.ontologyBean");
 		
 		for(Node node : nodeList){
-			S entry = transformVersionSummary(node);
+			S entry = null;
+			try {
+				entry = transformVersionSummary(node);
+			} catch (HttpClientErrorException e) {
+				log.warn("An HTTP Error Occured connecting to Bioportal.", e);
+				continue;
+			}
 			
 			entryList.add(entry);
 		}
