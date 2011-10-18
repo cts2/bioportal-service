@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
-import edu.mayo.cts2.framework.model.util.RestModelUtils;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
@@ -85,7 +85,7 @@ public class BioportalRestEntityDescriptionReadService
 						ontologyId,
 						entityName.getName());
 
-		return RestModelUtils.toEntityDescription(
+		return ModelUtils.toEntityDescription(
 				entityDescriptionTransform.transformEntityDescription(xml,
 					codeSystemName, codeSystemVersionName));
 	}

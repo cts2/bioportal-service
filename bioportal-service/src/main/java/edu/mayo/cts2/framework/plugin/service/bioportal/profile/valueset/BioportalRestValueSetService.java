@@ -42,7 +42,7 @@ import edu.mayo.cts2.framework.filter.match.ExactMatcher;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
 import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.util.RestModelUtils;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.restriction.ValueSetQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
@@ -201,7 +201,7 @@ public class BioportalRestValueSetService
 
 						public Iterable<String> resolveAttribute(
 								ValueSetCatalogEntry modelObject) {
-							return Arrays.asList(RestModelUtils.getResourceSynopsisValue(
+							return Arrays.asList(ModelUtils.getResourceSynopsisValue(
 									modelObject));
 						}
 					});

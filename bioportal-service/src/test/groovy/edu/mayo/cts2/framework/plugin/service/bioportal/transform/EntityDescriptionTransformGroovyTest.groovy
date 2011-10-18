@@ -11,7 +11,7 @@ import org.springframework.core.io.UrlResource
 import org.w3c.dom.*
 
 import edu.mayo.cts2.framework.core.url.UrlConstructor
-import edu.mayo.cts2.framework.core.xml.DelgatingMarshaller
+import edu.mayo.cts2.framework.core.xml.DelegatingMarshaller
 import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.EntityDescriptionTransform;
@@ -46,7 +46,7 @@ class EntityDescriptionTransformGroovyTest {
 			
 		def xsd = new UrlResource("http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/schema/Entity.xsd")
 	
-		def marshaller = new DelgatingMarshaller()
+		def marshaller = new DelegatingMarshaller()
 		
 		marshaller.marshal(entity, new StreamResult(new StringWriter()))
 
@@ -65,7 +65,7 @@ class EntityDescriptionTransformGroovyTest {
 			
 		def xsd = new UrlResource("http://informatics.mayo.edu/svn/trunk/cts2/spec/psm/rest/schema/Entity.xsd")
 	
-		def marshaller = new DelgatingMarshaller()
+		def marshaller = new DelegatingMarshaller()
 		
 		marshaller.marshal(entity, new StreamResult(new StringWriter()))
 	}

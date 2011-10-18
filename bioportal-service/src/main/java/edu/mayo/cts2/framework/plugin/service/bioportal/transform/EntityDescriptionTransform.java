@@ -42,7 +42,7 @@ import org.w3c.dom.NodeList;
 import com.google.common.collect.Iterables;
 
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.util.RestModelUtils;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
 import edu.mayo.cts2.framework.model.core.Definition;
 import edu.mayo.cts2.framework.model.core.DescriptionInCodeSystem;
@@ -115,7 +115,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 				buildScopedEntityName(name, codeSystemName));
 		
 		Designation designation = new Designation();
-		designation.setValue(RestModelUtils.toTsAnyType(label));
+		designation.setValue(ModelUtils.toTsAnyType(label));
 		designation.setDesignationRole(DesignationRole.PREFERRED);
 		designation.setAssertedInCodeSystemVersion(this.buildCodeSystemVersionReference(codeSystemName, codeSystemVersionName));
 		
@@ -195,7 +195,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 		
 			for(Node definition : TransformUtils.getNodeList(definitions, "string")){
 				Definition def = new Definition();
-				def.setValue(RestModelUtils.toTsAnyType(TransformUtils.getNodeText(definition)));
+				def.setValue(ModelUtils.toTsAnyType(TransformUtils.getNodeText(definition)));
 				def.setAssertedInCodeSystemVersion(codeSystemVersionName);
 			
 				returnList.add(def);
@@ -222,7 +222,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 			
 			for(Node synonym : TransformUtils.getNodeList(synonyms, "string")){
 				Designation designation = new Designation();
-				designation.setValue(RestModelUtils.toTsAnyType(TransformUtils.getNodeText(synonym)));
+				designation.setValue(ModelUtils.toTsAnyType(TransformUtils.getNodeText(synonym)));
 				designation.setDesignationRole(DesignationRole.ALTERNATIVE);
 				designation.setAssertedInCodeSystemVersion(
 						this.buildCodeSystemVersionReference(codeSystemName, codeSystemVersionName));
@@ -270,7 +270,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 						prop.setPredicate(predicateRef);
 						
 						StatementTarget target = new StatementTarget();
-						target.setLiteral(RestModelUtils.createOpaqueData(value));
+						target.setLiteral(ModelUtils.createOpaqueData(value));
 						
 						prop.addValue(target);
 						

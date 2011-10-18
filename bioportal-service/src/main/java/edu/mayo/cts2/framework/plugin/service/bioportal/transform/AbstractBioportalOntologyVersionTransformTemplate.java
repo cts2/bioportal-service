@@ -40,7 +40,7 @@ import org.w3c.dom.Node;
 
 import com.google.common.collect.Iterables;
 
-import edu.mayo.cts2.framework.model.util.RestModelUtils;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.core.EntryDescription;
 import edu.mayo.cts2.framework.model.core.OntologySyntaxReference;
 import edu.mayo.cts2.framework.model.core.Property;
@@ -218,7 +218,7 @@ public abstract class AbstractBioportalOntologyVersionTransformTemplate<R extend
 		resourceVersion = this.setName(resourceVersion, resourceVersionName);
 		resourceVersion.setFormalName(displayLabel);
 		resourceVersion.setResourceSynopsis(new EntryDescription());
-		resourceVersion.getResourceSynopsis().setValue(RestModelUtils.toTsAnyType(description));
+		resourceVersion.getResourceSynopsis().setValue(ModelUtils.toTsAnyType(description));
 		resourceVersion.setOfficialResourceVersionId(this.getOfficialResourceVersionId(node));
 		resourceVersion.addKeyword(abbreviation);
 		resourceVersion.addKeyword(ontologyId);
@@ -352,7 +352,7 @@ public abstract class AbstractBioportalOntologyVersionTransformTemplate<R extend
 		entry = this.setName(entry, resourceVersionName);
 		entry.setResourceName(resourceName);
 		entry.setResourceSynopsis(new EntryDescription());
-		entry.getResourceSynopsis().setValue(RestModelUtils.toTsAnyType(description));
+		entry.getResourceSynopsis().setValue(ModelUtils.toTsAnyType(description));
 
 		entry.setDocumentURI(this.getIdentityConverter().getDocumentUri(ontologyVersionId));
 		

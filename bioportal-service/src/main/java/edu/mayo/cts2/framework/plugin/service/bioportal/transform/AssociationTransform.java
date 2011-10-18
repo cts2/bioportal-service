@@ -35,7 +35,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.util.RestModelUtils;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.association.AssociationDirectoryEntry;
 import edu.mayo.cts2.framework.model.association.GraphNode;
 import edu.mayo.cts2.framework.model.core.DescriptionInCodeSystem;
@@ -154,7 +154,7 @@ public class AssociationTransform extends AbstractTransform{
 				entry.addKnownEntityDescription(new DescriptionInCodeSystem());
 				entry.getKnownEntityDescription(0).setDesignation(label);
 
-				entry.setName(RestModelUtils.createScopedEntityName(name, codeSystemName));
+				entry.setName(ModelUtils.createScopedEntityName(name, codeSystemName));
 
 				entryList.add(entry);
 			}

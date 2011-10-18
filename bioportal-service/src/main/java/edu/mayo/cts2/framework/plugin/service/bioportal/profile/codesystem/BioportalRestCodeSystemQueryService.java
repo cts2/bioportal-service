@@ -40,7 +40,7 @@ import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
 import edu.mayo.cts2.framework.filter.match.ResolvablePredicateReference;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
-import edu.mayo.cts2.framework.model.util.RestModelUtils;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
@@ -219,7 +219,7 @@ public class BioportalRestCodeSystemQueryService
 
 						public Iterable<String> resolveAttribute(
 								CodeSystemCatalogEntry modelObject) {
-							return Arrays.asList(RestModelUtils.getResourceSynopsisValue(
+							return Arrays.asList(ModelUtils.getResourceSynopsisValue(
 									modelObject));
 						}
 					});

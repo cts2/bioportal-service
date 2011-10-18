@@ -32,7 +32,7 @@ import org.w3c.dom.Node;
 
 import com.google.common.collect.Iterables;
 
-import edu.mayo.cts2.framework.model.util.RestModelUtils;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.core.AbstractResourceDescription;
 import edu.mayo.cts2.framework.model.core.AbstractResourceDescriptionDirectoryEntry;
 import edu.mayo.cts2.framework.model.core.EntryDescription;
@@ -107,7 +107,7 @@ public abstract class AbstractBioportalOntologyTransformTemplate<R extends Abstr
 		resource = this.setName(resource, name);
 		resource.setFormalName(displayLabel);
 		resource.setResourceSynopsis(new EntryDescription());
-		resource.getResourceSynopsis().setValue(RestModelUtils.toTsAnyType(description));
+		resource.getResourceSynopsis().setValue(ModelUtils.toTsAnyType(description));
 		resource.addKeyword(abbreviation);
 		resource.addKeyword(ontologyId);
 		resource.addSourceAndRole(this.getSourceAndRoleReference(node));
@@ -242,7 +242,7 @@ public abstract class AbstractBioportalOntologyTransformTemplate<R extends Abstr
 		entry = this.setName(entry, name);
 		entry.setResourceName(name);
 		entry.setResourceSynopsis(new EntryDescription());
-		entry.getResourceSynopsis().setValue(RestModelUtils.toTsAnyType(description));
+		entry.getResourceSynopsis().setValue(ModelUtils.toTsAnyType(description));
 		
 		entry.setHref(this.getHref(name));
 		

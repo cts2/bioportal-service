@@ -34,7 +34,7 @@ import org.w3c.dom.Document;
 
 import edu.mayo.cts2.framework.filter.directory.AbstractCallbackDirectoryBuilder.Callback;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.util.RestModelUtils;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
@@ -284,7 +284,7 @@ public class BioportalRestEntityDescriptionQueryService
 						ontologyId,
 						entityName.getName());
 
-		return RestModelUtils.toEntityDescription(
+		return ModelUtils.toEntityDescription(
 				entityDescriptionTransform.transformEntityDescription(xml,
 					codeSystemName, codeSystemVersionName));
 	}

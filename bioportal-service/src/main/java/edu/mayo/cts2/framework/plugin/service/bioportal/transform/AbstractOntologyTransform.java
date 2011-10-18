@@ -30,7 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Node;
 
-import edu.mayo.cts2.framework.model.util.RestModelUtils;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
 import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
@@ -140,7 +140,7 @@ public abstract class AbstractOntologyTransform extends AbstractTransform {
 		prop.getPredicate().setNamespace(predicateNamespace);
 		
 		StatementTarget target = new StatementTarget();
-		target.setLiteral(RestModelUtils.createOpaqueData(value));
+		target.setLiteral(ModelUtils.createOpaqueData(value));
 		
 		prop.addValue(target);
 		
@@ -270,7 +270,7 @@ public abstract class AbstractOntologyTransform extends AbstractTransform {
 		prop.getPredicate().setNamespace(name);
 		
 		StatementTarget target = new StatementTarget();
-		target.setLiteral(RestModelUtils.createOpaqueData(id));
+		target.setLiteral(ModelUtils.createOpaqueData(id));
 		
 		prop.addValue(target);
 		
