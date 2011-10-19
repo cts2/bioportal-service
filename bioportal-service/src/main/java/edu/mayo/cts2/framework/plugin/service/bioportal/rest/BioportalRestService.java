@@ -23,6 +23,7 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.rest;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -587,6 +588,8 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 		    ois = new ObjectInputStream(fis);
 
 				this.cache = (Map<String,String>) ois.readObject();
+			} catch (EOFException e) {
+				log.warn("Cache EOF Thrown -- trying to recover.");
 			} catch (Exception e) {
 				log.warn("There was an error reading the existing cache file at: " + file.getPath()
 						+ ".", e);
