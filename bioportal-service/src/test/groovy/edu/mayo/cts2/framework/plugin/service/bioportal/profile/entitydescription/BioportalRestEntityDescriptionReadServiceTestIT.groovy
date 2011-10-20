@@ -26,7 +26,7 @@ public class BioportalRestEntityDescriptionReadServiceTestIT {
 			new ScopedEntityName(name:"29506000", namespace:"SNOMEDCT"), 
 			ModelUtils.nameOrUriFromName("SNOMEDCT_2011_01_31_UMLS-RELA"))
 		
-		def ed = service.read(name)
+		def ed = service.read(name, null)
 		
 		assertEquals "29506000", ed.getChoiceValue().getEntityID().getName()
 		
