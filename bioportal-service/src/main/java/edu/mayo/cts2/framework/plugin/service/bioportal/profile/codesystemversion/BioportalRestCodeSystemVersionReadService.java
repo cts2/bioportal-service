@@ -30,11 +30,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.CodeSystemVersionTransform;
-import edu.mayo.cts2.framework.service.name.Name;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
 
 /**
@@ -61,10 +61,10 @@ public class BioportalRestCodeSystemVersionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
-	public CodeSystemVersionCatalogEntry read(Name codeSystemVersionName) {
+	public CodeSystemVersionCatalogEntry read(NameOrURI codeSystemVersionName) {
 		String ontologyVersionId = 
 			this.identityConverter.codeSystemVersionNameToOntologyVersionId(
-					codeSystemVersionName.getResourceId());
+					codeSystemVersionName.getName());
 		
 		String xml = this.bioportalRestService.getOntologyByOntologyVersionId(ontologyVersionId);
 
@@ -75,9 +75,9 @@ public class BioportalRestCodeSystemVersionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#exists(java.lang.Object)
 	 */
 	@Override
-	public boolean exists(Name codeSystemVersionName) {
+	public boolean exists(NameOrURI codeSystemVersionName) {
 		String ontologyVersionId = this.identityConverter
-				.codeSystemVersionNameToOntologyVersionId(codeSystemVersionName.getResourceId());
+				.codeSystemVersionNameToOntologyVersionId(codeSystemVersionName.getName());
 
 		try {
 			this.bioportalRestService
@@ -113,11 +113,6 @@ public class BioportalRestCodeSystemVersionReadService
 	@Override
 	public boolean existsVersionId(String codeSystemName,
 			String officialResourceVersionId) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public CodeSystemVersionCatalogEntry readByUri(String uri) {
 		throw new UnsupportedOperationException();
 	}
 }

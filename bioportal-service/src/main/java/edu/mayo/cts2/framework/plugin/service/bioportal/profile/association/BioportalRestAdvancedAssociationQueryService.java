@@ -43,7 +43,7 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioporta
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.AssociationTransform;
 import edu.mayo.cts2.framework.service.profile.association.AdvancedAssociationQueryService;
-import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionName;
+import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
 /**
  * The Class BioportalRestAdvancedAssociationQueryService.
@@ -68,15 +68,15 @@ public class BioportalRestAdvancedAssociationQueryService
 	 * @see edu.mayo.cts2.framework.service.profile.association.AdvancedAssociationQueryService#getAssociationGraph(edu.mayo.cts2.framework.service.profile.entitydescription.id.EntityDescriptionId, edu.mayo.cts2.framework.model.association.types.GraphDirection, long)
 	 */
 	public AssociationGraph getAssociationGraph(
-			EntityDescriptionName id,
+			EntityDescriptionReadId id,
 			GraphDirection direction,
 			long depth) {	
 		
-		String codeSystemVersionName = id.getCodeSystemVersionName();
+		String codeSystemVersionName = id.getCodeSystemVersion().getName();
 		String codeSystemName = this.identityConverter.
 				codeSystemVersionNameCodeSystemName(codeSystemVersionName);
 		
-		ScopedEntityName focusEntityName = id.getResourceId();
+		ScopedEntityName focusEntityName = id.getEntityName();
 		
 		if(depth != 1){
 			throw new UnsupportedOperationException("Only depth of '1' is allowed.");

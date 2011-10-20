@@ -10,7 +10,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 
 import edu.mayo.cts2.framework.model.core.ScopedEntityName
-import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionName
+import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId
 
 @RunWith(SpringJUnit4ClassRunner)
 @ContextConfiguration(locations="/bioportal-test-context-non-webapp.xml")
@@ -21,7 +21,7 @@ public class BioportalRestEntityDescriptionReadServiceTestIT {
 
 	@Test
 	public void testGetEntityCallBioportal(){
-		def name = new EntityDescriptionName(
+		def name = new EntityDescriptionReadId(
 			new ScopedEntityName(name:"29506000", namespace:"SNOMEDCT"), 
 			"SNOMEDCT_2011_01_31_UMLS-RELA")
 		

@@ -30,11 +30,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.CodeSystemTransform;
-import edu.mayo.cts2.framework.service.name.Name;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService;
 
 /**
@@ -60,9 +61,9 @@ public class BioportalRestCodeSystemReadService
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.plugin.service.CodeSystemService#doesCodeSystemExist(java.lang.String)
 	 */
-	public boolean exists(Name codeSystemName) {
+	public boolean exists(NameOrURI codeSystemName) {
 		String ontologyId = this.identityConverter
-				.codeSystemNameToOntologyId(codeSystemName.getResourceId());
+				.codeSystemNameToOntologyId(codeSystemName.getName());
 
 		try {
 			this.bioportalRestService
@@ -78,8 +79,8 @@ public class BioportalRestCodeSystemReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
-	public CodeSystemCatalogEntry read(Name codeSystemName) {
-		String ontologyId = this.identityConverter.codeSystemNameToOntologyId(codeSystemName.getResourceId());
+	public CodeSystemCatalogEntry read(NameOrURI codeSystemName) {
+		String ontologyId = this.identityConverter.codeSystemNameToOntologyId(codeSystemName.getName());
 		
 		String xml = this.bioportalRestService.getLatestOntologyVersionByOntologyId(ontologyId);
 
@@ -87,7 +88,8 @@ public class BioportalRestCodeSystemReadService
 	}
 
 	@Override
-	public CodeSystemCatalogEntry readByUri(String uri) {
+	public CodeSystemCatalogEntry getCodeSystemVersionForCodeSystem(
+			String codeSystemName, String tagName, ReadContext readContext) {
 		throw new UnsupportedOperationException();
 	}
 }

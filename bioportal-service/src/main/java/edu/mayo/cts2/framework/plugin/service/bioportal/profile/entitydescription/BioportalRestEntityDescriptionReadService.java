@@ -35,7 +35,7 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioporta
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.EntityDescriptionTransform;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService;
-import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionName;
+import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
 /**
  * The Class BioportalRestEntityDescriptionReadService.
@@ -70,12 +70,12 @@ public class BioportalRestEntityDescriptionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
-	public EntityDescription read(EntityDescriptionName id) {
-		String codeSystemVersionName = id.getCodeSystemVersionName();
+	public EntityDescription read(EntityDescriptionReadId id) {
+		String codeSystemVersionName = id.getCodeSystemVersion().getName();
 		String codeSystemName = this.identityConverter.
 				codeSystemVersionNameCodeSystemName(codeSystemVersionName);
 		
-		ScopedEntityName entityName = id.getResourceId();
+		ScopedEntityName entityName = id.getEntityName();
 		
 		String ontologyId = this.identityConverter
 				.codeSystemNameToOntologyId(codeSystemName);
@@ -94,12 +94,8 @@ public class BioportalRestEntityDescriptionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#exists(java.lang.Object)
 	 */
 	@Override
-	public boolean exists(EntityDescriptionName identifier) {
+	public boolean exists(EntityDescriptionReadId identifier) {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
-	public EntityDescription readByUri(String uri) {
-		throw new UnsupportedOperationException();
-	}
 }

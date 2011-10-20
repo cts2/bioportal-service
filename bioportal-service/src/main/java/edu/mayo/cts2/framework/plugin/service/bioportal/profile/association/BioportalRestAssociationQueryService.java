@@ -55,7 +55,7 @@ import edu.mayo.cts2.framework.service.command.restriction.AssociationQueryServi
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
 import edu.mayo.cts2.framework.service.profile.association.AssociationQueryService;
-import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionName;
+import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
 /**
  * The Class BioportalRestAssociationQueryService.
@@ -229,15 +229,15 @@ public class BioportalRestAssociationQueryService
 			Query query, 
 			FilterComponent filterComponent,
 			Page page,
-			EntityDescriptionName id) {
+			EntityDescriptionReadId id) {
 
 		String codeSystemName = this.identityConverter.
-				codeSystemVersionNameCodeSystemName(id.getCodeSystemVersionName());
+				codeSystemVersionNameCodeSystemName(id.getCodeSystemVersion().getName());
 		
 		return this.doGetAssociationsOfEntity(
 				codeSystemName,
-				id.getCodeSystemVersionName(), 
-				id.getResourceId().getName(),
+				id.getCodeSystemVersion().getName(),
+				id.getEntityName().getName(),
 				CHILDREN_PREDICATE,
 				filterComponent,
 				page);
@@ -252,22 +252,22 @@ public class BioportalRestAssociationQueryService
 			Query query,
 			FilterComponent filterComponent, 
 			Page page,
-			EntityDescriptionName id) {
+			EntityDescriptionReadId id) {
 		
 		String ontologyVersionId = 
 			this.identityConverter.codeSystemVersionNameToOntologyVersionId(
-					id.getCodeSystemVersionName());
+					id.getCodeSystemVersion().getName());
 		
 		String codeSystemName = this.identityConverter.
-				codeSystemVersionNameCodeSystemName(id.getCodeSystemVersionName());
+				codeSystemVersionNameCodeSystemName(id.getCodeSystemVersion().getName());
 
 		final String xml = this.bioportalRestService.
-			getEntityByOntologyVersionIdAndEntityId(ontologyVersionId, id.getResourceId().getName());
+			getEntityByOntologyVersionIdAndEntityId(ontologyVersionId, id.getEntityName().getName());
 	
 		return this.associationTransform.transformSubjectOfAssociationsForEntity(
 				xml, 
 				codeSystemName, 
-				id.getCodeSystemVersionName());
+				id.getCodeSystemVersion().getName());
 	}
 
 	/* (non-Javadoc)

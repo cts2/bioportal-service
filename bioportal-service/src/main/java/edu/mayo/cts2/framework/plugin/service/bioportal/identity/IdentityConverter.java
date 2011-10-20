@@ -141,7 +141,7 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 		String codeSystemName = this.ontologyIdToCodeSystemName.get(ontologyId);
 		
 		if(StringUtils.isBlank(codeSystemName)){
-			log.warn("Name for ontologyId: " + ontologyId + " is blank. Checking Virtual Ids...");
+			log.warn("ResourceNameOrUri for ontologyId: " + ontologyId + " is blank. Checking Virtual Ids...");
 			
 			this.cacheNameAndIdByVirtualId(ontologyId);
 			this.cacheVersionNameAndOntologyVersionId(ontologyId);
@@ -166,7 +166,7 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 		String valueSetName = this.ontologyIdToValueSetName.get(ontologyId);
 		
 		if(StringUtils.isBlank(valueSetName)){
-			log.warn("Name for ontologyId: " + ontologyId + " is blank. Checking Virtual Ids...");
+			log.warn("ResourceNameOrUri for ontologyId: " + ontologyId + " is blank. Checking Virtual Ids...");
 			
 			this.cacheNameAndIdByVirtualId(ontologyId);
 			this.cacheVersionNameAndOntologyVersionId(ontologyId);

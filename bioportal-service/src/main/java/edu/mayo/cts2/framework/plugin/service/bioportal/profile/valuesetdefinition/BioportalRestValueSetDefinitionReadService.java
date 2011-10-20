@@ -34,7 +34,6 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConvert
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.ValueSetDefinitionTransform;
-import edu.mayo.cts2.framework.service.name.Name;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService;
 
 /**
@@ -61,11 +60,11 @@ public class BioportalRestValueSetDefinitionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
-	public ValueSetDefinition read(Name valueSetDefinitionDocumentUri) {
+	public ValueSetDefinition read(String valueSetDefinitionDocumentUri) {
 		
 		String ontologyVersionId = 
 			this.identityConverter.valueSetDefinitionNameToOntologyVersionId(
-					valueSetDefinitionDocumentUri.getResourceId());
+					valueSetDefinitionDocumentUri);
 		
 		String xml = this.bioportalRestService.getOntologyByOntologyVersionId(ontologyVersionId);
 
@@ -76,10 +75,10 @@ public class BioportalRestValueSetDefinitionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#exists(java.lang.Object)
 	 */
 	@Override
-	public boolean exists(Name valueSetDefinitionDocumentUri) {
+	public boolean exists(String valueSetDefinitionDocumentUri) {
 		String ontologyVersionId = this.identityConverter
 				.valueSetDefinitionNameToOntologyVersionId(
-						valueSetDefinitionDocumentUri.getResourceId());
+						valueSetDefinitionDocumentUri);
 
 		try {
 			this.bioportalRestService
@@ -89,10 +88,5 @@ public class BioportalRestValueSetDefinitionReadService
 		}
 
 		return true;
-	}
-
-	@Override
-	public ValueSetDefinition readByUri(String uri) {
-		throw new UnsupportedOperationException();
 	}
 }
