@@ -29,6 +29,7 @@ import org.springframework.stereotype.Component;
 
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
+import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
@@ -70,7 +71,7 @@ public class BioportalRestEntityDescriptionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
-	public EntityDescription read(EntityDescriptionReadId id) {
+	public EntityDescription read(EntityDescriptionReadId id, ReadContext readContext) {
 		String codeSystemVersionName = id.getCodeSystemVersion().getName();
 		String codeSystemName = this.identityConverter.
 				codeSystemVersionNameCodeSystemName(codeSystemVersionName);
@@ -94,7 +95,7 @@ public class BioportalRestEntityDescriptionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#exists(java.lang.Object)
 	 */
 	@Override
-	public boolean exists(EntityDescriptionReadId identifier) {
+	public boolean exists(EntityDescriptionReadId identifier, ReadContext readContext) {
 		throw new UnsupportedOperationException();
 	}
 

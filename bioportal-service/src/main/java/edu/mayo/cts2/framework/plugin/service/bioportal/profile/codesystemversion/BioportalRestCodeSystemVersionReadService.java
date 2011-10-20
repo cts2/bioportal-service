@@ -31,6 +31,7 @@ import org.springframework.web.client.RestClientException;
 
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
@@ -61,7 +62,7 @@ public class BioportalRestCodeSystemVersionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
-	public CodeSystemVersionCatalogEntry read(NameOrURI codeSystemVersionName) {
+	public CodeSystemVersionCatalogEntry read(NameOrURI codeSystemVersionName, ReadContext readContext) {
 		String ontologyVersionId = 
 			this.identityConverter.codeSystemVersionNameToOntologyVersionId(
 					codeSystemVersionName.getName());
@@ -75,9 +76,9 @@ public class BioportalRestCodeSystemVersionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#exists(java.lang.Object)
 	 */
 	@Override
-	public boolean exists(NameOrURI codeSystemVersionName) {
+	public boolean exists(NameOrURI codeSystemVersion, ReadContext readContext) {
 		String ontologyVersionId = this.identityConverter
-				.codeSystemVersionNameToOntologyVersionId(codeSystemVersionName.getName());
+				.codeSystemVersionNameToOntologyVersionId(codeSystemVersion.getName());
 
 		try {
 			this.bioportalRestService
@@ -93,7 +94,7 @@ public class BioportalRestCodeSystemVersionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService#existsCodeSystemVersionForCodeSystem(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public boolean existsCodeSystemVersionForCodeSystem(String codeSystemName,
+	public boolean existsCodeSystemVersionForCodeSystem(NameOrURI codeSystem,
 			String tagName) {
 		throw new UnsupportedOperationException();
 	}
@@ -103,16 +104,28 @@ public class BioportalRestCodeSystemVersionReadService
 	 */
 	@Override
 	public CodeSystemVersionCatalogEntry getCodeSystemVersionForCodeSystem(
-			String codeSystemName, String tagName) {
+			NameOrURI codeSystem, String tagName, ReadContext readContext) {
 		throw new UnsupportedOperationException();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService#existsVersionId(java.lang.String, java.lang.String)
-	 */
+
 	@Override
-	public boolean existsVersionId(String codeSystemName,
+	public CodeSystemVersionCatalogEntry getCodeSystemVersionForCodeSystem(
+			NameOrURI codeSystem, String tagName) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean existsVersionId(NameOrURI codeSystem,
 			String officialResourceVersionId) {
 		throw new UnsupportedOperationException();
 	}
+
+	@Override
+	public CodeSystemVersionCatalogEntry getCodeSystemByVersionId(
+			NameOrURI codeSystem, String officialResourceVersionId,
+			ReadContext readContext) {
+		throw new UnsupportedOperationException();
+	}
+
 }

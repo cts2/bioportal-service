@@ -10,6 +10,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 
 import edu.mayo.cts2.framework.model.core.ScopedEntityName
+import edu.mayo.cts2.framework.model.util.ModelUtils
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId
 
 @RunWith(SpringJUnit4ClassRunner)
@@ -23,7 +24,7 @@ public class BioportalRestEntityDescriptionReadServiceTestIT {
 	public void testGetEntityCallBioportal(){
 		def name = new EntityDescriptionReadId(
 			new ScopedEntityName(name:"29506000", namespace:"SNOMEDCT"), 
-			"SNOMEDCT_2011_01_31_UMLS-RELA")
+			ModelUtils.nameOrUriFromName("SNOMEDCT_2011_01_31_UMLS-RELA"))
 		
 		def ed = service.read(name)
 		

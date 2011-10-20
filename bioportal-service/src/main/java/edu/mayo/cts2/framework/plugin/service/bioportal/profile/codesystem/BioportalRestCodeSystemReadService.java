@@ -61,7 +61,7 @@ public class BioportalRestCodeSystemReadService
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.plugin.service.CodeSystemService#doesCodeSystemExist(java.lang.String)
 	 */
-	public boolean exists(NameOrURI codeSystemName) {
+	public boolean exists(NameOrURI codeSystemName, ReadContext readContext) {
 		String ontologyId = this.identityConverter
 				.codeSystemNameToOntologyId(codeSystemName.getName());
 
@@ -79,7 +79,7 @@ public class BioportalRestCodeSystemReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
-	public CodeSystemCatalogEntry read(NameOrURI codeSystemName) {
+	public CodeSystemCatalogEntry read(NameOrURI codeSystemName, ReadContext readContext) {
 		String ontologyId = this.identityConverter.codeSystemNameToOntologyId(codeSystemName.getName());
 		
 		String xml = this.bioportalRestService.getLatestOntologyVersionByOntologyId(ontologyId);
@@ -87,9 +87,4 @@ public class BioportalRestCodeSystemReadService
 		return this.codeSystemTransform.transformResource(xml);
 	}
 
-	@Override
-	public CodeSystemCatalogEntry getCodeSystemVersionForCodeSystem(
-			String codeSystemName, String tagName, ReadContext readContext) {
-		throw new UnsupportedOperationException();
-	}
 }

@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 
+import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
@@ -60,7 +61,7 @@ public class BioportalRestValueSetDefinitionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
-	public ValueSetDefinition read(String valueSetDefinitionDocumentUri) {
+	public ValueSetDefinition read(String valueSetDefinitionDocumentUri, ReadContext readContext) {
 		
 		String ontologyVersionId = 
 			this.identityConverter.valueSetDefinitionNameToOntologyVersionId(
@@ -75,7 +76,7 @@ public class BioportalRestValueSetDefinitionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#exists(java.lang.Object)
 	 */
 	@Override
-	public boolean exists(String valueSetDefinitionDocumentUri) {
+	public boolean exists(String valueSetDefinitionDocumentUri, ReadContext readContext) {
 		String ontologyVersionId = this.identityConverter
 				.valueSetDefinitionNameToOntologyVersionId(
 						valueSetDefinitionDocumentUri);

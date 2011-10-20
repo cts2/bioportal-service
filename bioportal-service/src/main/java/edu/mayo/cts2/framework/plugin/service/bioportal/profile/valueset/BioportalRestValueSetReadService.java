@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
+import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
@@ -60,7 +61,7 @@ public class BioportalRestValueSetReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
-	public ValueSetCatalogEntry read(NameOrURI valueSetName) {
+	public ValueSetCatalogEntry read(NameOrURI valueSetName, ReadContext readContext) {
 		String ontologyId = this.identityConverter.valueSetNameToOntologyId(valueSetName.getName());
 		
 		String xml = this.bioportalRestService.getLatestOntologyVersionByOntologyId(ontologyId);
@@ -72,7 +73,7 @@ public class BioportalRestValueSetReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#exists(java.lang.Object)
 	 */
 	@Override
-	public boolean exists(NameOrURI identifier) {
+	public boolean exists(NameOrURI identifier, ReadContext readContext) {
 		throw new UnsupportedOperationException();
 	}
 }
