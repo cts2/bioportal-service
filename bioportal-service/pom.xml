@@ -6,10 +6,9 @@
 	<parent>
 		<groupId>edu.mayo.cts2.framework</groupId>
 		<artifactId>base-service-plugin</artifactId>
-		<version>0.2.2-SNAPSHOT</version>
+		<version>0.3.1-SNAPSHOT</version>
 	</parent>
 	
-	<groupId>edu.mayo.cts2.framework</groupId>
 	<artifactId>bioportal-service</artifactId>
 	<version>0.1.0-SNAPSHOT</version>
 	<name>bioportal-service</name>
@@ -32,7 +31,7 @@
 	</scm>
 
 	<properties>
-		<develpment.framework.version>0.2.2-SNAPSHOT</develpment.framework.version>
+		<develpment.framework.version>0.3.1-SNAPSHOT</develpment.framework.version>
 		<service.provider.class>
 		edu.mayo.cts2.framework.plugin.service.bioportal.profile.provider.BioportalServiceProvider
 		</service.provider.class>

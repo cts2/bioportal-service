@@ -85,6 +85,7 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 	private Map<String,String> codeSystemAboutToName = new HashMap<String,String>();
 	private Map<String,String> valueSetNameToAbout = new HashMap<String,String>();
 	private Map<String,String> versionNameToName = new HashMap<String,String>();
+	private Map<String,String> codeSystemNameAndVersionIdToCodeSystemVersionName = new HashMap<String,String>();
 	
 	/**
 	 * The Enum NameType.
@@ -323,6 +324,19 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 		return this.versionNameToName.get(codeSystemVersionName);
 	}
 	
+	public String codeSystemNameAndVersionIdToCodeSystemVersionName(
+			String codeSystemName,
+			String versionId){
+
+		if(! this.codeSystemNameAndVersionIdToCodeSystemVersionName.containsKey(
+				this.createNameVersionIdKey(codeSystemName, versionId))){		
+			throw new RuntimeException("OntologyVersionId should be cached.");
+		}
+		
+		return this.codeSystemNameAndVersionIdToCodeSystemVersionName.get(
+				this.createNameVersionIdKey(codeSystemName, versionId));
+	}
+	
 	/**
 	 * Value set definition name to ontology version id.
 	 *
@@ -362,11 +376,22 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 				this.nameToOntologyVersionId.put(name, ontologyVersionId);
 				this.ontologyVersionIdToName.put(ontologyVersionId, name);
 				this.versionNameToName.put(name, this.buildName(node));
+				
+				String version = TransformUtils.getNamedChildText(node, VERSION);
+				
+				this.codeSystemNameAndVersionIdToCodeSystemVersionName.put(
+						this.createNameVersionIdKey(
+								TransformUtils.getNamedChildText(node, ABBREVIATION), version),
+						name);
 			}
 			
 		} catch (Exception e) {
 			throw new UnspecifiedCts2RuntimeException(e, 500);
 		}
+	}
+	
+	private String createNameVersionIdKey(String name, String versionId){
+		return name + versionId;
 	}
 	
 	/**

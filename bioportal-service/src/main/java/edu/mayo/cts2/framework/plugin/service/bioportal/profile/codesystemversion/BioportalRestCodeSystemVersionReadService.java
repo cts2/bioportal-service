@@ -32,6 +32,7 @@ import org.springframework.web.client.RestClientException;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
@@ -123,9 +124,14 @@ public class BioportalRestCodeSystemVersionReadService
 
 	@Override
 	public CodeSystemVersionCatalogEntry getCodeSystemByVersionId(
-			NameOrURI codeSystem, String officialResourceVersionId,
+			NameOrURI codeSystemName, 
+			String officialResourceVersionId,
 			ReadContext readContext) {
-		throw new UnsupportedOperationException();
+		String codeSystemVersionName = 
+				this.identityConverter.codeSystemNameAndVersionIdToCodeSystemVersionName(
+						codeSystemName.getName(), officialResourceVersionId);
+		
+		return this.read(ModelUtils.nameOrUriFromName(codeSystemVersionName), readContext);
 	}
 
 }
