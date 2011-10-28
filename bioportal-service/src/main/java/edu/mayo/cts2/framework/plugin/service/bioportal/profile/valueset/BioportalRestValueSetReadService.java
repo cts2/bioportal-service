@@ -35,6 +35,7 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConvert
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.ValueSetTransform;
+import edu.mayo.cts2.framework.service.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetReadService;
 
 /**
@@ -61,7 +62,7 @@ public class BioportalRestValueSetReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
-	public ValueSetCatalogEntry read(NameOrURI valueSetName, ReadContext readContext) {
+	public ValueSetCatalogEntry read(NameOrURI valueSetName, ResolvedReadContext readContext) {
 		String ontologyId = this.identityConverter.valueSetNameToOntologyId(valueSetName.getName());
 		
 		String xml = this.bioportalRestService.getLatestOntologyVersionByOntologyId(ontologyId);

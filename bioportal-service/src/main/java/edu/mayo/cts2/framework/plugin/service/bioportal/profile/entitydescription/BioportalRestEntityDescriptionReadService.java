@@ -35,6 +35,7 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConvert
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.EntityDescriptionTransform;
+import edu.mayo.cts2.framework.service.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
@@ -71,7 +72,7 @@ public class BioportalRestEntityDescriptionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
-	public EntityDescription read(EntityDescriptionReadId id, ReadContext readContext) {
+	public EntityDescription read(EntityDescriptionReadId id, ResolvedReadContext readContext) {
 		String codeSystemVersionName = id.getCodeSystemVersion().getName();
 		String codeSystemName = this.identityConverter.
 				codeSystemVersionNameCodeSystemName(codeSystemVersionName);

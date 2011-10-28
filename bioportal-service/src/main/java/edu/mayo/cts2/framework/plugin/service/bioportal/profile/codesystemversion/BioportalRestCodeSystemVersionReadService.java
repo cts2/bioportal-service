@@ -37,6 +37,7 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConvert
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.CodeSystemVersionTransform;
+import edu.mayo.cts2.framework.service.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
 
 /**
@@ -63,7 +64,7 @@ public class BioportalRestCodeSystemVersionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
-	public CodeSystemVersionCatalogEntry read(NameOrURI codeSystemVersionName, ReadContext readContext) {
+	public CodeSystemVersionCatalogEntry read(NameOrURI codeSystemVersionName, ResolvedReadContext readContext) {
 		String ontologyVersionId = 
 			this.identityConverter.codeSystemVersionNameToOntologyVersionId(
 					codeSystemVersionName.getName());
@@ -131,7 +132,7 @@ public class BioportalRestCodeSystemVersionReadService
 				this.identityConverter.codeSystemNameAndVersionIdToCodeSystemVersionName(
 						codeSystemName.getName(), officialResourceVersionId);
 		
-		return this.read(ModelUtils.nameOrUriFromName(codeSystemVersionName), readContext);
+		return this.read(ModelUtils.nameOrUriFromName(codeSystemVersionName), null);
 	}
 
 }
