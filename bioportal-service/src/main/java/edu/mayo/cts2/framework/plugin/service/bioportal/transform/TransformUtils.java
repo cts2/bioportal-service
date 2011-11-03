@@ -44,9 +44,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
-import edu.mayo.cts2.framework.service.command.Filter;
 
 /**
  * The Class TransformUtils.
@@ -156,11 +156,11 @@ public class TransformUtils {
 	/**
 	 * Checks for filter.
 	 *
-	 * @param filter the filter
+	 * @param resolvedFilter the filter
 	 * @return true, if successful
 	 */
-	public static boolean hasFilter(Filter filter) {
-		return filter != null && StringUtils.isNotBlank(filter.getMatchValue());
+	public static boolean hasFilter(ResolvedFilter resolvedFilter) {
+		return resolvedFilter != null && StringUtils.isNotBlank(resolvedFilter.getMatchValue());
 	}
 
 	/**

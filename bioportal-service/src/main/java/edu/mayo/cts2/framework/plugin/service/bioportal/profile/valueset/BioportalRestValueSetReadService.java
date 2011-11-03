@@ -28,6 +28,7 @@ import javax.annotation.Resource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
@@ -35,7 +36,6 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConvert
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.ValueSetTransform;
-import edu.mayo.cts2.framework.service.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetReadService;
 
 /**

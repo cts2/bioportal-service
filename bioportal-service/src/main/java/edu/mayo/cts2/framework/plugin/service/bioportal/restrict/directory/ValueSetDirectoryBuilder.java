@@ -32,11 +32,11 @@ import org.apache.commons.collections.CollectionUtils;
 import edu.mayo.cts2.framework.filter.directory.AbstractRemovingDirectoryBuilder;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
 import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
-import edu.mayo.cts2.framework.plugin.service.bioportal.transform.ValueSetTransform;
-import edu.mayo.cts2.framework.service.command.restriction.ValueSetQueryServiceRestrictions;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntrySummary;
+import edu.mayo.cts2.framework.plugin.service.bioportal.transform.ValueSetTransform;
+import edu.mayo.cts2.framework.service.command.restriction.ValueSetQueryServiceRestrictions;
 
 /**
  * The Class ValueSetDirectoryBuilder.
@@ -107,7 +107,7 @@ public class ValueSetDirectoryBuilder extends AbstractRemovingDirectoryBuilder<V
 	 */
 	@Override
 	public ValueSetDirectoryBuilder restrict(
-			FilterComponent filterComponent) {
+			ResolvedFilter filterComponent) {
 		return (ValueSetDirectoryBuilder) super.restrict(filterComponent);
 	}
 

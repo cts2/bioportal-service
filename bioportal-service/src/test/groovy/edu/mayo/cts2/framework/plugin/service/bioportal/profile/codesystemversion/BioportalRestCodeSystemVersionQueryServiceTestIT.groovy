@@ -9,7 +9,7 @@ import org.junit.runner.RunWith
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 
-import edu.mayo.cts2.framework.service.command.Page
+import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.service.command.restriction.CodeSystemVersionQueryServiceRestrictions
 
 @RunWith(SpringJUnit4ClassRunner)

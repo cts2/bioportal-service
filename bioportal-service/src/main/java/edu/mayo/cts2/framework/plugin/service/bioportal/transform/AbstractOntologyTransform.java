@@ -30,7 +30,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Node;
 
-import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
 import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
@@ -41,6 +40,7 @@ import edu.mayo.cts2.framework.model.core.SourceReference;
 import edu.mayo.cts2.framework.model.core.StatementTarget;
 import edu.mayo.cts2.framework.model.core.ValueSetDefinitionReference;
 import edu.mayo.cts2.framework.model.core.ValueSetReference;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.util.BioportalConstants;
 

@@ -29,13 +29,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.ValueSetDefinitionTransform;
-import edu.mayo.cts2.framework.service.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService;
 
 /**

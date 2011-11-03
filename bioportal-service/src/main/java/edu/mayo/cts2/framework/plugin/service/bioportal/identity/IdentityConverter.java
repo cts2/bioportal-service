@@ -41,7 +41,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
-import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.CacheObserver;

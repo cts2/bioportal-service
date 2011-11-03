@@ -41,8 +41,6 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Iterables;
 
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
 import edu.mayo.cts2.framework.model.core.Definition;
 import edu.mayo.cts2.framework.model.core.DescriptionInCodeSystem;
@@ -51,12 +49,14 @@ import edu.mayo.cts2.framework.model.core.Property;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.core.StatementTarget;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
+import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.Designation;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.entity.NamedEntityDescription;
 import edu.mayo.cts2.framework.model.entity.NamedIndividualDescription;
 import edu.mayo.cts2.framework.model.entity.PredicateDescription;
 import edu.mayo.cts2.framework.model.entity.types.DesignationRole;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
 
 /**

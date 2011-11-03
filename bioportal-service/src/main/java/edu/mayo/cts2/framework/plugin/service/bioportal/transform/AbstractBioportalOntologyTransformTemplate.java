@@ -32,11 +32,11 @@ import org.w3c.dom.Node;
 
 import com.google.common.collect.Iterables;
 
-import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.core.AbstractResourceDescription;
 import edu.mayo.cts2.framework.model.core.AbstractResourceDescriptionDirectoryEntry;
 import edu.mayo.cts2.framework.model.core.EntryDescription;
 import edu.mayo.cts2.framework.model.core.Property;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.TransformUtils.NodeFilter;
 

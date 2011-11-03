@@ -31,8 +31,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
+import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
-import edu.mayo.cts2.framework.service.command.Page;
 
 /**
  * The Class BioportalRestUtils.
@@ -90,7 +90,7 @@ public class BioportalRestUtils {
 	 * @return the end
 	 */
 	public static int getEnd(Page page){
-		return ( page.getPage() + 1 ) * page.getMaxtoreturn();
+		return ( page.getPage() + 1 ) * page.getMaxToReturn();
 	}
 	
 	
@@ -102,7 +102,7 @@ public class BioportalRestUtils {
 	 * @return the start
 	 */
 	public static int getStart(Page page){
-		return page.getPage() * page.getMaxtoreturn();
+		return page.getPage() * page.getMaxToReturn();
 	}
 	
 }

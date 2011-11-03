@@ -26,7 +26,7 @@ package edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory;
 import java.util.List;
 
 import edu.mayo.cts2.framework.filter.directory.AbstractCallbackDirectoryBuilder;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -65,7 +65,7 @@ public class EntityDirectoryBuilder extends AbstractCallbackDirectoryBuilder<Ent
 	 */
 	@Override
 	public EntityDirectoryBuilder restrict(
-			FilterComponent filterComponent) {
+			ResolvedFilter filterComponent) {
 		return (EntityDirectoryBuilder) super.restrict(filterComponent);
 	}
 

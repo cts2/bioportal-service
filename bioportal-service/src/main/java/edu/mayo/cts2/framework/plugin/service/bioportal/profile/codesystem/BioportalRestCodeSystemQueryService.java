@@ -26,6 +26,7 @@ package edu.mayo.cts2.framework.plugin.service.bioportal.profile.codesystem;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -38,27 +39,27 @@ import edu.mayo.cts2.framework.filter.match.ExactMatcher;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
 import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
 import edu.mayo.cts2.framework.filter.match.ResolvablePredicateReference;
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
-import edu.mayo.cts2.framework.model.util.ModelUtils;
-import edu.mayo.cts2.framework.service.command.Page;
-import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
-import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
-import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntrySummary;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.Property;
 import edu.mayo.cts2.framework.model.core.StatementTarget;
+import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestQueryService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory.CodeSystemDirectoryBuilder;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.CodeSystemTransform;
 import edu.mayo.cts2.framework.plugin.service.bioportal.util.BioportalConstants;
+import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
+import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
+import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService;
 
 /**
  * The Class BioportalRestCodeSystemQueryService.
@@ -254,7 +255,7 @@ public class BioportalRestCodeSystemQueryService
 	@Override
 	public DirectoryResult<CodeSystemCatalogEntrySummary> getResourceSummaries(
 			Query query, 
-			FilterComponent filterComponent, 
+			Set<ResolvedFilter> filterComponent, 
 			Void restrictions,
 			Page page) {
 		
@@ -269,7 +270,7 @@ public class BioportalRestCodeSystemQueryService
 
 		return builder.restrict(filterComponent).
 			addStart(page.getStart()).
-			addMaxToReturn(page.getMaxtoreturn()).resolve();
+			addMaxToReturn(page.getMaxToReturn()).resolve();
 	}
 
 
@@ -279,7 +280,7 @@ public class BioportalRestCodeSystemQueryService
 	 */
 	@Override
 	public DirectoryResult<CodeSystemCatalogEntry> getResourceList(Query query,
-			FilterComponent filterComponent, Void restrictions, Page page) {
+			Set<ResolvedFilter> filterComponent, Void restrictions, Page page) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -289,7 +290,7 @@ public class BioportalRestCodeSystemQueryService
 	 * @see edu.mayo.cts2.framework.service.profile.QueryService#count(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object)
 	 */
 	@Override
-	public int count(Query query, FilterComponent filterComponent,
+	public int count(Query query, Set<ResolvedFilter> filterComponent,
 			Void restrictions) {
 		throw new UnsupportedOperationException();
 	}

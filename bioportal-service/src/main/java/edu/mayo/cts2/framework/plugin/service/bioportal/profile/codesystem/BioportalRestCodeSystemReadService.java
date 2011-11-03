@@ -30,13 +30,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.CodeSystemTransform;
-import edu.mayo.cts2.framework.service.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService;
 
 /**
