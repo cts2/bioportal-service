@@ -23,8 +23,8 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile;
 
-import edu.mayo.cts2.framework.service.profile.AbstractService;
 import edu.mayo.cts2.framework.model.service.core.BaseService;
+import edu.mayo.cts2.framework.service.profile.AbstractService;
 
 
 /**

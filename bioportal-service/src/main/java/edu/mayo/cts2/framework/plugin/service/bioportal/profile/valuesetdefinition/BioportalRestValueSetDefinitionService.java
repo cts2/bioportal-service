@@ -26,6 +26,7 @@ package edu.mayo.cts2.framework.plugin.service.bioportal.profile.valuesetdefinit
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -38,18 +39,14 @@ import edu.mayo.cts2.framework.filter.match.ContainsMatcher;
 import edu.mayo.cts2.framework.filter.match.ExactMatcher;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
 import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.util.ModelUtils;
-import edu.mayo.cts2.framework.service.command.Page;
-import edu.mayo.cts2.framework.service.command.restriction.ValueSetDefinitionQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
-import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
-import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionQueryService;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
+import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionDirectoryEntry;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
@@ -57,6 +54,10 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioporta
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory.ValueSetDefinitionDirectoryBuilder;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.ValueSetDefinitionTransform;
+import edu.mayo.cts2.framework.service.command.restriction.ValueSetDefinitionQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
+import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
+import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionQueryService;
 
 /**
  * The Class BioportalRestValueSetDefinitionService.
@@ -91,7 +92,7 @@ public class BioportalRestValueSetDefinitionService
 	 */
 	private DirectoryResult<ValueSetDefinitionDirectoryEntry> getValueSetDefinitions(
 			Query query,
-			FilterComponent filterComponent,
+			Set<ResolvedFilter> filterComponent,
 			Page page) {	
 		
 		String xml = this.bioportalRestService.getLatestViews();
@@ -105,7 +106,7 @@ public class BioportalRestValueSetDefinitionService
 		return builder.restrict(query).
 				restrict(filterComponent).
 				addStart(page.getStart()).
-				addMaxToReturn(page.getMaxtoreturn()).
+				addMaxToReturn(page.getMaxToReturn()).
 				resolve();	
 	}
 	
@@ -123,7 +124,7 @@ public class BioportalRestValueSetDefinitionService
 	 */
 	private DirectoryResult<ValueSetDefinitionDirectoryEntry> getValueSetDefinitionsOfValueSet(
 			Query query,
-			FilterComponent filterComponent,
+			Set<ResolvedFilter> filterComponent,
 			Page page,
 			String valueSetName) {
 		String ontologyId = this.identityConverter.valueSetNameToOntologyId(valueSetName);
@@ -139,7 +140,7 @@ public class BioportalRestValueSetDefinitionService
 		return builder.restrict(query).
 				restrict(filterComponent).
 				addStart(page.getStart()).
-				addMaxToReturn(page.getMaxtoreturn()).
+				addMaxToReturn(page.getMaxToReturn()).
 				resolve();	
 	}
 
@@ -153,7 +154,7 @@ public class BioportalRestValueSetDefinitionService
 	 */
 	private int getValueSetDefinitionsOfValueSetCount(
 			Query query,
-			FilterComponent filterComponent, 
+			Set<ResolvedFilter> filterComponent, 
 			String valueSetName) {
 		String ontologyId = this.identityConverter.valueSetNameToOntologyId(valueSetName);
 		
@@ -179,7 +180,7 @@ public class BioportalRestValueSetDefinitionService
 	 */
 	private int getValueSetDefinitionsCount(
 			Query query,
-			FilterComponent filterComponent) {
+			Set<ResolvedFilter> filterComponent) {
 		String xml = this.bioportalRestService.getLatestOntologyVersions();
 		
 		ValueSetDefinitionDirectoryBuilder builder = new ValueSetDefinitionDirectoryBuilder(
@@ -296,7 +297,7 @@ public class BioportalRestValueSetDefinitionService
 	@Override
 	public DirectoryResult<ValueSetDefinitionDirectoryEntry> getResourceSummaries(
 			Query query, 
-			FilterComponent filterComponent,
+			Set<ResolvedFilter> filterComponent,
 			ValueSetDefinitionQueryServiceRestrictions restrictions, 
 			Page page) {
 		String valueSetName = restrictions.getValueset();
@@ -321,7 +322,7 @@ public class BioportalRestValueSetDefinitionService
 	@Override
 	public DirectoryResult<ValueSetDefinition> getResourceList(
 			Query query,
-			FilterComponent filterComponent,
+			Set<ResolvedFilter> filterComponent,
 			ValueSetDefinitionQueryServiceRestrictions restrictions, 
 			Page page) {
 		throw new UnsupportedOperationException();
@@ -332,7 +333,7 @@ public class BioportalRestValueSetDefinitionService
 	 */
 	@Override
 	public int count(Query query,
-			FilterComponent filterComponent,
+			Set<ResolvedFilter> filterComponent,
 			ValueSetDefinitionQueryServiceRestrictions restrictions) {
 		String valueSetName = restrictions.getValueset();
 		

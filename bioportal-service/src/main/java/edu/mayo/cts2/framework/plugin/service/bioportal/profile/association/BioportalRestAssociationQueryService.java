@@ -26,6 +26,7 @@ package edu.mayo.cts2.framework.plugin.service.bioportal.profile.association;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -38,7 +39,8 @@ import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
 import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
 import edu.mayo.cts2.framework.model.association.Association;
 import edu.mayo.cts2.framework.model.association.AssociationDirectoryEntry;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
@@ -50,7 +52,6 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioporta
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory.ParentOrChildOfEntityDirectoryBuilder;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.AssociationTransform;
-import edu.mayo.cts2.framework.service.command.Page;
 import edu.mayo.cts2.framework.service.command.restriction.AssociationQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
@@ -95,7 +96,7 @@ public class BioportalRestAssociationQueryService
 			final String codeSystemVersionName, 
 			final String entity,
 			final String predicateName,
-			FilterComponent filterComponent,
+			Set<ResolvedFilter> filterComponent,
 			Page page) {
 
 		String ontologyVersionId = 
@@ -122,7 +123,7 @@ public class BioportalRestAssociationQueryService
 		
 		return builder.restrict(filterComponent).
 			addStart(page.getStart()).
-			addMaxToReturn(page.getMaxtoreturn()).
+			addMaxToReturn(page.getMaxToReturn()).
 			resolve();
 	}
 
@@ -192,7 +193,7 @@ public class BioportalRestAssociationQueryService
 	@Override
 	public DirectoryResult<AssociationDirectoryEntry> getResourceSummaries(
 			Query query, 
-			FilterComponent filterComponent,
+			Set<ResolvedFilter> filterComponent,
 			AssociationQueryServiceRestrictions restrictions, 
 			Page page) {
 		throw new UnsupportedOperationException();
@@ -204,7 +205,7 @@ public class BioportalRestAssociationQueryService
 	@Override
 	public DirectoryResult<Association> getResourceList(
 			Query query,
-			FilterComponent filterComponent,
+			Set<ResolvedFilter> filterComponent,
 			AssociationQueryServiceRestrictions restrictions, 
 			Page page) {
 		throw new UnsupportedOperationException();
@@ -216,7 +217,7 @@ public class BioportalRestAssociationQueryService
 	@Override
 	public int count(
 			Query query, 
-			FilterComponent filterComponent,
+			Set<ResolvedFilter> filterComponent,
 			AssociationQueryServiceRestrictions restrictions) {
 		throw new UnsupportedOperationException();
 	}
@@ -227,7 +228,7 @@ public class BioportalRestAssociationQueryService
 	@Override
 	public DirectoryResult<EntityDirectoryEntry> getChildrenAssociationsOfEntity(
 			Query query, 
-			FilterComponent filterComponent,
+			Set<ResolvedFilter> filterComponent,
 			Page page,
 			EntityDescriptionReadId id) {
 
@@ -250,7 +251,7 @@ public class BioportalRestAssociationQueryService
 	@Override
 	public DirectoryResult<AssociationDirectoryEntry> getSourceOfAssociationsOfEntity(
 			Query query,
-			FilterComponent filterComponent, 
+			Set<ResolvedFilter> filterComponent, 
 			Page page,
 			EntityDescriptionReadId id) {
 		

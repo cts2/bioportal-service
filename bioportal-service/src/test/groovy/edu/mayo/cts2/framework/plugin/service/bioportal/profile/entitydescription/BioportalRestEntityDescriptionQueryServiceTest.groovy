@@ -4,8 +4,8 @@ import static org.junit.Assert.*
 
 import org.junit.Test
 
+import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.entitydescription.BioportalRestEntityDescriptionQueryService;
-import edu.mayo.cts2.framework.service.command.Page
 
 class BioportalRestEntityDescriptionQueryServiceTest {
 	

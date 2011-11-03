@@ -58,10 +58,11 @@ import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 
 import edu.mayo.cts2.framework.core.config.PluginConfig;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
-import edu.mayo.cts2.framework.service.command.Page;
+import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.service.constant.ExternalCts2Constants;
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 
@@ -366,7 +367,7 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 		String 
 			url = "http://rest.bioontology.org/bioportal/concepts/" + ontologyVersionId + "/all" +
 			"?pagenum=" + page.getPage() +
-			"&pagesize=" + page.getMaxtoreturn();
+			"&pagesize=" + page.getMaxToReturn();
 
 		String xml = this.doCallBioportal(url);
 
@@ -381,7 +382,7 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	 * @param page the page
 	 * @return the string
 	 */
-	public String searchEntitiesByOntologyId(String ontologyId, FilterComponent filter, Page page){
+	public String searchEntitiesByOntologyId(String ontologyId, ResolvedFilter filter, Page page){
 		return this.doSearchEntities(Arrays.asList(ontologyId), filter, page);
 	}
 	
@@ -393,7 +394,7 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	 * @param page the page
 	 * @return the string
 	 */
-	public String searchEntitiesByOntologyIds(Collection<String> ontologyIds, FilterComponent filter, Page page){
+	public String searchEntitiesByOntologyIds(Collection<String> ontologyIds, ResolvedFilter filter, Page page){
 		return this.doSearchEntities(ontologyIds, filter, page);
 	}
 	
@@ -404,7 +405,7 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	 * @param page the page
 	 * @return the string
 	 */
-	public String searchEntitiesOfLatestOntologyVersions(FilterComponent filter, Page page){
+	public String searchEntitiesOfLatestOntologyVersions(ResolvedFilter filter, Page page){
 		return this.doSearchEntities(null, filter, page);
 	}
 	
@@ -425,10 +426,10 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	 * @param page the page
 	 * @return the string
 	 */
-	protected String doSearchEntities(Collection<String> ontologyIds, FilterComponent filter, Page page){
+	protected String doSearchEntities(Collection<String> ontologyIds, ResolvedFilter filter, Page page){
 		String url = "http://rest.bioontology.org/bioportal/search/" + filter.getMatchValue() +
 			"?pagenum=" + (page.getPage() + 1) +
-			"&pagesize=" + page.getMaxtoreturn();
+			"&pagesize=" + page.getMaxToReturn();
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append(url);
@@ -442,7 +443,7 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 			}
 		}
 		
-		String algorithm = filter.getMatchAlgorithm().getContent();
+		String algorithm = filter.getMatchAlgorithmReference().getContent();
 		
 		if(algorithm.equals(StandardMatchAlgorithmReference.EXACT_MATCH.
 			getMatchAlgorithmReference().getContent())){
@@ -464,16 +465,18 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	 * @return the bioportal query string for filter
 	 * 
 	 */
-	private String getBioportalQueryStringForFilter(FilterComponent filter) {
+	private String getBioportalQueryStringForFilter(ResolvedFilter filter) {
 		StringBuffer sb = new StringBuffer();
-		URIAndEntityName target = filter.getReferenceTarget();
 		
-		if(StringUtils.equals(target.getName(),DEFINITIONS_NAME)){
-			sb.append("&includedefinitions=true");
-		} else if(StringUtils.equals(target.getName(),PROPERTIES_NAME)){
-			sb.append("&includeproperties=true");
+		if(filter.getReferenceType().equals(TargetReferenceType.PROPERTY)){
+			URIAndEntityName target = filter.getPropertyReference();
+			
+			if(StringUtils.equals(target.getName(),DEFINITIONS_NAME)){
+				sb.append("&includedefinitions=true");
+			} else if(StringUtils.equals(target.getName(),PROPERTIES_NAME)){
+				sb.append("&includeproperties=true");
+			}
 		}
-		
 		return sb.toString();
 	}
 	

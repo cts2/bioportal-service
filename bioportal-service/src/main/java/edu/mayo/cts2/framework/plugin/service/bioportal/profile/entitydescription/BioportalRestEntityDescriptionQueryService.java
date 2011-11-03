@@ -25,6 +25,7 @@ package edu.mayo.cts2.framework.plugin.service.bioportal.profile.entitydescripti
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
 
@@ -33,22 +34,18 @@ import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
 import edu.mayo.cts2.framework.filter.directory.AbstractCallbackDirectoryBuilder.Callback;
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.util.ModelUtils;
-import edu.mayo.cts2.framework.service.command.Page;
-import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
-import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
-import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQueryService;
-import edu.mayo.cts2.framework.model.core.FilterComponent;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
+import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.entity.NamedEntityDescription;
 import edu.mayo.cts2.framework.model.service.core.Query;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestQueryService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
@@ -56,6 +53,10 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory.EntityDirectoryBuilder;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.EntityDescriptionTransform;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.TransformUtils;
+import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
+import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
+import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQueryService;
 
 /**
  * The Class BioportalRestEntityDescriptionQueryService.
@@ -99,13 +100,13 @@ public class BioportalRestEntityDescriptionQueryService
 	 */
 	private DirectoryResult<EntityDirectoryEntry> getAllEntityDescriptions(
 			Query query,
-			FilterComponent filterComponent, 
+			Set<ResolvedFilter> filterComponent, 
 			Page page) {
 		
 		EntityDirectoryBuilder builder = getAllEntitiesDirectoryBuilder();
 		
 		return builder.restrict(filterComponent).
-			addMaxToReturn(page.getMaxtoreturn()).
+			addMaxToReturn(page.getMaxToReturn()).
 			addStart(page.getStart()).resolve();
 	}
 	
@@ -133,7 +134,7 @@ public class BioportalRestEntityDescriptionQueryService
 	private Page getPageForStartAndMax(int start, int max){
 		Page page = new Page();
 		if(start < max){
-			page.setMaxtoreturn(max);
+			page.setMaxToReturn(max);
 			page.setPage(0);
 		} else {
 			int calculatedPage;
@@ -143,7 +144,7 @@ public class BioportalRestEntityDescriptionQueryService
 				calculatedPage = 0;
 			}
 			page.setPage(calculatedPage);
-			page.setMaxtoreturn(
+			page.setMaxToReturn(
 					(start - (calculatedPage * max)) + max);
 		}
 		
@@ -162,7 +163,7 @@ public class BioportalRestEntityDescriptionQueryService
 	 */
 	private DirectoryResult<EntityDirectoryEntry> getEntityDescriptionsOfCodeSystemVersion(
 			Query query,
-			FilterComponent filterComponent, 
+			Set<ResolvedFilter> filterComponent, 
 			Page page, 
 			String codeSystemName,
 			String codeSystemVersionName) {
@@ -218,7 +219,7 @@ public class BioportalRestEntityDescriptionQueryService
 	 * @return the entity descriptions by code system version name with filter
 	 */
 	private DirectoryResult<EntityDirectoryEntry> getEntityDescriptionsByCodeSystemVersionNameWithFilter(
-			FilterComponent filterComponent,
+			Set<ResolvedFilter> filterComponent,
 			Page page, 
 			final String codeSystemName, 
 			final String codeSystemVersionName) {
@@ -232,7 +233,7 @@ public class BioportalRestEntityDescriptionQueryService
 				codeSystemVersionName);
 		
 		return builder.restrict(filterComponent).
-			addMaxToReturn(page.getMaxtoreturn()).
+			addMaxToReturn(page.getMaxToReturn()).
 			addStart(page.getStart()).resolve();
 	}
 	
@@ -301,7 +302,7 @@ public class BioportalRestEntityDescriptionQueryService
 	 */
 	public int getEntityDescriptionsCount(
 			Query query,
-			FilterComponent filterComponent) {
+			Set<ResolvedFilter> filterComponent) {
 		if(filterComponent != null){
 			return this.getAllEntitiesDirectoryBuilder().restrict(filterComponent).count();
 		} else {
@@ -405,7 +406,7 @@ public class BioportalRestEntityDescriptionQueryService
 	 */
 	public int getEntityDescriptionsOfCodeSystemVersionCount(
 			Query query,
-			FilterComponent filterComponent, 
+			Set<ResolvedFilter> filterComponent, 
 			String codeSystemName,
 			String codeSystemVersionName) {
 		String ontologyId = identityConverter.codeSystemNameToOntologyId(codeSystemName);
@@ -435,8 +436,7 @@ public class BioportalRestEntityDescriptionQueryService
 		return  new EntityDirectoryBuilder(new Callback<EntityDirectoryEntry>(){
 
 			public DirectoryResult<EntityDirectoryEntry> execute(
-					FilterComponent filterComponent,
-					MatchAlgorithmReference matchAlgorithm, 
+					ResolvedFilter filterComponent,
 					float minScore,
 					int start, 
 					int maxResults) {
@@ -458,12 +458,11 @@ public class BioportalRestEntityDescriptionQueryService
 			}
 			
 			public int executeCount(
-					FilterComponent filterComponent,
-					MatchAlgorithmReference matchAlgorithm, 
+					ResolvedFilter filterComponent,
 					float minScore) {
 				Page bioportalPage = new Page();
 				bioportalPage.setPage(0);
-				bioportalPage.setMaxtoreturn(1);
+				bioportalPage.setMaxToReturn(1);
 				
 				String xml = bioportalRestService.searchEntitiesByOntologyId(
 						ontologyId,
@@ -495,7 +494,7 @@ public class BioportalRestEntityDescriptionQueryService
 			public int executeCount() {
 				Page bioportalPage = new Page();
 				bioportalPage.setPage(0);
-				bioportalPage.setMaxtoreturn(1);
+				bioportalPage.setMaxToReturn(1);
 				
 				String xml = bioportalRestService.
 					getAllEntitiesByOntologyVersionId(ontologyVersionId, bioportalPage);
@@ -512,8 +511,7 @@ public class BioportalRestEntityDescriptionQueryService
 			new Callback<EntityDirectoryEntry>(){
 
 				public DirectoryResult<EntityDirectoryEntry> execute(
-						FilterComponent filterComponent,
-						MatchAlgorithmReference matchAlgorithm, 
+						ResolvedFilter filterComponent, 
 						float minScore,
 						int start, 
 						int maxResults) {
@@ -534,12 +532,11 @@ public class BioportalRestEntityDescriptionQueryService
 				}
 
 				public int executeCount(
-						FilterComponent filterComponent,
-						MatchAlgorithmReference matchAlgorithm, 
+						ResolvedFilter filterComponent, 
 						float minScore) {
 					Page bioportalPage = new Page();
 					bioportalPage.setPage(0);
-					bioportalPage.setMaxtoreturn(1);
+					bioportalPage.setMaxToReturn(1);
 					
 					String xml = bioportalRestService.searchEntitiesOfLatestOntologyVersions(
 							filterComponent,
@@ -582,7 +579,7 @@ public class BioportalRestEntityDescriptionQueryService
 	@Override
 	public DirectoryResult<EntityDirectoryEntry> getResourceSummaries(
 			Query query, 
-			FilterComponent filterComponent,
+			Set<ResolvedFilter> filterComponent,
 			EntityDescriptionQueryServiceRestrictions restrictions, 
 			Page page) {
 		
@@ -608,7 +605,7 @@ public class BioportalRestEntityDescriptionQueryService
 	@Override
 	public DirectoryResult<EntityDescription> getResourceList(
 			Query query,
-			FilterComponent filterComponent,
+			Set<ResolvedFilter> filterComponent,
 			EntityDescriptionQueryServiceRestrictions restrictions, 
 			Page page) {
 		throw new UnsupportedOperationException();
@@ -620,7 +617,7 @@ public class BioportalRestEntityDescriptionQueryService
 	@Override
 	public int count(
 			Query query, 
-			FilterComponent filterComponent,
+			Set<ResolvedFilter> filterComponent,
 			EntityDescriptionQueryServiceRestrictions restrictions) {
 		throw new UnsupportedOperationException();
 	}
