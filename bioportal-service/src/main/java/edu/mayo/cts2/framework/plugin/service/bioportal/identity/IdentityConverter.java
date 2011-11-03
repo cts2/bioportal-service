@@ -25,6 +25,7 @@ package edu.mayo.cts2.framework.plugin.service.bioportal.identity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -80,6 +81,7 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 	private Map<String,String> valueSetNameToOntologyId = new HashMap<String,String>();
 	private Map<String,String> nameToOntologyVersionId = new HashMap<String,String>();
 	private Map<String,String> ontologyVersionIdToName = new HashMap<String,String>();
+	private Map<String,String> codeSystemVersionNameToVersion = new HashMap<String,String>();
 	private Map<String,String> codeSystemNameToAbout = new HashMap<String,String>();
 	private Map<String,String> codeSystemAboutToName = new HashMap<String,String>();
 	private Map<String,String> valueSetNameToAbout = new HashMap<String,String>();
@@ -262,6 +264,19 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 	}
 	
 	/**
+	 *codeSystemVersionName to code system version string.
+	 * @param codeSystemVersionName
+	 *
+	 * @return the string
+	 */	
+	public String codeSystemVersionNameToVersion(String codeSystemVersionName) {		
+		return this.codeSystemVersionNameToVersion.get(codeSystemVersionName);
+	}
+		
+	
+	
+	
+	/**
 	 * Ontology version id to code system version name.
 	 *
 	 * @param ontologyId the ontology id
@@ -352,6 +367,33 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 		return this.nameToOntologyVersionId.get(valueSetDefinitionName);
 	}
 
+	
+	private boolean hasUniqueVersions(String ontologyId) {
+		try {
+			String xml = this.bioportalRestService.getOntologyVersionsByOntologyId(ontologyId);
+
+			Document doc = BioportalRestUtils.getDocument(xml);
+
+			List<Node> nodeList = TransformUtils.getNodeListWithPath(doc, 
+			"success.data.list.ontologyBean");
+			
+			// We check to see if all the versions of an ontologyId has unique names. If they do, we
+			// use the version as the cts2 version, else we use the ontology version id as the version.
+			Set<String> version_set= new HashSet<String> ();
+			boolean unique_versions= true;
+            for(Node node : nodeList){				
+				String version = TransformUtils.getNamedChildText(node, VERSION);
+				if (!version_set.contains(version)) {
+					version_set.add(version);
+				} else {
+					unique_versions= false;
+				}				
+			}
+            return unique_versions;
+          } catch (Exception e) {
+				throw new UnspecifiedCts2RuntimeException(e, 500);
+		  }
+	}
 	/**
 	 * Cache version name and ontology version id.
 	 *
@@ -365,23 +407,39 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 
 			List<Node> nodeList = TransformUtils.getNodeListWithPath(doc, 
 			"success.data.list.ontologyBean");
+			
+			// We check to see if all the versions of an ontologyId has unique names. If they do, we
+			// use the version as the cts2 version, else we use the ontology version id as the version.
+			Set<String> version_set= new HashSet<String> ();
+			boolean unique_versions= true;
+            for(Node node : nodeList){				
+				String version = TransformUtils.getNamedChildText(node, VERSION);
+				if (!version_set.contains(version)) {
+					version_set.add(version);
+				} else {
+					unique_versions= false;
+				}				
+			}
 
 			for(Node node : nodeList){
 				
 				String ontologyVersionId = TransformUtils.getNamedChildText(node, ONTOLOGY_VERSION_ID);
+				String versionName = this.buildVersionName(node, unique_versions);
 
-				String name = this.buildVersionName(node);
-
-				this.nameToOntologyVersionId.put(name, ontologyVersionId);
-				this.ontologyVersionIdToName.put(ontologyVersionId, name);
-				this.versionNameToName.put(name, this.buildName(node));
-				
-				String version = TransformUtils.getNamedChildText(node, VERSION);
-				
+				this.nameToOntologyVersionId.put(versionName, ontologyVersionId);
+				this.ontologyVersionIdToName.put(ontologyVersionId, versionName);
+				this.versionNameToName.put(versionName, this.buildName(node));
+				String version;
+				if (unique_versions) {
+				    version = TransformUtils.getNamedChildText(node, VERSION);
+				} else {
+					version= ontologyVersionId;
+				}
+				codeSystemVersionNameToVersion.put(versionName, version);
 				this.codeSystemNameAndVersionIdToCodeSystemVersionName.put(
 						this.createNameVersionIdKey(
 								TransformUtils.getNamedChildText(node, ABBREVIATION), version),
-						name);
+						versionName);
 			}
 			
 		} catch (Exception e) {
@@ -426,10 +484,11 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 
 			Node node = TransformUtils.getNamedChildWithPath(doc, "success.data.ontologyBean");
 
-			String name = this.buildVersionName(node);
+			String version_name = this.buildVersionName(node, false);
 
-			this.nameToOntologyVersionId.put(name, ontologyVersionId);
-			this.ontologyVersionIdToName.put(ontologyVersionId, name);
+			this.nameToOntologyVersionId.put(version_name, ontologyVersionId);
+			this.ontologyVersionIdToName.put(ontologyVersionId, version_name);
+			//this.ontologyVersionIdToVersion.put(ontologyVersionId, version_name);
 
 		} catch (Exception e) {
 			throw new UnspecifiedCts2RuntimeException(e, 500);
@@ -466,13 +525,18 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 	 * @param node the node
 	 * @return the string
 	 */
-	private String buildVersionName(Node node){
+	private String buildVersionName(Node node, boolean useVersion){
 
 		try {
 
 			String abbreviation = TransformUtils.getNamedChildText(node, ABBREVIATION);;
 			String format = TransformUtils.getNamedChildText(node, FORMAT);
-			String version = TransformUtils.getNamedChildText(node, VERSION);
+			String version;
+			if (useVersion) {
+				 version = TransformUtils.getNamedChildText(node, VERSION);
+			} else {			
+			   version = TransformUtils.getNamedChildText(node, ONTOLOGY_VERSION_ID);
+			}
 
 			StringBuffer sb = new StringBuffer();
 

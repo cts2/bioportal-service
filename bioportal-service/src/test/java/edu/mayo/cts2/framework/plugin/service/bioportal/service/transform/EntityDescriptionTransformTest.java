@@ -35,8 +35,8 @@ public class EntityDescriptionTransformTest {
 		EasyMock.expect(idConverter.ontologyVersionIdToCodeSystemVersionName("1104", "44450")).andReturn("testCsVersionName").anyTimes();
 		EasyMock.expect(idConverter.getCodeSystemAbout("csName", "http://purl.bioontology.org/ontology/")).andReturn("http://test.doc.uri").anyTimes();
 		EasyMock.expect(idConverter.getCodeSystemAbout("ICD10", "http://purl.bioontology.org/ontology/")).andReturn("http://test.doc.uri").anyTimes();
-		
-		
+		EasyMock.expect(idConverter.codeSystemVersionNameToVersion("csVersionName")).andReturn("csVersionName").anyTimes();
+		EasyMock.expect(idConverter.codeSystemVersionNameToVersion("ICD10")).andReturn("ICD10").anyTimes();
 		EasyMock.replay(idConverter, urlConstructor);
 		
 		this.transform.setIdentityConverter(idConverter);

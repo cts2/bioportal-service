@@ -224,7 +224,7 @@ public class BioportalRestEntityDescriptionQueryService
 			final String codeSystemName, 
 			final String codeSystemVersionName) {
 		final String ontologyId = identityConverter.codeSystemNameToOntologyId(codeSystemName);
-		final String ontologyVersionId = identityConverter.codeSystemVersionNameToOntologyVersionId(codeSystemName);
+		final String ontologyVersionId = identityConverter.codeSystemVersionNameToOntologyVersionId(codeSystemVersionName);
 		
 		EntityDirectoryBuilder builder = this.getEntitiesOfCodeSystemVersionDirectoryBuilder(
 				ontologyId, 

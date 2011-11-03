@@ -119,7 +119,8 @@ public class AbstractTransform {
 		
 		NameAndMeaningReference version = new NameAndMeaningReference();
 		version.setContent(codeSystemVersionName);
-		version.setHref(this.getUrlConstructor().createCodeSystemVersionUrl(codeSystemName, codeSystemVersionName));
+		String versionString= this.getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
+		version.setHref(this.getUrlConstructor().createCodeSystemVersionUrl(codeSystemName, versionString));
 			
 		ref.setVersion(version);
 		

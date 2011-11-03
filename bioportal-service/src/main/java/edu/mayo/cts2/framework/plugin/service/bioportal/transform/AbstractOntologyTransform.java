@@ -186,12 +186,14 @@ public abstract class AbstractOntologyTransform extends AbstractTransform {
 		
 		String codeSystemVersionName = this.getIdentityConverter().
 			ontologyVersionIdToCodeSystemVersionName(ontologyId, ontologyVersionId);
+		String version = this.getIdentityConverter().
+				codeSystemVersionNameToVersion(codeSystemVersionName);
 		
 		CodeSystemVersionReference ref = new CodeSystemVersionReference();
 		ref.setCodeSystem(this.buildCodeSystemReference(codeSystemName));
 		NameAndMeaningReference csv = new NameAndMeaningReference();
 		csv.setContent(codeSystemVersionName);
-		csv.setHref(this.getUrlConstructor().createCodeSystemVersionUrl(codeSystemName, codeSystemVersionName));
+		csv.setHref(this.getUrlConstructor().createCodeSystemVersionUrl(codeSystemName, version));
 		ref.setVersion(csv);
 		
 		return ref;

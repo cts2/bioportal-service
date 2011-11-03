@@ -51,7 +51,7 @@ class IdentityConverterTest {
 
 		def csNode = db.parse(inStream)
 	
-		String codeSystemVersionName = identityConverter.buildVersionName(csNode.childNodes.item(0))
+		String codeSystemVersionName = identityConverter.buildVersionName(csNode.childNodes.item(0), true)
 		
 		assertThat codeSystemVersionName, is("BRO_3-2-1_OWL-FULL")
 	}
