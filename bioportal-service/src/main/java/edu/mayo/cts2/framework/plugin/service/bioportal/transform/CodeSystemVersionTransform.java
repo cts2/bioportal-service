@@ -150,9 +150,9 @@ public class CodeSystemVersionTransform extends AbstractBioportalOntologyVersion
 		String resourceVersionName = resourceVersion.getCodeSystemVersionName();
 
 		resourceVersion.setVersionOf(this.buildCodeSystemReference(resourceName));
-		
-		resourceVersion.setEntityDescriptions(this.getUrlConstructor().createEntitiesOfCodeSystemVersionUrl(resourceName, resourceVersionName));
-		resourceVersion.setAssociations(this.getUrlConstructor().createAssociationsOfCodeSystemVersionUrl(resourceName, resourceVersionName));
+		String version= this.getIdentityConverter().codeSystemVersionNameToVersion(resourceVersionName);
+		resourceVersion.setEntityDescriptions(this.getUrlConstructor().createEntitiesOfCodeSystemVersionUrl(resourceName, version));
+		resourceVersion.setAssociations(this.getUrlConstructor().createAssociationsOfCodeSystemVersionUrl(resourceName, version));
 		
 		return resourceVersion;
 	}

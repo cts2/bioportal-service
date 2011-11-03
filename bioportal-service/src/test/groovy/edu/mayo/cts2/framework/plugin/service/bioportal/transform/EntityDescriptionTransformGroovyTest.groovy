@@ -145,7 +145,8 @@ class EntityDescriptionTransformGroovyTest {
 			ontologyIdToCodeSystemName : { a -> "test" },
 			ontologyVersionIdToCodeSystemVersionName : { a,b -> "test" },
 			codeSystemVersionNameToOntologyVersionId : {a,b -> "test" },
-			getCodeSystemAbout: {cs, ns -> "http://test.doc.uri" }
+			getCodeSystemAbout: {cs, ns -> "http://test.doc.uri" },
+			codeSystemVersionNameToVersion: {a -> "test"}
 		] as IdentityConverter
 		
 		transform.setIdentityConverter(idConverter)
@@ -168,7 +169,8 @@ class EntityDescriptionTransformGroovyTest {
 			ontologyIdToCodeSystemName : { a -> "test" },
 			ontologyVersionIdToCodeSystemVersionName : { a,b -> "test" },
 			codeSystemVersionNameToOntologyVersionId : {a,b -> "test" },
-			getCodeSystemAbout: {cs, ns -> "http://test.doc.uri" }
+			getCodeSystemAbout: {cs, ns -> "http://test.doc.uri" },
+			codeSystemVersionNameToVersion: {a -> "test"}
 		] as IdentityConverter
 		
 		transform.setIdentityConverter(idConverter)
@@ -191,7 +193,8 @@ class EntityDescriptionTransformGroovyTest {
 			ontologyIdToCodeSystemName : { a -> "test" },
 			ontologyVersionIdToCodeSystemVersionName : { a,b -> "test" },
 			codeSystemVersionNameToOntologyVersionId : {a,b -> "test" },
-			getCodeSystemAbout: {cs, ns -> "http://test.doc.uri" }
+			getCodeSystemAbout: {cs, ns -> "http://test.doc.uri" },
+			codeSystemVersionNameToVersion: {a -> "test"}
 		] as IdentityConverter
 		
 		transform.setIdentityConverter(idConverter)
@@ -214,7 +217,8 @@ class EntityDescriptionTransformGroovyTest {
 			ontologyIdToCodeSystemName : { a -> "test" },
 			ontologyVersionIdToCodeSystemVersionName : { a,b -> "test" },
 			codeSystemVersionNameToOntologyVersionId : {a,b -> "test" },
-			getCodeSystemAbout: {cs, ns -> "http://test.doc.uri" }
+			getCodeSystemAbout: {cs, ns -> "http://test.doc.uri" },
+			codeSystemVersionNameToVersion: {a -> "test"}
 		] as IdentityConverter
 		
 		transform.setIdentityConverter(idConverter)
@@ -238,7 +242,8 @@ class EntityDescriptionTransformGroovyTest {
 			ontologyIdToCodeSystemName : { a -> "test" },
 			ontologyVersionIdToCodeSystemVersionName : { a,b -> "test" },
 			codeSystemVersionNameToOntologyVersionId : {a,b -> "test" },
-			getCodeSystemAbout: {cs, ns -> "http://test.doc.uri" }
+			getCodeSystemAbout: {cs, ns -> "http://test.doc.uri" },
+			codeSystemVersionNameToVersion: {a -> "test"}
 		] as IdentityConverter
 		
 		transform.setIdentityConverter(idConverter)

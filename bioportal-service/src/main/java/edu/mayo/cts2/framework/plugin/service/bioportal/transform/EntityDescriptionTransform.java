@@ -113,6 +113,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 		
 		entity.setEntityID(
 				buildScopedEntityName(name, codeSystemName));
+		String version= this.getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
 		
 		Designation designation = new Designation();
 		designation.setValue(ModelUtils.toTsAnyType(label));
@@ -132,7 +133,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 		entity.setDescribingCodeSystemVersion(this.buildCodeSystemVersionReference(codeSystemName, codeSystemVersionName));
 		
 		entity.setChildren(
-				this.getUrlConstructor().createChildrenUrl(codeSystemName, codeSystemVersionName, name));
+				this.getUrlConstructor().createChildrenUrl(codeSystemName, version, name));
 		
 		entity.addEntityType(this.getEntityType(type));
 		
@@ -315,8 +316,8 @@ public class EntityDescriptionTransform extends AbstractTransform {
 			entry.setName(scopedEntityName);
 			
 			entry.setResourceName(this.buildResourceName(scopedEntityName));
-			
-			entry.setHref(this.getUrlConstructor().createEntityUrl(codeSystemName, codeSystemVersionName, name));
+			String version= this.getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
+			entry.setHref(this.getUrlConstructor().createEntityUrl(codeSystemName, version, name));
 
 			entry.addKnownEntityDescription(this.createKnownEntityDescription(
 					codeSystemName, 
@@ -428,6 +429,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 			}
 			
 			String codeSystemVersionName;
+			String version="";
 			
 			//if there is no codesystemname, it must be matching a view, so throw it out
 			if(StringUtils.isBlank(codeSystemName)){
@@ -439,7 +441,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 
 			} else {
 				codeSystemVersionName = this.getIdentityConverter().ontologyVersionIdToCodeSystemVersionName(ontologyId, ontologyVersionId);
-
+				version= this.getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
 				entry.addKnownEntityDescription(this.createKnownEntityDescription(
 						codeSystemName, 
 						codeSystemVersionName, 
@@ -452,7 +454,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 			
 			entry.setHref(this.getUrlConstructor().createEntityUrl(
 					codeSystemName, 
-					codeSystemVersionName, 
+					version, 
 					name));
 			
 			entryList.add(entry);

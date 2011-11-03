@@ -45,10 +45,14 @@ public class CodeSystemVersionTransformTest {
 		EasyMock.expect(idConverter.ontologyIdToCodeSystemName("1104")).andReturn("testCsName").once();
 		EasyMock.expect(idConverter.getCodeSystemAbout("testCsName", "http://purl.bioontology.org/ontology/")).andReturn("http://test.about").anyTimes();
 		EasyMock.expect(idConverter.getDocumentUri("44450")).andReturn("http://test.doc.uri").anyTimes();
+		EasyMock.expect(idConverter.codeSystemNameToOntologyId("testCsName")).andReturn("1104").anyTimes();
+		EasyMock.expect(idConverter.codeSystemVersionNameToOntologyVersionId("testCsName")).andReturn("44450").anyTimes();
+		EasyMock.expect(idConverter.codeSystemVersionNameToVersion("testCsName")).andReturn("44450").anyTimes();
 		
+	
 		UrlConstructor urlConstructor = EasyMock.createNiceMock(UrlConstructor.class);
 		
-		EasyMock.expect(idConverter.ontologyVersionIdToCodeSystemVersionName("1104", "44450")).andReturn("testCsVersionName").once();
+		EasyMock.expect(idConverter.ontologyVersionIdToCodeSystemVersionName("1104", "44450")).andReturn("testCsName").anyTimes();
 		
 		EasyMock.replay(idConverter, urlConstructor, restService);
 		

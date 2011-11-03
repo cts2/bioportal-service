@@ -362,10 +362,10 @@ public abstract class AbstractBioportalOntologyVersionTransformTemplate<R extend
 		entry.getResourceSynopsis().setValue(ModelUtils.toTsAnyType(description));
 
 		entry.setDocumentURI(this.getIdentityConverter().getDocumentUri(ontologyVersionId));
+		String version= this.getIdentityConverter().codeSystemVersionNameToVersion(resourceVersionName);
+		entry.setHref(this.getHref(resourceName, version));
 		
-		entry.setHref(this.getHref(resourceName, resourceVersionName));
-		
-		entry.setOfficialResourceVersionId(getOfficialResourceVersionId(node));
+		entry.setOfficialResourceVersionId(version);
 		
 		entry = this.decorateResourceVersionSummary(node, resourceName, entry);
 		
