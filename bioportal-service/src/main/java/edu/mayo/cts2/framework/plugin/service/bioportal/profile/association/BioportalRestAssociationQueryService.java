@@ -41,6 +41,7 @@ import edu.mayo.cts2.framework.model.association.Association;
 import edu.mayo.cts2.framework.model.association.AssociationDirectoryEntry;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
@@ -195,6 +196,7 @@ public class BioportalRestAssociationQueryService
 			Query query, 
 			Set<ResolvedFilter> filterComponent,
 			AssociationQueryServiceRestrictions restrictions, 
+			ResolvedReadContext readContext,
 			Page page) {
 		throw new UnsupportedOperationException();
 	}

@@ -36,6 +36,7 @@ import org.w3c.dom.Document;
 import edu.mayo.cts2.framework.filter.directory.AbstractCallbackDirectoryBuilder.Callback;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
@@ -581,6 +582,7 @@ public class BioportalRestEntityDescriptionQueryService
 			Query query, 
 			Set<ResolvedFilter> filterComponent,
 			EntityDescriptionQueryServiceRestrictions restrictions, 
+			ResolvedReadContext readContext,
 			Page page) {
 		
 		if(StringUtils.isNotBlank(restrictions.getCodesystem()) &&

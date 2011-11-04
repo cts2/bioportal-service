@@ -43,6 +43,7 @@ import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
 import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
@@ -278,6 +279,7 @@ public class BioportalRestValueSetService
 			Query query, 
 			Set<ResolvedFilter> filterComponent,
 			ValueSetQueryServiceRestrictions restrictions, 
+			ResolvedReadContext readContext,
 			Page page) {
 		ValueSetDirectoryBuilder builder = 
 				new ValueSetDirectoryBuilder(

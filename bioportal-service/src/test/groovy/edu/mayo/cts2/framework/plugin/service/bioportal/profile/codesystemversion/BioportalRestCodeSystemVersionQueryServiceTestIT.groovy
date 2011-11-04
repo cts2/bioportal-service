@@ -22,7 +22,7 @@ public class BioportalRestCodeSystemVersionQueryServiceTestIT {
 	@Test
 	public void testCorrectlyCallBioportal(){
 		def summaries = 
-			service.getResourceSummaries(null,null,new CodeSystemVersionQueryServiceRestrictions(),new Page())
+			service.getResourceSummaries(null,null,new CodeSystemVersionQueryServiceRestrictions(),null,new Page())
 	
 		assertTrue summaries.getEntries().size > 0		
 	}

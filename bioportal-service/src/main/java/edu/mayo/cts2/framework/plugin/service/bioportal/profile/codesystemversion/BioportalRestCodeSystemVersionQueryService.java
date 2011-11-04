@@ -44,6 +44,7 @@ import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogE
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
@@ -222,6 +223,7 @@ public class BioportalRestCodeSystemVersionQueryService
 			Query query, 
 			Set<ResolvedFilter> filterComponent,
 			CodeSystemVersionQueryServiceRestrictions restrictions, 
+			ResolvedReadContext readContext,
 			Page page) {
 		String xml;
 		
