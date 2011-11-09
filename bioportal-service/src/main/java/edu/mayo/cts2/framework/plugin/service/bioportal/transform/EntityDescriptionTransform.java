@@ -105,6 +105,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 		String type = TransformUtils.getNamedChildText(node, TYPE);
 		String about = TransformUtils.getNamedChildText(node, ABOUT);
 		String name = TransformUtils.getNamedChildText(node, NAME);
+		name= name.replaceFirst(":", "_");
 		String label = TransformUtils.getNamedChildText(node, LABEL);
 		
 		NamedEntityDescription entity = this.createNamedEntityDescription(type);
@@ -308,6 +309,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 		
 			String about = TransformUtils.getNamedChildText(node, ABOUT);
 			String name = TransformUtils.getNamedChildText(node, NAME);
+			name= name.replaceFirst(":", "_");
 			String label = TransformUtils.getNamedChildText(node, LABEL);
 			
 			entry.setAbout(about);
