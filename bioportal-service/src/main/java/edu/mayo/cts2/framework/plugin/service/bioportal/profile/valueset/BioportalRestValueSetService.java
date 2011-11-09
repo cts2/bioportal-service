@@ -23,7 +23,6 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.valueset;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -45,7 +44,6 @@ import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -73,7 +71,8 @@ import edu.mayo.cts2.framework.service.profile.valueset.ValueSetQueryService;
 @Component
 @Qualifier("local")
 public class BioportalRestValueSetService 
-	extends AbstractBioportalRestQueryService<edu.mayo.cts2.framework.model.service.valueset.ValueSetQueryService>
+	extends AbstractBioportalRestQueryService<
+		edu.mayo.cts2.framework.model.service.valueset.ValueSetQueryService>
 	implements ValueSetQueryService {
 
 	@Resource
@@ -88,7 +87,7 @@ public class BioportalRestValueSetService
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getPropertyReference(java.lang.String)
 	 */
-	public PredicateReference getPropertyReference(String nameOrUri) {
+	public PredicateReference getPredicateReference(String nameOrUri) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -114,62 +113,27 @@ public class BioportalRestValueSetService
 		return this.valueSetTransform.transformResource(xml);
 	}
 
-	/**
-	 * Does value set exist.
-	 *
-	 * @param valueSetName the value set name
-	 * @return true, if successful
-	 */
-	public boolean doesValueSetExist(String valueSetName) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerMatchAlgorithmReferences()
-	 */
-	@Override
-	protected List<? extends MatchAlgorithmReference> getAvailableMatchAlgorithmReferences() {
-		return this.getKnownMatchAlgorithmReferences();
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerPredicateReferences()
-	 */
-	@Override
-	protected List<? extends PredicateReference> getAvailablePredicateReferences() {
-		return null;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerModelAttributeReferences()
-	 */
-	@Override
-	protected List<? extends ModelAttributeReference> getAvailableModelAttributeReferences() {
-		return this.getKnownModelAttributeReferences();
-	}
-	
-	protected List<ResolvableMatchAlgorithmReference> getKnownMatchAlgorithmReferences(){
-		List<ResolvableMatchAlgorithmReference> returnList = new ArrayList<ResolvableMatchAlgorithmReference>();
+	public Set<ResolvableMatchAlgorithmReference> getSupportedMatchAlgorithms(){
+		Set<ResolvableMatchAlgorithmReference> returnSet = new HashSet<ResolvableMatchAlgorithmReference>();
 		
 		MatchAlgorithmReference exactMatch = 
 			StandardMatchAlgorithmReference.EXACT_MATCH.getMatchAlgorithmReference();
 		
-		returnList.add(
+		returnSet.add(
 				ResolvableMatchAlgorithmReference.toResolvableMatchAlgorithmReference(exactMatch, new ExactMatcher()));
 		
 		MatchAlgorithmReference contains = 
 			StandardMatchAlgorithmReference.CONTAINS.getMatchAlgorithmReference();
 		
-		returnList.add(
+		returnSet.add(
 				ResolvableMatchAlgorithmReference.toResolvableMatchAlgorithmReference(contains, new ContainsMatcher()));
 		
-		return returnList;
+		return returnSet;
 	}
 	
-	protected List<ResolvableModelAttributeReference<ValueSetCatalogEntry>> getKnownModelAttributeReferences(){
-		List<ResolvableModelAttributeReference<ValueSetCatalogEntry>> returnList =
-			new ArrayList<ResolvableModelAttributeReference<ValueSetCatalogEntry>>();
+	public Set<ResolvableModelAttributeReference<ValueSetCatalogEntry>> getSupportedModelAttributes(){
+		Set<ResolvableModelAttributeReference<ValueSetCatalogEntry>> returnSet =
+			new HashSet<ResolvableModelAttributeReference<ValueSetCatalogEntry>>();
 		
 		ResolvableModelAttributeReference<ValueSetCatalogEntry> refName = 
 			ResolvableModelAttributeReference.toModelAttributeReference(
@@ -221,12 +185,12 @@ public class BioportalRestValueSetService
 					});
 		
 		
-		returnList.add(refName);
-		returnList.add(refAbout);
-		returnList.add(refSynopsis);
-		returnList.add(keyword);
+		returnSet.add(refName);
+		returnSet.add(refAbout);
+		returnSet.add(refSynopsis);
+		returnSet.add(keyword);
 		
-		return returnList;
+		return returnSet;
 	}
 	
 	/**
@@ -286,8 +250,8 @@ public class BioportalRestValueSetService
 						this.valueSetTransform,
 						this.getAllValueSetCatalogEntries(),
 						new CodeSystemExtractor(), 
-						this.getKnownMatchAlgorithmReferences(),
-						this.getKnownModelAttributeReferences()
+						this.getSupportedMatchAlgorithms(),
+						this.getSupportedModelAttributes()
 						);
 
 			return builder.
@@ -303,9 +267,12 @@ public class BioportalRestValueSetService
 	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getResourceList(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object, edu.mayo.cts2.framework.service.command.Page)
 	 */
 	@Override
-	public DirectoryResult<ValueSetCatalogEntry> getResourceList(Query query,
+	public DirectoryResult<ValueSetCatalogEntry> getResourceList(
+			Query query,
 			Set<ResolvedFilter> filterComponent,
-			ValueSetQueryServiceRestrictions restrictions, Page page) {
+			ValueSetQueryServiceRestrictions restrictions, 
+			ResolvedReadContext readContext,
+			Page page) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -323,8 +290,8 @@ public class BioportalRestValueSetService
 						this.valueSetTransform,
 						this.getAllValueSetCatalogEntries(),
 						new CodeSystemExtractor(), 
-						this.getKnownMatchAlgorithmReferences(),
-						this.getKnownModelAttributeReferences()
+						this.getSupportedMatchAlgorithms(),
+						this.getSupportedModelAttributes()
 						);
 
 			return builder.
@@ -334,4 +301,9 @@ public class BioportalRestValueSetService
 					count();
 	}
 
+	@Override
+	public Set<? extends PredicateReference> getSupportedProperties() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

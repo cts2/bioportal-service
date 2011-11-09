@@ -30,6 +30,8 @@ import org.springframework.stereotype.Component;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
@@ -97,6 +99,26 @@ public class BioportalRestEntityDescriptionReadService
 	 */
 	@Override
 	public boolean exists(EntityDescriptionReadId identifier, ReadContext readContext) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public EntityDescription readByCodeSystem(EntityNameOrURI entityId,
+			NameOrURI codeSystem, String tagName,
+			ResolvedReadContext readContext) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean existsInCodeSystem(EntityNameOrURI entityId,
+			NameOrURI codeSystem, String tagName,
+			ResolvedReadContext readContext) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean readEntityDescriptions(EntityNameOrURI entityId,
+			ResolvedReadContext readContext) {
 		throw new UnsupportedOperationException();
 	}
 

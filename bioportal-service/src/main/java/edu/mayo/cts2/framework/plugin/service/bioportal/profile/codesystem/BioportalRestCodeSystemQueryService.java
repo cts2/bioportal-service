@@ -25,6 +25,7 @@ package edu.mayo.cts2.framework.plugin.service.bioportal.profile.codesystem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -45,7 +46,6 @@ import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.Property;
 import edu.mayo.cts2.framework.model.core.StatementTarget;
@@ -70,7 +70,8 @@ import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService
 @Component
 @Qualifier("local")
 public class BioportalRestCodeSystemQueryService 
-	extends AbstractBioportalRestQueryService<edu.mayo.cts2.framework.model.service.codesystem.CodeSystemQueryService>
+	extends AbstractBioportalRestQueryService<
+		edu.mayo.cts2.framework.model.service.codesystem.CodeSystemQueryService>
 	implements CodeSystemQueryService {
 
 	@Resource
@@ -90,34 +91,10 @@ public class BioportalRestCodeSystemQueryService
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerMatchAlgorithmReferences()
-	 */
-	@Override
-	protected List<? extends MatchAlgorithmReference> getAvailableMatchAlgorithmReferences() {
-		return this.getKnownMatchAlgorithmReferences();
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerModelAttributeReferences()
-	 */
-	@Override
-	protected List<? extends ModelAttributeReference> getAvailableModelAttributeReferences() {
-		return this.getKnownModelAttributeReferences();
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerPredicateReferences()
-	 */
-	@Override
-	protected List<? extends PredicateReference> getAvailablePredicateReferences() {
-		return this.getKnownPredicateReferences();
-	}
-
-	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getPropertyReference(java.lang.String)
 	 */
-	public PredicateReference getPropertyReference(String nameOrUri) {
-		for(PredicateReference ref : this.getKnownPredicateReferences()){
+	public PredicateReference getPredicateReference(String nameOrUri) {
+		for(PredicateReference ref : this.getSupportedProperties()){
 			if(ref.getName().equals(nameOrUri)){
 				return ref;
 			}
@@ -126,22 +103,22 @@ public class BioportalRestCodeSystemQueryService
 		throw ExceptionFactory.createUnsupportedPredicateReference(nameOrUri);
 	}
 	
-	protected List<ResolvableMatchAlgorithmReference> getKnownMatchAlgorithmReferences(){
-		List<ResolvableMatchAlgorithmReference> returnList = new ArrayList<ResolvableMatchAlgorithmReference>();
+	public Set<ResolvableMatchAlgorithmReference> getSupportedMatchAlgorithms(){
+		Set<ResolvableMatchAlgorithmReference> returnSet = new HashSet<ResolvableMatchAlgorithmReference>();
 		
 		MatchAlgorithmReference exactMatch = 
 			StandardMatchAlgorithmReference.EXACT_MATCH.getMatchAlgorithmReference();
 		
-		returnList.add(
+		returnSet.add(
 				ResolvableMatchAlgorithmReference.toResolvableMatchAlgorithmReference(exactMatch, new ExactMatcher()));
 		
 		MatchAlgorithmReference contains = 
 			StandardMatchAlgorithmReference.CONTAINS.getMatchAlgorithmReference();
 		
-		returnList.add(
+		returnSet.add(
 				ResolvableMatchAlgorithmReference.toResolvableMatchAlgorithmReference(contains, new ContainsMatcher()));
 		
-		return returnList;
+		return returnSet;
 	}
 	
 	/**
@@ -149,9 +126,9 @@ public class BioportalRestCodeSystemQueryService
 	 *
 	 * @return the known predicate references
 	 */
-	protected List<ResolvablePredicateReference<CodeSystemCatalogEntry>> getKnownPredicateReferences(){
-		List<ResolvablePredicateReference<CodeSystemCatalogEntry>> returnList =
-			new ArrayList<ResolvablePredicateReference<CodeSystemCatalogEntry>>();
+	public Set<ResolvablePredicateReference<CodeSystemCatalogEntry>> getSupportedProperties(){
+		Set<ResolvablePredicateReference<CodeSystemCatalogEntry>> returnSet =
+			new HashSet<ResolvablePredicateReference<CodeSystemCatalogEntry>>();
 		
 		ResolvablePredicateReference<CodeSystemCatalogEntry> ref = 
 			new ResolvablePredicateReference<CodeSystemCatalogEntry>(
@@ -181,14 +158,14 @@ public class BioportalRestCodeSystemQueryService
 		ref.setUri(BioportalConstants.BIOPORTAL_ONTOLOGY_ID_ABOUT);
 		ref.setNamespace(BioportalConstants.BIOPORTAL_NAMESPACE_NAME);
 		
-		returnList.add(ref);
+		returnSet.add(ref);
 		
-		return returnList;
+		return returnSet;
 	}
 	
-	protected List<ResolvableModelAttributeReference<CodeSystemCatalogEntry>> getKnownModelAttributeReferences(){
-		List<ResolvableModelAttributeReference<CodeSystemCatalogEntry>> returnList =
-			new ArrayList<ResolvableModelAttributeReference<CodeSystemCatalogEntry>>();
+	public Set<ResolvableModelAttributeReference<CodeSystemCatalogEntry>> getSupportedModelAttributes(){
+		Set<ResolvableModelAttributeReference<CodeSystemCatalogEntry>> returnSet =
+			new HashSet<ResolvableModelAttributeReference<CodeSystemCatalogEntry>>();
 		
 		ResolvableModelAttributeReference<CodeSystemCatalogEntry> refName = 
 			ResolvableModelAttributeReference.toModelAttributeReference(
@@ -240,12 +217,12 @@ public class BioportalRestCodeSystemQueryService
 					});
 		
 		
-		returnList.add(refName);
-		returnList.add(refAbout);
-		returnList.add(refSynopsis);
-		returnList.add(keyword);
+		returnSet.add(refName);
+		returnSet.add(refAbout);
+		returnSet.add(refSynopsis);
+		returnSet.add(keyword);
 		
-		return returnList;
+		return returnSet;
 	}
 
 
@@ -265,9 +242,9 @@ public class BioportalRestCodeSystemQueryService
 			new CodeSystemDirectoryBuilder(
 					this.codeSystemTransform,
 					this.getAllCodeSystemCatalogEntries(),
-					this.getKnownMatchAlgorithmReferences(),
-					this.getKnownModelAttributeReferences(),
-					this.getKnownPredicateReferences()
+					this.getSupportedMatchAlgorithms(),
+					this.getSupportedModelAttributes(),
+					this.getSupportedProperties()
 					);
 
 		return builder.restrict(filterComponent).
@@ -281,8 +258,12 @@ public class BioportalRestCodeSystemQueryService
 	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getResourceList(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object, edu.mayo.cts2.framework.service.command.Page)
 	 */
 	@Override
-	public DirectoryResult<CodeSystemCatalogEntry> getResourceList(Query query,
-			Set<ResolvedFilter> filterComponent, Void restrictions, Page page) {
+	public DirectoryResult<CodeSystemCatalogEntry> getResourceList(
+			Query query,
+			Set<ResolvedFilter> filterComponent, 
+			Void restrictions, 
+			ResolvedReadContext readContext,
+			Page page) {
 		throw new UnsupportedOperationException();
 	}
 

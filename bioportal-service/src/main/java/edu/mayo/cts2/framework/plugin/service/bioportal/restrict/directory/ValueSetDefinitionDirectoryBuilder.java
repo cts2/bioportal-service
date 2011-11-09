@@ -24,6 +24,7 @@
 package edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory;
 
 import java.util.List;
+import java.util.Set;
 
 import edu.mayo.cts2.framework.filter.directory.AbstractRemovingDirectoryBuilder;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
@@ -56,8 +57,8 @@ public class ValueSetDefinitionDirectoryBuilder extends AbstractRemovingDirector
 	 */
 	public ValueSetDefinitionDirectoryBuilder(
 			List<ValueSetDefinitionDirectoryEntry> allPossibleResults,
-			List<ResolvableMatchAlgorithmReference> matchAlgorithmReferences,
-			List<ResolvableModelAttributeReference<ValueSetDefinitionDirectoryEntry>> 
+			Set<ResolvableMatchAlgorithmReference> matchAlgorithmReferences,
+			Set<ResolvableModelAttributeReference<ValueSetDefinitionDirectoryEntry>> 
 				resolvableModelAttributeReferences) {
 		super(allPossibleResults, 
 				matchAlgorithmReferences,

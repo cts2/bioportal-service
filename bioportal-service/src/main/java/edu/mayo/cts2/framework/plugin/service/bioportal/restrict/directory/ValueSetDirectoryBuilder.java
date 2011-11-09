@@ -76,8 +76,8 @@ public class ValueSetDirectoryBuilder extends AbstractRemovingDirectoryBuilder<V
 			ValueSetTransform valueSetTransform,
 			List<ValueSetCatalogEntry> allPossibleResults,
 			ValueSetCodeSystemExtractor valueSetCodeSystemExtractor,
-			List<ResolvableMatchAlgorithmReference> matchAlgorithmReferences,
-			List<ResolvableModelAttributeReference<ValueSetCatalogEntry>> resolvableModelAttributeReferences) {
+			Set<ResolvableMatchAlgorithmReference> matchAlgorithmReferences,
+			Set<ResolvableModelAttributeReference<ValueSetCatalogEntry>> resolvableModelAttributeReferences) {
 		super(allPossibleResults, 
 				matchAlgorithmReferences,
 				resolvableModelAttributeReferences,

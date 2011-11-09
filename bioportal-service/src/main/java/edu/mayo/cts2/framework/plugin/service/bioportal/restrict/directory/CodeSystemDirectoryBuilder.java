@@ -25,6 +25,7 @@ package edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import edu.mayo.cts2.framework.filter.directory.AbstractRemovingDirectoryBuilder;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
@@ -68,9 +69,9 @@ public class CodeSystemDirectoryBuilder extends AbstractRemovingDirectoryBuilder
 	public CodeSystemDirectoryBuilder(
 			CodeSystemTransform codeSystemTransform,
 			List<CodeSystemCatalogEntry> allPossibleResults,
-			List<ResolvableMatchAlgorithmReference> matchAlgorithmReferences,
-			List<ResolvableModelAttributeReference<CodeSystemCatalogEntry>> resolvableModelAttributeReferences,
-			List<ResolvablePredicateReference<CodeSystemCatalogEntry>> resolvablePredicateReferences) {
+			Set<ResolvableMatchAlgorithmReference> matchAlgorithmReferences,
+			Set<ResolvableModelAttributeReference<CodeSystemCatalogEntry>> resolvableModelAttributeReferences,
+			Set<ResolvablePredicateReference<CodeSystemCatalogEntry>> resolvablePredicateReferences) {
 		super(allPossibleResults, 
 				matchAlgorithmReferences,
 				resolvableModelAttributeReferences,

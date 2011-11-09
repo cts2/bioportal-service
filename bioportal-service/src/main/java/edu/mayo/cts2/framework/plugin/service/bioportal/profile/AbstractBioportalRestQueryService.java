@@ -33,7 +33,8 @@ import edu.mayo.cts2.framework.service.profile.AbstractQueryService;
  * @param <T> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public abstract class AbstractBioportalRestQueryService<T extends BaseQueryService> extends AbstractQueryService<T> {
+public abstract class AbstractBioportalRestQueryService<T extends BaseQueryService> 
+	extends AbstractQueryService<T> {
 	
 	private static final String MAYO = "Mayo Clinic";
 	private static final String DEFAULT_VERSION = "1.0";

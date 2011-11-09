@@ -23,13 +23,11 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.entitydescription;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 
@@ -37,14 +35,18 @@ import edu.mayo.cts2.framework.filter.directory.AbstractCallbackDirectoryBuilder
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.core.EntityReferenceList;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
+import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.entity.NamedEntityDescription;
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURIList;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
@@ -66,7 +68,8 @@ import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescripti
  */
 @Component
 public class BioportalRestEntityDescriptionQueryService 
-	extends AbstractBioportalRestQueryService<edu.mayo.cts2.framework.model.service.entitydescription.EntityDescriptionQueryService>
+	extends AbstractBioportalRestQueryService<
+		edu.mayo.cts2.framework.model.service.entitydescription.EntityDescriptionQueryService>
 	implements EntityDescriptionQueryService {
 
 	@Resource
@@ -328,8 +331,8 @@ public class BioportalRestEntityDescriptionQueryService
 		throw new RuntimeException("Bioportal is READ-ONLY!");
 	}
 
-	protected List<MatchAlgorithmReference> getKnownMatchAlgorithmReferences() {
-		List<MatchAlgorithmReference> returnList = new ArrayList<MatchAlgorithmReference>();
+	public Set<MatchAlgorithmReference> getSupportedMatchAlgorithms() {
+		Set<MatchAlgorithmReference> returnSet = new HashSet<MatchAlgorithmReference>();
 		
 		MatchAlgorithmReference contains = 
 			StandardMatchAlgorithmReference.CONTAINS.getMatchAlgorithmReference();
@@ -337,55 +340,31 @@ public class BioportalRestEntityDescriptionQueryService
 		MatchAlgorithmReference exactMatch = 
 			StandardMatchAlgorithmReference.EXACT_MATCH.getMatchAlgorithmReference();
 		
-		returnList.add(contains);
-		returnList.add(exactMatch);
+		returnSet.add(contains);
+		returnSet.add(exactMatch);
 		
-		return returnList;
+		return returnSet;
 	}
 
-	protected List<ModelAttributeReference> getKnownModelAttributeReferences() {
-		List<ModelAttributeReference> returnList =
-			new ArrayList<ModelAttributeReference>();
+	public Set<ModelAttributeReference> getSupportedModelAttributes() {
+		Set<ModelAttributeReference> returnSet =
+			new HashSet<ModelAttributeReference>();
 		
-		returnList.add(
+		returnSet.add(
 				StandardModelAttributeReference.RESOURCE_SYNOPSIS.getModelAttributeReference());
 
-		returnList.add(BioportalRestService.DEFINITIONS);
-		returnList.add(BioportalRestService.PROPERTIES);
+		returnSet.add(BioportalRestService.DEFINITIONS);
+		returnSet.add(BioportalRestService.PROPERTIES);
 		
-		return returnList;
+		return returnSet;
 	}
 
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getPropertyReference(java.lang.String)
 	 */
-	public PredicateReference getPropertyReference(String nameOrUri) {
+	public PredicateReference getPredicateReference(String nameOrUri) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerPredicateReferences()
-	 */
-	@Override
-	protected List<? extends PredicateReference> getAvailablePredicateReferences() {
-		return null;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerMatchAlgorithmReferences()
-	 */
-	@Override
-	protected List<MatchAlgorithmReference> getAvailableMatchAlgorithmReferences() {
-		return this.getKnownMatchAlgorithmReferences();
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerModelAttributeReferences()
-	 */
-	@Override
-	protected List<ModelAttributeReference> getAvailableModelAttributeReferences() {
-		return this.getKnownModelAttributeReferences();
 	}
 	
 	public BioportalRestService getBioportalRestService() {
@@ -434,7 +413,7 @@ public class BioportalRestEntityDescriptionQueryService
 			final String ontologyVersionId,
 			final String codeSystemName,
 			final String codeSystemVersionName){
-		return  new EntityDirectoryBuilder(new Callback<EntityDirectoryEntry>(){
+		return new EntityDirectoryBuilder(new Callback<EntityDirectoryEntry>(){
 
 			public DirectoryResult<EntityDirectoryEntry> execute(
 					ResolvedFilter filterComponent,
@@ -503,7 +482,7 @@ public class BioportalRestEntityDescriptionQueryService
 				return getCount(xml);
 			}
 		},
-		getKnownMatchAlgorithmReferences());
+		getSupportedMatchAlgorithms());
 	}
 	
 	private EntityDirectoryBuilder getAllEntitiesDirectoryBuilder(){
@@ -556,7 +535,7 @@ public class BioportalRestEntityDescriptionQueryService
 					throw new UnsupportedOperationException();
 				}
 			},
-			getKnownMatchAlgorithmReferences());
+			getSupportedMatchAlgorithms());
 	}
 
 	/**
@@ -585,14 +564,18 @@ public class BioportalRestEntityDescriptionQueryService
 			ResolvedReadContext readContext,
 			Page page) {
 		
-		if(StringUtils.isNotBlank(restrictions.getCodesystem()) &&
-				StringUtils.isNotBlank(restrictions.getCodesystemversion())){
+		if(restrictions.getCodeSystemVersion() != null){
+			
+			String codeSystemVersionName = restrictions.getCodeSystemVersion().getName();
+			
+			String codeSystemName = this.identityConverter.codeSystemVersionNameCodeSystemName(codeSystemVersionName);
+			
 			return this.getEntityDescriptionsOfCodeSystemVersion(
 					query, 
 					filterComponent, 
 					page,
-					restrictions.getCodesystem(),
-					restrictions.getCodesystemversion());
+					codeSystemName,
+					codeSystemVersionName);
 		} else {
 			return this.getAllEntityDescriptions(
 					query,
@@ -609,6 +592,7 @@ public class BioportalRestEntityDescriptionQueryService
 			Query query,
 			Set<ResolvedFilter> filterComponent,
 			EntityDescriptionQueryServiceRestrictions restrictions, 
+			ResolvedReadContext readContext,
 			Page page) {
 		throw new UnsupportedOperationException();
 	}
@@ -622,5 +606,42 @@ public class BioportalRestEntityDescriptionQueryService
 			Set<ResolvedFilter> filterComponent,
 			EntityDescriptionQueryServiceRestrictions restrictions) {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean isEntityInSet(EntityNameOrURI entity, Query query,
+			Set<ResolvedFilter> filterComponent,
+			EntityDescriptionQueryServiceRestrictions restrictions,
+			ResolvedReadContext readContext) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public EntityReferenceList resolveAsEntityReferenceList(Query query,
+			Set<ResolvedFilter> filterComponent,
+			EntityDescriptionQueryServiceRestrictions restrictions,
+			ResolvedReadContext readContext) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public EntityNameOrURIList intersectEntityList(
+			Set<EntityNameOrURI> entities, Query query,
+			Set<ResolvedFilter> filterComponent,
+			EntityDescriptionQueryServiceRestrictions restrictions,
+			ResolvedReadContext readContext) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Set<? extends PredicateReference> getSupportedProperties() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Set<? extends VersionTagReference> getSupportedTags() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

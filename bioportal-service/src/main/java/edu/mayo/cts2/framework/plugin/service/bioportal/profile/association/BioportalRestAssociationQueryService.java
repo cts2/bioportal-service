@@ -23,13 +23,14 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.association;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 import edu.mayo.cts2.framework.filter.match.AttributeResolver;
@@ -39,12 +40,16 @@ import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
 import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
 import edu.mayo.cts2.framework.model.association.Association;
 import edu.mayo.cts2.framework.model.association.AssociationDirectoryEntry;
+import edu.mayo.cts2.framework.model.association.AssociationGraph;
+import edu.mayo.cts2.framework.model.association.GraphNode;
+import edu.mayo.cts2.framework.model.association.types.GraphDirection;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
+import edu.mayo.cts2.framework.model.core.ScopedEntityName;
+import edu.mayo.cts2.framework.model.core.types.AssociationDirection;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.Query;
@@ -66,7 +71,8 @@ import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDesc
  */
 @Component
 public class BioportalRestAssociationQueryService 
-	extends AbstractBioportalRestQueryService<edu.mayo.cts2.framework.model.service.association.AssociationQueryService>
+	extends AbstractBioportalRestQueryService<
+		edu.mayo.cts2.framework.model.service.association.AssociationQueryService>
 	implements AssociationQueryService {
 
 	@Resource
@@ -115,8 +121,8 @@ public class BioportalRestAssociationQueryService
 							codeSystemName,
 							codeSystemVersionName, 
 							predicateName),
-						this.getKnownMatchAlgorithmReferences(),
-						this.getKnownModelAttributeReferences()
+						this.getSupportedMatchAlgorithms(),
+						this.getSupportedModelAttributes()
 					);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -128,9 +134,9 @@ public class BioportalRestAssociationQueryService
 			resolve();
 	}
 
-	protected List<ResolvableModelAttributeReference<EntityDirectoryEntry>> getKnownModelAttributeReferences() {
-		List<ResolvableModelAttributeReference<EntityDirectoryEntry>> returnList =
-			new ArrayList<ResolvableModelAttributeReference<EntityDirectoryEntry>>();
+	public Set<ResolvableModelAttributeReference<EntityDirectoryEntry>> getSupportedModelAttributes() {
+		Set<ResolvableModelAttributeReference<EntityDirectoryEntry>> returnSet =
+			new HashSet<ResolvableModelAttributeReference<EntityDirectoryEntry>>();
 		
 		ResolvableModelAttributeReference<EntityDirectoryEntry> refName = 
 			ResolvableModelAttributeReference.toModelAttributeReference(
@@ -155,28 +161,28 @@ public class BioportalRestAssociationQueryService
 					});
 	
 		
-		returnList.add(refName);
-		returnList.add(refAbout);
+		returnSet.add(refName);
+		returnSet.add(refAbout);
 		
-		return returnList;
+		return returnSet;
 	}
 
-	protected List<ResolvableMatchAlgorithmReference> getKnownMatchAlgorithmReferences() {
-		List<ResolvableMatchAlgorithmReference> returnList = new ArrayList<ResolvableMatchAlgorithmReference>();
+	public Set<ResolvableMatchAlgorithmReference> getSupportedMatchAlgorithms() {
+		Set<ResolvableMatchAlgorithmReference> returnSet = new HashSet<ResolvableMatchAlgorithmReference>();
 		
 		MatchAlgorithmReference exactMatch = 
 			StandardMatchAlgorithmReference.EXACT_MATCH.getMatchAlgorithmReference();
 		
-		returnList.add(
+		returnSet.add(
 				ResolvableMatchAlgorithmReference.toResolvableMatchAlgorithmReference(exactMatch, new ExactMatcher()));
 		
 		MatchAlgorithmReference contains = 
 			StandardMatchAlgorithmReference.CONTAINS.getMatchAlgorithmReference();
 		
-		returnList.add(
+		returnSet.add(
 				ResolvableMatchAlgorithmReference.toResolvableMatchAlgorithmReference(contains, new ContainsMatcher()));
 		
-		return returnList;
+		return returnSet;
 	}
 
 	/* (non-Javadoc)
@@ -209,6 +215,7 @@ public class BioportalRestAssociationQueryService
 			Query query,
 			Set<ResolvedFilter> filterComponent,
 			AssociationQueryServiceRestrictions restrictions, 
+			ResolvedReadContext readContext,
 			Page page) {
 		throw new UnsupportedOperationException();
 	}
@@ -229,10 +236,12 @@ public class BioportalRestAssociationQueryService
 	 */
 	@Override
 	public DirectoryResult<EntityDirectoryEntry> getChildrenAssociationsOfEntity(
-			Query query, 
+			Query query,
 			Set<ResolvedFilter> filterComponent,
-			Page page,
-			EntityDescriptionReadId id) {
+			EntityDescriptionReadId id,
+			AssociationQueryServiceRestrictions restrictions,
+			ResolvedReadContext readContext,
+			Page page) {
 
 		String codeSystemName = this.identityConverter.
 				codeSystemVersionNameCodeSystemName(id.getCodeSystemVersion().getName());
@@ -253,9 +262,10 @@ public class BioportalRestAssociationQueryService
 	@Override
 	public DirectoryResult<AssociationDirectoryEntry> getSourceOfAssociationsOfEntity(
 			Query query,
-			Set<ResolvedFilter> filterComponent, 
-			Page page,
-			EntityDescriptionReadId id) {
+			Set<ResolvedFilter> filterComponent,
+			Page page, 
+			EntityDescriptionReadId id,
+			ResolvedReadContext readContext) {
 		
 		String ontologyVersionId = 
 			this.identityConverter.codeSystemVersionNameToOntologyVersionId(
@@ -273,27 +283,102 @@ public class BioportalRestAssociationQueryService
 				id.getCodeSystemVersion().getName());
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerMatchAlgorithmReferences()
-	 */
 	@Override
-	protected List<? extends MatchAlgorithmReference> getAvailableMatchAlgorithmReferences() {
-		return this.getKnownMatchAlgorithmReferences();
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerModelAttributeReferences()
-	 */
-	@Override
-	protected List<? extends ModelAttributeReference> getAvailableModelAttributeReferences() {
-		return this.getKnownModelAttributeReferences();
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerPredicateReferences()
-	 */
-	@Override
-	protected List<? extends PredicateReference> getAvailablePredicateReferences() {
+	public Set<? extends PredicateReference> getSupportedProperties() {
+		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mayo.cts2.framework.service.profile.association.AdvancedAssociationQueryService#getAssociationGraph(edu.mayo.cts2.framework.service.profile.entitydescription.id.EntityDescriptionId, edu.mayo.cts2.framework.model.association.types.GraphDirection, long)
+	 */
+	public AssociationGraph getAssociationGraph(
+			EntityDescriptionReadId id,
+			GraphDirection direction,
+			long depth) {	
+		
+		String codeSystemVersionName = id.getCodeSystemVersion().getName();
+		String codeSystemName = this.identityConverter.
+				codeSystemVersionNameCodeSystemName(codeSystemVersionName);
+		
+		ScopedEntityName focusEntityName = id.getEntityName();
+		
+		if(depth != 1){
+			throw new UnsupportedOperationException("Only depth of '1' is allowed.");
+		}
+		if(direction != GraphDirection.FORWARD){
+			throw new UnsupportedOperationException("Only GraphDirection of 'FORWARD' is allowed.");
+		}
+		
+		AssociationGraph graph = new AssociationGraph();
+		
+		String ontologyVersionId = this.identityConverter.
+			codeSystemVersionNameToOntologyVersionId(codeSystemVersionName);
+		
+		String xml;
+		
+		if(focusEntityName.getName().equals("TOP_NODE")){
+			xml = bioportalRestService.getHierarchyRootsByOntolotyVersionId(ontologyVersionId);
+		} else {
+			xml = bioportalRestService.getEntityByOntologyVersionIdAndEntityId(ontologyVersionId, focusEntityName.getName());
+		}
+		
+		List<GraphNode> associations = 
+			this.associationTransform.transformAssociationForGraph(xml, codeSystemName, codeSystemVersionName);
+		
+		for(long i=0;i<associations.size();i++){
+			GraphNode entry = associations.get((int)i);
+			entry.setNodeNumber(i);
+			entry.setNextNodeNumber(i+1);
+			
+			entry.setDirection(AssociationDirection.SOURCE_TO_TARGET);
+			
+			graph.addEntry(entry);
+		}
+		
+		graph.setExpansionDepth(depth);
+		graph.setNumEntries((long) associations.size());
+		
+		if(CollectionUtils.isNotEmpty(associations)){
+			GraphNode focus = associations.get(0);
+			graph.setFocusEntity(focus.getSubject());
+		}
+		
+		graph.setExpansionDirection(direction);
+		
+		
+		return graph;
+	}
+
+	@Override
+	public DirectoryResult<EntityDirectoryEntry> getSourceEntities(Query query,
+			Set<ResolvedFilter> filterComponent,
+			AssociationQueryServiceRestrictions restrictions,
+			ResolvedReadContext readContext, Page page) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public DirectoryResult<EntityDirectoryEntry> getTargetEntities(Query query,
+			Set<ResolvedFilter> filterComponent,
+			AssociationQueryServiceRestrictions restrictions,
+			ResolvedReadContext readContext, Page page) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public DirectoryResult<EntityDirectoryEntry> getAllSourceAndTargetEntities(
+			Query query, Set<ResolvedFilter> filterComponent,
+			AssociationQueryServiceRestrictions restrictions,
+			ResolvedReadContext readContext, Page page) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public DirectoryResult<EntityDirectoryEntry> getPredicates(Query query,
+			Set<ResolvedFilter> filterComponent,
+			AssociationQueryServiceRestrictions restrictions,
+			ResolvedReadContext readContext, Page page) {
+		throw new UnsupportedOperationException();
 	}
 }

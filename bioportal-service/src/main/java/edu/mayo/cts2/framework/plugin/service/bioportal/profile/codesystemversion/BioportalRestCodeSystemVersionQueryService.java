@@ -25,12 +25,12 @@ package edu.mayo.cts2.framework.plugin.service.bioportal.profile.codesystemversi
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -46,7 +46,6 @@ import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.Property;
 import edu.mayo.cts2.framework.model.core.StatementTarget;
@@ -72,7 +71,8 @@ import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersi
 @Component
 @Qualifier("local")
 public class BioportalRestCodeSystemVersionQueryService 
-	extends AbstractBioportalRestQueryService<edu.mayo.cts2.framework.model.service.codesystemversion.CodeSystemVersionQueryService>
+	extends AbstractBioportalRestQueryService<
+		edu.mayo.cts2.framework.model.service.codesystemversion.CodeSystemVersionQueryService>
 	implements CodeSystemVersionQueryService {
 
 	@Resource
@@ -84,27 +84,27 @@ public class BioportalRestCodeSystemVersionQueryService
 	@Resource
 	private IdentityConverter identityConverter;
 
-	protected List<ResolvableMatchAlgorithmReference> getKnownMatchAlgorithmReferences(){
-		List<ResolvableMatchAlgorithmReference> returnList = new ArrayList<ResolvableMatchAlgorithmReference>();
+	public Set<ResolvableMatchAlgorithmReference> getSupportedMatchAlgorithms(){
+		Set<ResolvableMatchAlgorithmReference> returnSet = new HashSet<ResolvableMatchAlgorithmReference>();
 		
 		MatchAlgorithmReference exactMatch = 
 			StandardMatchAlgorithmReference.EXACT_MATCH.getMatchAlgorithmReference();
 		
-		returnList.add(
+		returnSet.add(
 				ResolvableMatchAlgorithmReference.toResolvableMatchAlgorithmReference(exactMatch, new ExactMatcher()));
 		
 		MatchAlgorithmReference contains = 
 			StandardMatchAlgorithmReference.CONTAINS.getMatchAlgorithmReference();
 		
-		returnList.add(
+		returnSet.add(
 				ResolvableMatchAlgorithmReference.toResolvableMatchAlgorithmReference(contains, new ContainsMatcher()));
 		
-		return returnList;
+		return returnSet;
 	}
 	
-	protected List<ResolvablePredicateReference<CodeSystemVersionCatalogEntry>> getKnownPredicateReferences(){
-		List<ResolvablePredicateReference<CodeSystemVersionCatalogEntry>> returnList =
-			new ArrayList<ResolvablePredicateReference<CodeSystemVersionCatalogEntry>>();
+	public Set<ResolvablePredicateReference<CodeSystemVersionCatalogEntry>> getSupportedProperties(){
+		Set<ResolvablePredicateReference<CodeSystemVersionCatalogEntry>> returnSet =
+			new HashSet<ResolvablePredicateReference<CodeSystemVersionCatalogEntry>>();
 		
 		ResolvablePredicateReference<CodeSystemVersionCatalogEntry> ref = 
 			new ResolvablePredicateReference<CodeSystemVersionCatalogEntry>(
@@ -134,14 +134,14 @@ public class BioportalRestCodeSystemVersionQueryService
 		ref.setUri(BioportalConstants.BIOPORTAL_ONTOLOGY_ID_ABOUT);
 		ref.setNamespace(BioportalConstants.BIOPORTAL_NAMESPACE_NAME);
 		
-		returnList.add(ref);
+		returnSet.add(ref);
 		
-		return returnList;
+		return returnSet;
 	}
 	
-	protected List<ResolvableModelAttributeReference<CodeSystemVersionCatalogEntrySummary>> getKnownModelAttributeReferences(){
-		List<ResolvableModelAttributeReference<CodeSystemVersionCatalogEntrySummary>> returnList =
-			new ArrayList<ResolvableModelAttributeReference<CodeSystemVersionCatalogEntrySummary>>();
+	public Set<ResolvableModelAttributeReference<CodeSystemVersionCatalogEntrySummary>> getSupportedModelAttributes(){
+		Set<ResolvableModelAttributeReference<CodeSystemVersionCatalogEntrySummary>> returnSet =
+			new HashSet<ResolvableModelAttributeReference<CodeSystemVersionCatalogEntrySummary>>();
 		
 		ResolvableModelAttributeReference<CodeSystemVersionCatalogEntrySummary> refName = 
 			ResolvableModelAttributeReference.toModelAttributeReference(
@@ -177,36 +177,13 @@ public class BioportalRestCodeSystemVersionQueryService
 					});
 		
 		
-		returnList.add(refName);
-		returnList.add(refAbout);
-		returnList.add(refSynopsis);
+		returnSet.add(refName);
+		returnSet.add(refAbout);
+		returnSet.add(refSynopsis);
 		
-		return returnList;
+		return returnSet;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerPredicateReferences()
-	 */
-	@Override
-	protected List<? extends PredicateReference> getAvailablePredicateReferences() {
-		return null;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerMatchAlgorithmReferences()
-	 */
-	@Override
-	protected List<? extends MatchAlgorithmReference> getAvailableMatchAlgorithmReferences() {
-		return this.getKnownMatchAlgorithmReferences();
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.AbstractQueryService#registerModelAttributeReferences()
-	 */
-	@Override
-	protected List<? extends ModelAttributeReference> getAvailableModelAttributeReferences() {
-		return this.getKnownModelAttributeReferences();
-	}
 
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getPropertyReference(java.lang.String)
@@ -227,8 +204,11 @@ public class BioportalRestCodeSystemVersionQueryService
 			Page page) {
 		String xml;
 		
-		if(StringUtils.isNotBlank(restrictions.getCodesystem())){
-			String ontologyId = this.identityConverter.codeSystemNameToOntologyId(restrictions.getCodesystem());
+		if(restrictions.getCodeSystem() != null){
+			//TODO: This does not resolve the URI if the restriction is a CodeSystemURI
+			String ontologyId = 
+					this.identityConverter.codeSystemNameToOntologyId(
+							restrictions.getCodeSystem().getName());
 			xml = this.bioportalRestService.getOntologyVersionsByOntologyId(ontologyId);
 		} else {
 			xml = this.bioportalRestService.getLatestOntologyVersions();
@@ -236,8 +216,8 @@ public class BioportalRestCodeSystemVersionQueryService
 	
 		CodeSystemVersionDirectoryBuilder builder = new CodeSystemVersionDirectoryBuilder(
 				this.codeSystemVersionTransform.transformVersionsOfResource(xml),
-				this.getKnownMatchAlgorithmReferences(),
-				this.getKnownModelAttributeReferences(),
+				this.getSupportedMatchAlgorithms(),
+				this.getSupportedModelAttributes(),
 				null
 				);
 		
@@ -249,8 +229,10 @@ public class BioportalRestCodeSystemVersionQueryService
 	 */
 	@Override
 	public DirectoryResult<CodeSystemVersionCatalogEntry> getResourceList(
-			Query query, Set<ResolvedFilter> filterComponent,
-			CodeSystemVersionQueryServiceRestrictions restrictions, Page page) {
+			Query query, 
+			Set<ResolvedFilter> filterComponent,
+			CodeSystemVersionQueryServiceRestrictions restrictions,
+			ResolvedReadContext readContext, Page page) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -265,8 +247,8 @@ public class BioportalRestCodeSystemVersionQueryService
 		
 		CodeSystemVersionDirectoryBuilder builder = new CodeSystemVersionDirectoryBuilder(
 					this.codeSystemVersionTransform.transformResourceVersions(xml),
-					this.getKnownMatchAlgorithmReferences(),
-					this.getKnownModelAttributeReferences(),
+					this.getSupportedMatchAlgorithms(),
+					this.getSupportedModelAttributes(),
 					null
 					);
 	
