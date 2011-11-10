@@ -339,28 +339,6 @@ public class EntityDescriptionTransform extends AbstractTransform {
 				numPages == page);
 	}
 	
-	/**
-	 * Creates the known entity description.
-	 *
-	 * @param codeSystemName the code system name
-	 * @param codeSystemVersionName the code system version name
-	 * @param label the label
-	 * @return the description in code system
-	 */
-	private DescriptionInCodeSystem createKnownEntityDescription(
-			String codeSystemName, 
-			String codeSystemVersionName,
-			String label){
-		DescriptionInCodeSystem description = new DescriptionInCodeSystem();
-		description.setDesignation(label);
-		
-		CodeSystemVersionReference versionRef = 
-			this.buildCodeSystemVersionReference(codeSystemName, codeSystemVersionName);
-
-		description.setDescribingCodeSystemVersion(versionRef);
-		
-		return description;
-	}
 
 	/**
 	 * Builds the resource name.

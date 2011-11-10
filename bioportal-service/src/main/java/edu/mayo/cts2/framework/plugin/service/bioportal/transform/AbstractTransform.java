@@ -32,6 +32,7 @@ import org.apache.commons.logging.LogFactory;
 import edu.mayo.cts2.framework.core.url.UrlConstructor;
 import edu.mayo.cts2.framework.model.core.CodeSystemReference;
 import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
+import edu.mayo.cts2.framework.model.core.DescriptionInCodeSystem;
 import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
@@ -183,5 +184,28 @@ public class AbstractTransform {
 	 */
 	public void setUrlConstructor(UrlConstructor urlConstructor) {
 		this.urlConstructor = urlConstructor;
+	}
+	
+	/**
+	 * Creates the known entity description.
+	 *
+	 * @param codeSystemName the code system name
+	 * @param codeSystemVersionName the code system version name
+	 * @param label the label
+	 * @return the description in code system
+	 */
+	public DescriptionInCodeSystem createKnownEntityDescription(
+			String codeSystemName, 
+			String codeSystemVersionName,
+			String label){
+		DescriptionInCodeSystem description = new DescriptionInCodeSystem();
+		description.setDesignation(label);
+		
+		CodeSystemVersionReference versionRef = 
+			this.buildCodeSystemVersionReference(codeSystemName, codeSystemVersionName);
+
+		description.setDescribingCodeSystemVersion(versionRef);
+		
+		return description;
 	}
 }

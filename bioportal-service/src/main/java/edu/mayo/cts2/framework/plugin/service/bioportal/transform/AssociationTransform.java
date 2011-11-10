@@ -77,8 +77,8 @@ public class AssociationTransform extends AbstractTransform{
 			
 			returnList.addAll(this.transformEntityNodeForRelationships(
 					codeSystemName, 
-					null, 
-					node));
+					codeSystemVersionName, 
+					null, node));
 		}
 
 		return null;//returnList;
@@ -104,27 +104,28 @@ public class AssociationTransform extends AbstractTransform{
 		
 		return transformEntityNodeForRelationships(
 				codeSystemName, 
-				predicateName,
-				node);
+				codeSystemVersionName,
+				predicateName, node);
 	}
 
 	/**
 	 * Transform entity node for relationships.
 	 *
 	 * @param codeSystemName the code system name
+	 * @param codeSystemVersionName the code system version name
 	 * @param predicateName the predicate name
 	 * @param node the node
 	 * @return the list
 	 */
 	private List<EntityDirectoryEntry> transformEntityNodeForRelationships(
 			String codeSystemName,
-			String predicateName, 
-			Node node) {
+			String codeSystemVersionName, 
+			String predicateName, Node node) {
 		List<EntityDirectoryEntry> entryList = new ArrayList<EntityDirectoryEntry>();
 
 		XPathExpression relationships;
 		if(StringUtils.isNotBlank(predicateName)){
-			relationships = TransformUtils.getXpathExpression(
+			relationships = TransformUtils.getXpathExpression(					
 					"relations/entry[string/text()='" + predicateName + "']");
 		} else {
 
@@ -151,9 +152,16 @@ public class AssociationTransform extends AbstractTransform{
 				
 
 				entry.setAbout(about);
-				entry.addKnownEntityDescription(new DescriptionInCodeSystem());
-				entry.getKnownEntityDescription(0).setDesignation(label);
-
+				String version= this.getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
+				entry.addKnownEntityDescription(this.createKnownEntityDescription(
+						codeSystemName, 
+						codeSystemVersionName, 
+						label));
+				
+				entry.setHref(this.getUrlConstructor().createEntityUrl(
+						codeSystemName, 
+						version, 
+						name));
 				entry.setName(ModelUtils.createScopedEntityName(name, codeSystemName));
 
 				entryList.add(entry);
@@ -214,7 +222,7 @@ public class AssociationTransform extends AbstractTransform{
 						codeSystemVersionName, subjectName));
 		
 		entry.setAssertedBy(this.buildCodeSystemVersionReference(codeSystemName, codeSystemVersionName));
-
+        
 		entry.setTarget(new StatementTarget());
 		entry.getTarget().setEntity(new URIAndEntityName());
 		entry.getTarget().getEntity().setName(targetName);
