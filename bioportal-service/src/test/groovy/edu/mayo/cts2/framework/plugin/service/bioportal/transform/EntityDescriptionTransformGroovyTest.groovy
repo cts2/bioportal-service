@@ -2,21 +2,28 @@ package edu.mayo.cts2.framework.plugin.service.bioportal.transform
 
 import static org.junit.Assert.*
 
+import javax.annotation.Resource
 import javax.xml.transform.*
 import javax.xml.transform.dom.*
 import javax.xml.transform.stream.*
 
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.springframework.core.io.UrlResource
+import org.springframework.test.context.ContextConfiguration
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.w3c.dom.*
 
 import edu.mayo.cts2.framework.core.url.UrlConstructor
 import edu.mayo.cts2.framework.core.xml.DelegatingMarshaller
 import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter
-import edu.mayo.cts2.framework.plugin.service.bioportal.transform.EntityDescriptionTransform;
-
+@RunWith(SpringJUnit4ClassRunner)
+@ContextConfiguration(locations="/bioportal-test-context-non-webapp.xml")
 class EntityDescriptionTransformGroovyTest {
+	
+	//@Resource EntityDescriptionTransform entityDescriptionTransform;
+	@Resource AssociationTransform associationTransform;
 	
 	def urlConstructor = [
 		createEntityUrl: {cs, csv, sub -> "http://entity/uri" },
@@ -35,6 +42,7 @@ class EntityDescriptionTransformGroovyTest {
 			"src/test/resources/bioportalXml/entityDescription.xml"
 		
 		EntityDescriptionTransform transform = new EntityDescriptionTransform()
+		transform.setAssociationTransform(associationTransform)
 		transform.setUrlConstructor(urlConstructor)
 		transform.setIdentityConverter(idConverter)
 	
@@ -53,7 +61,7 @@ class EntityDescriptionTransformGroovyTest {
 	}
 	
 	void doValidateXml(String xmlfileName){
-		EntityDescriptionTransform transform = new EntityDescriptionTransform()
+		EntityDescriptionTransform transform = entityDescriptionTransform
 		transform.setUrlConstructor(urlConstructor)
 		transform.setIdentityConverter(idConverter)
 	
@@ -73,9 +81,10 @@ class EntityDescriptionTransformGroovyTest {
 	@Test
 	void testGetPropertyCount(){
 		EntityDescriptionTransform transform = new EntityDescriptionTransform()
+		transform.setAssociationTransform(associationTransform)
 		transform.setUrlConstructor(urlConstructor)
 		transform.setIdentityConverter(idConverter)
-	
+	    
 		def xml = new File(
 			"src/test/resources/bioportalXml/entityDescription.xml").text
 	
@@ -88,6 +97,7 @@ class EntityDescriptionTransformGroovyTest {
 	@Test
 	void testPropertyNames(){
 		EntityDescriptionTransform transform = new EntityDescriptionTransform()
+		transform.setAssociationTransform(associationTransform)
 		transform.setUrlConstructor(urlConstructor)
 		transform.setIdentityConverter(idConverter)
 	
@@ -105,6 +115,7 @@ class EntityDescriptionTransformGroovyTest {
 	@Test
 	void testPropertyValueCount(){
 		EntityDescriptionTransform transform = new EntityDescriptionTransform()
+		transform.setAssociationTransform(associationTransform)
 		transform.setUrlConstructor(urlConstructor)
 		transform.setIdentityConverter(idConverter)
 	
@@ -122,6 +133,7 @@ class EntityDescriptionTransformGroovyTest {
 	@Test
 	void testPropertyValueText(){
 		EntityDescriptionTransform transform = new EntityDescriptionTransform()
+		transform.setAssociationTransform(associationTransform)
 		transform.setUrlConstructor(urlConstructor)
 		transform.setIdentityConverter(idConverter)
 	
@@ -139,6 +151,7 @@ class EntityDescriptionTransformGroovyTest {
 	@Test
 	void testTransformEntityDirectoryCount(){
 		EntityDescriptionTransform transform = new EntityDescriptionTransform()
+		transform.setAssociationTransform(associationTransform)
 		transform.setUrlConstructor(urlConstructor)
 		
 		def idConverter = [

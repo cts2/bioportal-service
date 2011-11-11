@@ -31,6 +31,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.Resource;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,9 +43,7 @@ import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Iterables;
 
-import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
 import edu.mayo.cts2.framework.model.core.Definition;
-import edu.mayo.cts2.framework.model.core.DescriptionInCodeSystem;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.Property;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
@@ -84,6 +84,10 @@ public class EntityDescriptionTransform extends AbstractTransform {
 	private final static String SKOS_CONCEPT_NAME = "Concept";
 	private final static String SKOS_URI = "http://www.w3.org/2004/02/skos/core#";
 	private final static String SKOS_NAMESPACE = "skos";
+	private static final String PARENT_PREDICATE = "SuperClass";
+
+	@Resource
+	private AssociationTransform associationTransform;
 	
 	/**
 	 * Transform entity description.
@@ -138,6 +142,8 @@ public class EntityDescriptionTransform extends AbstractTransform {
 		
 		entity.addEntityType(this.getEntityType(type));
 		
+		entity.setParent(associationTransform.transformURIAndEntityNameForRelationships(xml, codeSystemName, codeSystemVersionName, PARENT_PREDICATE));
+
 		return entity;
 	}
 	
@@ -327,6 +333,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 					label));
 			
 			entryList.add(entry);
+			
 		}
 		
 		int totalCount = TransformUtils.getTotalCount(xml);
@@ -476,5 +483,13 @@ public class EntityDescriptionTransform extends AbstractTransform {
 			}
 		}
 		return returnMap;
+	}
+
+	public AssociationTransform getAssociationTransform() {
+		return associationTransform;
+	}
+
+	public void setAssociationTransform(AssociationTransform associationTransform) {
+		this.associationTransform = associationTransform;
 	}
 }

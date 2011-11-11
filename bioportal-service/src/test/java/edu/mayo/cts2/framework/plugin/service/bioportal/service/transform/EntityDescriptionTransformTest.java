@@ -14,17 +14,21 @@ import org.springframework.core.io.Resource;
 import edu.mayo.cts2.framework.core.url.UrlConstructor;
 import edu.mayo.cts2.framework.model.entity.NamedEntityDescription;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
+import edu.mayo.cts2.framework.plugin.service.bioportal.transform.AssociationTransform;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.EntityDescriptionTransform;
 
 public class EntityDescriptionTransformTest {
 	
 	private EntityDescriptionTransform transform;
+	private AssociationTransform associationTransform;
 	
 	private String xml;
 	
 	@Before
 	public void buildTransform() throws Exception{
 		this.transform = new EntityDescriptionTransform();
+		this.associationTransform= new AssociationTransform();
+		this.transform.setAssociationTransform(associationTransform);
 		
 		IdentityConverter idConverter = EasyMock.createMock(IdentityConverter.class);
 		
@@ -40,7 +44,10 @@ public class EntityDescriptionTransformTest {
 		EasyMock.replay(idConverter, urlConstructor);
 		
 		this.transform.setIdentityConverter(idConverter);
+		
 		this.transform.setUrlConstructor(urlConstructor);
+		this.associationTransform.setIdentityConverter(idConverter);
+		this.associationTransform.setUrlConstructor(urlConstructor);
 		
 		Resource resource = new ClassPathResource("bioportalXml/entityDescription.xml");
 		

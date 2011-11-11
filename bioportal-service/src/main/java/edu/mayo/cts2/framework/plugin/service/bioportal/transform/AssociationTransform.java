@@ -34,14 +34,16 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.google.common.collect.Iterables;
+
 import edu.mayo.cts2.framework.model.association.AssociationDirectoryEntry;
 import edu.mayo.cts2.framework.model.association.GraphNode;
-import edu.mayo.cts2.framework.model.core.DescriptionInCodeSystem;
 import edu.mayo.cts2.framework.model.core.EntitySynopsis;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.StatementTarget;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.entity.Designation;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
@@ -172,6 +174,69 @@ public class AssociationTransform extends AbstractTransform{
 	}
 
 
+	/**
+	 * Transform entity node for relationships.
+	 *
+	 * @param codeSystemName the code system name
+	 * @param codeSystemVersionName the code system version name
+	 * @param predicateName the predicate name
+	 * @param node the node
+	 * @return the list
+	 */
+	public   URIAndEntityName[] transformURIAndEntityNameForRelationships(
+			String xml,
+			String codeSystemName,
+			String codeSystemVersionName, 
+			String predicateName) {
+		List<URIAndEntityName> entityList = new ArrayList<URIAndEntityName>();
+		Node node = TransformUtils.getNamedChildWithPath(BioportalRestUtils.getDocument(xml), NODE);
+
+
+		XPathExpression relationships;
+		if(StringUtils.isNotBlank(predicateName)){
+			relationships = TransformUtils.getXpathExpression(					
+					"relations/entry[string/text()='" + predicateName + "']");
+		} else {
+
+			relationships = TransformUtils.getXpathExpression(
+			"relations/entry");
+		}
+
+		NodeList predicateNodeList = 
+			TransformUtils.evalXpathExpressionForNodeList(relationships, node);
+
+		for(int i=0;i<predicateNodeList.getLength();i++){
+
+			Node predicate = predicateNodeList.item(i);
+
+			List<Node> targets = this.getTargetNodes(predicate);
+			
+			for(Node entryNode : targets){
+
+				URIAndEntityName entityName = new URIAndEntityName();
+
+				String about = this.getAbout(entryNode);
+				String name = this.getName(entryNode);
+				String label = this.getLabel(entryNode);
+				
+
+				entityName.setName(name);
+				entityName.setNamespace(codeSystemName);
+				String version= this.getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
+				entityName.setHref(this.getUrlConstructor().createEntityUrl(
+						codeSystemName, 
+						version, 
+						name));
+				//entityName.setUri(uri)
+				
+
+				entityList.add(entityName);
+			}
+		}		
+		return Iterables.toArray(entityList, URIAndEntityName.class);
+	}
+	
+	
 	/**
 	 * Transform association node.
 	 *
