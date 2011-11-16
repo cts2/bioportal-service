@@ -128,9 +128,14 @@ public class BioportalRestCodeSystemVersionReadService
 			NameOrURI codeSystemName, 
 			String officialResourceVersionId,
 			ReadContext readContext) {
-		String codeSystemVersionName = 
+		String codeSystemVersionName;
+		if (this.identityConverter.isCachedCodeSystemVersionName(officialResourceVersionId)) {
+			 codeSystemVersionName= officialResourceVersionId;
+		} else {
+		    codeSystemVersionName = 
 				this.identityConverter.codeSystemNameAndVersionIdToCodeSystemVersionName(
 						codeSystemName.getName(), officialResourceVersionId);
+		}
 		
 		return this.read(ModelUtils.nameOrUriFromName(codeSystemVersionName), null);
 	}

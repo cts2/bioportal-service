@@ -270,6 +270,7 @@ public class AssociationTransform extends AbstractTransform{
 
 		String targetAbout = TransformUtils.getNamedChildText(
 				targetNode, "fullId");
+		String version=  this.getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
 
 		T entry;
 		try {
@@ -284,17 +285,18 @@ public class AssociationTransform extends AbstractTransform{
 		entry.getSubject().setUri(subjectAbout);
 		entry.getSubject().setHref(
 				this.getUrlConstructor().createEntityUrl(codeSystemName,
-						codeSystemVersionName, subjectName));
+						version, subjectName));
 		
 		entry.setAssertedBy(this.buildCodeSystemVersionReference(codeSystemName, codeSystemVersionName));
         
 		entry.setTarget(new StatementTarget());
 		entry.getTarget().setEntity(new URIAndEntityName());
 		entry.getTarget().getEntity().setName(targetName);
+		entry.getTarget().getEntity().setNamespace(codeSystemName);
 		entry.getTarget().getEntity().setUri(targetAbout);
 		entry.getTarget().getEntity().setHref(
 				this.getUrlConstructor().createEntityUrl(codeSystemName,
-						codeSystemVersionName, targetName));
+						version, targetName));
 		
 		if(clazz.equals(GraphNode.class)){
 			String targetLabel = TransformUtils.getNamedChildText(
@@ -309,11 +311,12 @@ public class AssociationTransform extends AbstractTransform{
 			graphNode.getNodeEntity().setUri(targetAbout);
 			graphNode.getNodeEntity().setHref(
 					this.getUrlConstructor().createEntityUrl(codeSystemName,
-							codeSystemVersionName, targetName));
+							version, targetName));
 		}
 
 		PredicateReference predicateRef = new PredicateReference();
 		predicateRef.setName(predicateName);
+		predicateRef.setNamespace(codeSystemName);
 		entry.setPredicate(predicateRef);
 		
 		return entry;

@@ -204,7 +204,15 @@ public class BioportalRestAssociationQueryService
 			AssociationQueryServiceRestrictions restrictions, 
 			ResolvedReadContext readContext,
 			Page page) {
-		throw new UnsupportedOperationException();
+		EntityDescriptionReadId id= null;
+		if (restrictions.getSourceEntity() != null && restrictions.getCodeSystemVersion() != null) {
+			id= new EntityDescriptionReadId(restrictions.getSourceEntity().getEntityName(), restrictions.getCodeSystemVersion());
+		}
+		if (id != null) {
+		 return getDirectoryResult(id);
+		} else {
+			return null;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -380,5 +388,23 @@ public class BioportalRestAssociationQueryService
 			AssociationQueryServiceRestrictions restrictions,
 			ResolvedReadContext readContext, Page page) {
 		throw new UnsupportedOperationException();
+	}
+	
+	private DirectoryResult<AssociationDirectoryEntry> getDirectoryResult(EntityDescriptionReadId id) {
+		String ontologyVersionId = 
+				this.identityConverter.codeSystemVersionNameToOntologyVersionId(
+						id.getCodeSystemVersion().getName());
+			
+			String codeSystemName = this.identityConverter.
+					codeSystemVersionNameCodeSystemName(id.getCodeSystemVersion().getName());
+
+			final String xml = this.bioportalRestService.
+				getEntityByOntologyVersionIdAndEntityId(ontologyVersionId, id.getEntityName().getName());
+		
+			return this.associationTransform.transformSubjectOfAssociationsForEntity(
+					xml, 
+					codeSystemName, 
+					id.getCodeSystemVersion().getName());
+			
 	}
 }

@@ -724,4 +724,8 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 
 		return returnList;
 	}
+	
+	public boolean isCachedCodeSystemVersionName(String codeSystemVersionName) {
+		return nameToOntologyVersionId.containsKey(codeSystemVersionName);
+	}
 }
