@@ -30,7 +30,6 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 import edu.mayo.cts2.framework.filter.match.AttributeResolver;
@@ -40,9 +39,9 @@ import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
 import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
 import edu.mayo.cts2.framework.model.association.Association;
 import edu.mayo.cts2.framework.model.association.AssociationDirectoryEntry;
-import edu.mayo.cts2.framework.model.association.AssociationGraph;
 import edu.mayo.cts2.framework.model.association.GraphNode;
 import edu.mayo.cts2.framework.model.association.types.GraphDirection;
+import edu.mayo.cts2.framework.model.association.types.GraphFocus;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
@@ -300,8 +299,9 @@ public class BioportalRestAssociationQueryService
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.service.profile.association.AdvancedAssociationQueryService#getAssociationGraph(edu.mayo.cts2.framework.service.profile.entitydescription.id.EntityDescriptionId, edu.mayo.cts2.framework.model.association.types.GraphDirection, long)
 	 */
-	public AssociationGraph getAssociationGraph(
-			EntityDescriptionReadId id,
+	public DirectoryResult<GraphNode> getAssociationGraph(
+			GraphFocus focusType,
+			EntityDescriptionReadId id, 
 			GraphDirection direction,
 			long depth) {	
 		
@@ -317,9 +317,7 @@ public class BioportalRestAssociationQueryService
 		if(direction != GraphDirection.FORWARD){
 			throw new UnsupportedOperationException("Only GraphDirection of 'FORWARD' is allowed.");
 		}
-		
-		AssociationGraph graph = new AssociationGraph();
-		
+
 		String ontologyVersionId = this.identityConverter.
 			codeSystemVersionNameToOntologyVersionId(codeSystemVersionName);
 		
@@ -331,6 +329,7 @@ public class BioportalRestAssociationQueryService
 			xml = bioportalRestService.getEntityByOntologyVersionIdAndEntityId(ontologyVersionId, focusEntityName.getName());
 		}
 		
+	
 		List<GraphNode> associations = 
 			this.associationTransform.transformAssociationForGraph(xml, codeSystemName, codeSystemVersionName);
 		
@@ -341,21 +340,9 @@ public class BioportalRestAssociationQueryService
 			
 			entry.setDirection(AssociationDirection.SOURCE_TO_TARGET);
 			
-			graph.addEntry(entry);
 		}
 		
-		graph.setExpansionDepth(depth);
-		graph.setNumEntries((long) associations.size());
-		
-		if(CollectionUtils.isNotEmpty(associations)){
-			GraphNode focus = associations.get(0);
-			graph.setFocusEntity(focus.getSubject());
-		}
-		
-		graph.setExpansionDirection(direction);
-		
-		
-		return graph;
+		return new DirectoryResult<GraphNode>(associations,true,true);
 	}
 
 	@Override
