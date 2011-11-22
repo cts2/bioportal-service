@@ -123,7 +123,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 		Designation designation = new Designation();
 		designation.setValue(ModelUtils.toTsAnyType(label));
 		designation.setDesignationRole(DesignationRole.PREFERRED);
-		designation.setAssertedInCodeSystemVersion(this.buildCodeSystemVersionReference(codeSystemName, codeSystemVersionName));
+		//designation.setAssertedInCodeSystemVersion(this.buildCodeSystemVersionReference(codeSystemName, codeSystemVersionName));
 		
 		entity.addDesignation(designation);
 	
@@ -232,8 +232,8 @@ public class EntityDescriptionTransform extends AbstractTransform {
 				Designation designation = new Designation();
 				designation.setValue(ModelUtils.toTsAnyType(TransformUtils.getNodeText(synonym)));
 				designation.setDesignationRole(DesignationRole.ALTERNATIVE);
-				designation.setAssertedInCodeSystemVersion(
-						this.buildCodeSystemVersionReference(codeSystemName, codeSystemVersionName));
+				//designation.setAssertedInCodeSystemVersion(
+				//		this.buildCodeSystemVersionReference(codeSystemName, codeSystemVersionName));
 				returnList.add(designation);
 			}
 		}
