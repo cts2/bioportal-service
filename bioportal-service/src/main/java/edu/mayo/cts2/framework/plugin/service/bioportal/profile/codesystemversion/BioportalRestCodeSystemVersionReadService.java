@@ -106,7 +106,9 @@ public class BioportalRestCodeSystemVersionReadService
 	 */
 	@Override
 	public CodeSystemVersionCatalogEntry getCodeSystemVersionForCodeSystem(
-			NameOrURI codeSystem, String tagName, ReadContext readContext) {
+			NameOrURI codeSystem, 
+			String tagName, 
+			ResolvedReadContext readContext) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -127,7 +129,7 @@ public class BioportalRestCodeSystemVersionReadService
 	public CodeSystemVersionCatalogEntry getCodeSystemByVersionId(
 			NameOrURI codeSystemName, 
 			String officialResourceVersionId,
-			ReadContext readContext) {
+			ResolvedReadContext readContext) {
 		String codeSystemVersionName;
 		if (this.identityConverter.isCachedCodeSystemVersionName(officialResourceVersionId)) {
 			 codeSystemVersionName= officialResourceVersionId;
