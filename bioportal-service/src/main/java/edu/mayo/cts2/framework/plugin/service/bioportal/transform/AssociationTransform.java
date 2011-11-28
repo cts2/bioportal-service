@@ -407,8 +407,9 @@ public class AssociationTransform extends AbstractTransform{
 							predicateNode, 
 							objectNode,
 							clazz);
-
-					entryList.add(entry);
+					if (StringUtils.isNotBlank(entry.getPredicate().getName()) && ! entry.getPredicate().getName().startsWith("[R]")) {
+					   entryList.add(entry);
+					}
 				}
 			}
 		}

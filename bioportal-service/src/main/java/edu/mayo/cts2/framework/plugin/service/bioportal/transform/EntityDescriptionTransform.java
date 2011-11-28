@@ -139,6 +139,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 		
 		entity.setChildren(
 				this.getUrlConstructor().createChildrenUrl(codeSystemName, version, name));
+		entity.setSubjectOf(this.getUrlConstructor().createSourceUrl(codeSystemName, version, name));
 		
 		entity.addEntityType(this.getEntityType(type));
 		
