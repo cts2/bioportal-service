@@ -85,8 +85,9 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	
 	private RestTemplate restTemplate = new RestTemplate();
 	
-	private String apiKey = "880e5e30-0fa9-4cba-b25f-3069b15577f9";
-	
+	//private String apiKey = "880e5e30-0fa9-4cba-b25f-3069b15577f9";
+	//BioPortal CTS2 apikey
+	private String apiKey = "9a305fa2-40fb-4bd8-a630-8c201fca3792";
 	private static final String API_KEY_PARAM = "apikey";
 	
 	/* every hour default */
