@@ -30,13 +30,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.extension.LocalIdValueSetDefinition;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
-import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.ValueSetDefinitionTransform;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService;
+import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
 
 /**
  * The Class BioportalRestValueSetDefinitionReadService.
@@ -62,25 +63,25 @@ public class BioportalRestValueSetDefinitionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
-	public ValueSetDefinition read(String valueSetDefinitionDocumentUri, ResolvedReadContext readContext) {
+	public LocalIdValueSetDefinition read(ValueSetDefinitionReadId id, ResolvedReadContext readContext) {
 		
 		String ontologyVersionId = 
 			this.identityConverter.valueSetDefinitionNameToOntologyVersionId(
-					valueSetDefinitionDocumentUri);
+					id.getUri());
 		
 		String xml = this.bioportalRestService.getOntologyByOntologyVersionId(ontologyVersionId);
 
-		return this.valueSetDefinitionTransform.transformResourceVersion(xml);
+		return new LocalIdValueSetDefinition(this.valueSetDefinitionTransform.transformResourceVersion(xml));
 	}
 
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#exists(java.lang.Object)
 	 */
 	@Override
-	public boolean exists(String valueSetDefinitionDocumentUri, ReadContext readContext) {
+	public boolean exists(ValueSetDefinitionReadId id, ReadContext readContext) {
 		String ontologyVersionId = this.identityConverter
 				.valueSetDefinitionNameToOntologyVersionId(
-						valueSetDefinitionDocumentUri);
+						id.getUri());
 
 		try {
 			this.bioportalRestService
