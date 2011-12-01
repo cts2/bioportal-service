@@ -6,7 +6,7 @@ import org.junit.Test
 
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryMsg
 
-class CodeSystemCatalogReadTestIT extends BaseServiceTestITBase {
+class CodeSystemCatalogQueryTestIT extends BaseServiceTestITBase {
 	
 	@Test void "Test get a code system catalog entry by name"(){
 		
@@ -16,15 +16,5 @@ class CodeSystemCatalogReadTestIT extends BaseServiceTestITBase {
 		assertNotNull result
 		
 		assertEquals "LNC", result.getCodeSystemCatalogEntry().getCodeSystemName()
-	}
-	
-	@Test void "Test get a code system catalog entry by uri"(){
-		
-		CodeSystemCatalogEntryMsg result =
-			client.getCts2Resource(server + "codesystembyuri?uri=http://purl.bioontology.org/ontology/CL", CodeSystemCatalogEntryMsg.class);
-			
-		assertNotNull result
-		
-		assertEquals "CL", result.getCodeSystemCatalogEntry().getCodeSystemName()
 	}
 }

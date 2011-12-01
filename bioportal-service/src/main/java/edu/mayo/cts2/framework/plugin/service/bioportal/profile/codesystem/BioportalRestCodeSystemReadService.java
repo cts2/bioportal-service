@@ -25,6 +25,7 @@ package edu.mayo.cts2.framework.plugin.service.bioportal.profile.codesystem;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
@@ -80,8 +81,15 @@ public class BioportalRestCodeSystemReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
 	 */
 	@Override
-	public CodeSystemCatalogEntry read(NameOrURI codeSystemName, ResolvedReadContext readContext) {
-		String ontologyId = this.identityConverter.codeSystemNameToOntologyId(codeSystemName.getName());
+	public CodeSystemCatalogEntry read(NameOrURI codeSystem, ResolvedReadContext readContext) {
+		String codeSystemName;
+		if(StringUtils.isNotBlank(codeSystem.getUri())){
+			codeSystemName = this.identityConverter.codeSystemAboutToName(codeSystem.getUri());
+		} else {
+			codeSystemName = codeSystem.getName();
+		}
+		
+		String ontologyId = this.identityConverter.codeSystemNameToOntologyId(codeSystemName);
 		
 		String xml = this.bioportalRestService.getLatestOntologyVersionByOntologyId(ontologyId);
 
