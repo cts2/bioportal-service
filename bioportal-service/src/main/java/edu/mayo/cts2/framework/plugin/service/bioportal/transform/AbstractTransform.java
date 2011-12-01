@@ -28,6 +28,7 @@ import javax.annotation.Resource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.xerces.util.XMLChar;
 
 import edu.mayo.cts2.framework.core.url.UrlConstructor;
 import edu.mayo.cts2.framework.model.core.CodeSystemReference;
@@ -81,14 +82,19 @@ public class AbstractTransform {
 			scopedName.setName(nameParts[0]);
 			scopedName.setNamespace(codeSystemName);
 		} else {
-			scopedName.setName(nameParts[1]);
-			scopedName.setNamespace(nameParts[0]);
+			boolean isNamespaceValidNCName = 
+					XMLChar.isValidNCName(nameParts[0]);
+			if(isNamespaceValidNCName){
+				scopedName.setNamespace(nameParts[0]);
+			} else {
+				scopedName.setNamespace(codeSystemName);
+			}
+			scopedName.setName(nameParts[1]);	
 		}
 
 		return scopedName;
 	}
 
-	
 	/**
 	 * Builds the code system reference.
 	 *
