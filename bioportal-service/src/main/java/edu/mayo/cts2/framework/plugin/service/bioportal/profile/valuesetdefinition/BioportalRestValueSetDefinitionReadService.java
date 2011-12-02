@@ -67,7 +67,7 @@ public class BioportalRestValueSetDefinitionReadService
 		
 		String ontologyVersionId = 
 			this.identityConverter.valueSetDefinitionNameToOntologyVersionId(
-					id.getUri());
+					id.getName());
 		
 		String xml = this.bioportalRestService.getOntologyByOntologyVersionId(ontologyVersionId);
 

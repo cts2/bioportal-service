@@ -24,6 +24,7 @@
 package edu.mayo.cts2.framework.plugin.service.bioportal.transform;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Node;
 
@@ -43,7 +44,7 @@ public class ValueSetTransform extends AbstractBioportalOntologyTransformTemplat
 	private static NodeFilter NODE_FILTER = new NodeFilter(){
 
 		public boolean add(Node node) {
-			return ! BooleanUtils.toBoolean(
+			return  BooleanUtils.toBoolean(
 					TransformUtils.getNamedChildText(node, IS_VIEW));
 		}
 	};
@@ -151,10 +152,15 @@ public class ValueSetTransform extends AbstractBioportalOntologyTransformTemplat
 	protected ValueSetCatalogEntry decorateResource(Node node,
 			ValueSetCatalogEntry resource) {
 		String viewDefinition = TransformUtils.getNamedChildText(node, VIEW_DEFINITION);
-		
+		if (StringUtils.isNotBlank(viewDefinition)) {
+			resource.addAdditionalDocumentation(viewDefinition);
+		}
+		String valueSetName= resource.getValueSetName();
+		resource.setDefinitions(this.getUrlConstructor().createDefinitionsOfValueSetUrl(valueSetName));
+
 		//TODO: not sure where to put this, as there are no Definitions on ValueSetDefinition
 		
-		resource.addAdditionalDocumentation(viewDefinition);
+		
 		
 		return resource;
 	}

@@ -70,7 +70,7 @@ import edu.mayo.cts2.framework.service.profile.valueset.ValueSetQueryService;
  */
 @Component
 @Qualifier("local")
-public class BioportalRestValueSetService 
+public class BioportalRestValueSetQueryService 
 	extends AbstractBioportalRestQueryService<
 		edu.mayo.cts2.framework.model.service.valueset.ValueSetQueryService>
 	implements ValueSetQueryService {
