@@ -4,17 +4,17 @@ import static org.junit.Assert.*
 
 import org.junit.Test
 
-import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryMsg
+import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntryDirectory
 
 class CodeSystemCatalogQueryTestIT extends BaseServiceTestITBase {
 	
-	@Test void "Test get a code system catalog entry by name"(){
+	@Test void "Test get code systems"(){
 		
-		CodeSystemCatalogEntryMsg result = 
-			client.getCts2Resource(server + "codesystem/LNC", CodeSystemCatalogEntryMsg.class);
+		CodeSystemCatalogEntryDirectory result = 
+			client.getCts2Resource(server + "codesystems", CodeSystemCatalogEntryDirectory.class);
 			
 		assertNotNull result
 		
-		assertEquals "LNC", result.getCodeSystemCatalogEntry().getCodeSystemName()
+		assertTrue result.getEntryCount() > 0
 	}
 }

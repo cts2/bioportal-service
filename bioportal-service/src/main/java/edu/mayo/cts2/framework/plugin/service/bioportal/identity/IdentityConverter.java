@@ -671,13 +671,6 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 	 * @return the about from xml
 	 */
 	private String getAboutFromXml(String xml, String resourceName, String defaultAboutPrefix){
-//		String about = StringUtils.substringBefore(this.getUrn(xml), "|");
-//		
-//		if(StringUtils.isBlank(about)){
-//			return defaultAboutPrefix + resourceName;
-//		} else {
-//			return about;
-//		}
 		return defaultAboutPrefix + resourceName;
 	}
 	

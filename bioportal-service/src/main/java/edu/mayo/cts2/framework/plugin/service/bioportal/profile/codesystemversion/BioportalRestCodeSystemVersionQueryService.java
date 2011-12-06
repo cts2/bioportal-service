@@ -221,7 +221,11 @@ public class BioportalRestCodeSystemVersionQueryService
 				null
 				);
 		
-		return builder.restrict(filterComponent).resolve();
+		return builder.
+				restrict(filterComponent).
+				addMaxToReturn(page.getMaxToReturn()).
+				addStart(page.getStart()).
+				resolve();
 	}
 
 	/* (non-Javadoc)
