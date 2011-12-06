@@ -21,7 +21,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package edu.mayo.cts2.framework.plugin.service.bioportal.profile.valuesetdefinition;
+package edu.mayo.cts2.framework.plugin.service.bioportal.profile.valuesetesolution;
 
 import javax.annotation.Resource;
 
@@ -33,12 +33,14 @@ import org.springframework.web.client.RestClientException;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.extension.LocalIdValueSetDefinition;
 import edu.mayo.cts2.framework.model.service.core.ReadContext;
+import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.ValueSetDefinitionTransform;
-import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
+import edu.mayo.cts2.framework.service.profile.valuesetresolution.ResolvedValueSetReadService;
+import edu.mayo.cts2.framework.service.profile.valuesetresolution.name.ResolvedValueSetReadId;
 
 /**
  * The Class BioportalRestValueSetDefinitionReadService.
@@ -47,9 +49,11 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetD
  */
 @Component
 @Qualifier("local")
-public class BioportalRestValueSetDefinitionReadService
-	extends AbstractBioportalRestService<edu.mayo.cts2.framework.model.service.valuesetdefinition.ValueSetDefinitionReadService>
-	implements ValueSetDefinitionReadService {
+public class BioportalRestValueSetDefinitionResolutionReadService
+	extends AbstractBioportalRestService<edu.mayo.cts2.framework.model.service.valuesetdefinition.ValueSetDefinitionResolution>
+	implements ResolvedValueSetReadService {
+
+
 
 	@Resource
 	private BioportalRestService bioportalRestService;
@@ -59,10 +63,15 @@ public class BioportalRestValueSetDefinitionReadService
 	
 	@Resource
 	private IdentityConverter identityConverter;
-
+	
+	@Override
+	public ResolvedValueSet read(ResolvedValueSetReadId identifier) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#read(java.lang.Object)
-	 */
+	 
 	@Override
 	public LocalIdValueSetDefinition read(ValueSetDefinitionReadId id, ResolvedReadContext readContext) {
 		String ontologyVersionId=null;
@@ -78,23 +87,6 @@ public class BioportalRestValueSetDefinitionReadService
 
 		return new LocalIdValueSetDefinition(this.valueSetDefinitionTransform.transformResourceVersion(xml));
 	}
+*/
 
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.ReadService#exists(java.lang.Object)
-	 */
-	@Override
-	public boolean exists(ValueSetDefinitionReadId id, ReadContext readContext) {
-		String ontologyVersionId = this.identityConverter
-				.valueSetDefinitionNameToOntologyVersionId(
-						id.getUri());
-
-		try {
-			this.bioportalRestService
-					.getOntologyByOntologyVersionId(ontologyVersionId);
-		} catch (RestClientException ex) {
-			return false;
-		}
-
-		return true;
-	}
 }

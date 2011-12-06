@@ -23,13 +23,18 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.transform;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Node;
 
+import edu.mayo.cts2.framework.model.core.CodeSystemReference;
 import edu.mayo.cts2.framework.model.core.ValueSetReference;
 import edu.mayo.cts2.framework.model.core.VersionTagReference;
+import edu.mayo.cts2.framework.model.core.types.SetOperator;
+import edu.mayo.cts2.framework.model.valuesetdefinition.CompleteCodeSystemReference;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionDirectoryEntry;
+import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionEntry;
 import edu.mayo.cts2.framework.plugin.service.bioportal.util.BioportalConstants;
 
 /**
@@ -153,10 +158,30 @@ public class ValueSetDefinitionTransform extends AbstractBioportalOntologyVersio
 		String viewDefinition = TransformUtils.getNamedChildText(node, VIEW_DEFINITION);
 
 		//TODO: not sure where to put this, as there are no Definitions on ValueSetDefinition
-		
-		resourceVersion.addAdditionalDocumentation(viewDefinition);
-		
+		if (StringUtils.isNotBlank(viewDefinition)) {
+		    resourceVersion.addAdditionalDocumentation(viewDefinition);
+		}
+		ValueSetDefinitionEntry vsde= new ValueSetDefinitionEntry();
+		vsde.setCompleteCodeSystem(buildCompleteCodeSystemReference(resourceName));
+		vsde.setOperator(SetOperator.UNION);
+		vsde.setEntryOrder(1L);
+		resourceVersion.addEntry(vsde);
 		return resourceVersion;
+	}
+	
+	
+	CompleteCodeSystemReference buildCompleteCodeSystemReference(String valueSetName) {
+		CompleteCodeSystemReference ccsr= new CompleteCodeSystemReference();
+		CodeSystemReference csr= new CodeSystemReference();
+		String valueSetPath = this.getUrlConstructor().createValueSetUrl(valueSetName);
+
+		csr.setContent(valueSetName);
+		csr.setHref(valueSetPath);
+		csr.setUri(this.getIdentityConverter().getValueSetAbout(valueSetName, BioportalConstants.DEFAULT_VIEW_ABOUT));
+
+		ccsr.setCodeSystem(csr);
+		return ccsr;
+		
 	}
 
 	/* (non-Javadoc)

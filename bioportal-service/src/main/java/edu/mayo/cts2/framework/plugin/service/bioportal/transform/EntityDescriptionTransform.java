@@ -401,6 +401,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 
 			String about = resultMap.get(conceptIdKey);
 			String name = resultMap.get(conceptIdShortKey);
+			name= name.replaceFirst(":", "_");
 			String label = resultMap.get(preferredNameKey);
 			String ontologyId = resultMap.get(ontologyIdKey);
 			String ontologyVersionId = resultMap.get(ontologyVersionIdKey);
