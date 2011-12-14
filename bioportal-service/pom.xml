@@ -9,7 +9,7 @@
 	</parent>
 	
 	<artifactId>bioportal-service</artifactId>
-	<version>0.3.2-SNAPSHOT</version>
+	<version>0.3.4-SNAPSHOT</version>
 	<name>bioportal-service</name>
 	
 	<developers>

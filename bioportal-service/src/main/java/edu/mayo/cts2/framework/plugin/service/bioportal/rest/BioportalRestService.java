@@ -41,6 +41,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 
@@ -52,6 +54,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -85,8 +91,8 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	
 	private RestTemplate restTemplate = new RestTemplate();
 	
-	//private String apiKey = "880e5e30-0fa9-4cba-b25f-3069b15577f9";
-	//BioPortal CTS2 apikey
+	private ExecutorService executorService = Executors.newFixedThreadPool(1);
+	
 	private String apiKey = "9a305fa2-40fb-4bd8-a630-8c201fca3792";
 	private static final String API_KEY_PARAM = "apikey";
 	
@@ -502,8 +508,6 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	protected String doCallBioportal(String url){
 		String fullUrl = this.appendApiKey(url);
 		
-		synchronized(cache){
-		
 		if(!this.cache.containsKey(fullUrl)){
 	
 			String xml = this.callBioportal(fullUrl);
@@ -515,9 +519,10 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
-		}
-		
-		return new String(this.cache.get(fullUrl));
+			
+			return xml;
+		} else {
+			return new String(this.cache.get(fullUrl));
 		}
 	}
 	
@@ -568,7 +573,16 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	 */
 	protected String callBioportal(String url){
 		log.info("Calling Bioportal REST: " + url);
-		return this.restTemplate.getForObject(url, String.class);
+		HttpHeaders headers = new HttpHeaders();
+		headers.set( "Accept", "application/xml" );
+		
+		ResponseEntity<String> response = this.restTemplate.exchange(
+				url, 
+				HttpMethod.GET, 
+				new HttpEntity<Void>(headers), 
+				String.class);
+		
+		return response.getBody();
 	}
 	
     /* (non-Javadoc)
@@ -732,19 +746,43 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	 *
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	private void writeCache() throws IOException {
-		log.info("Writing cache");
+	private void writeCache() {
+			this.executorService.execute(new Runnable(){
 
-		if (this.cache instanceof Serializable) {
-			
-			File file = this.getCacheFile();
-			FileOutputStream fos = new FileOutputStream(file);
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject((Serializable) this.cache);
-			oos.close();
-		} else {
-			throw new RuntimeException(this.cache.getClass().getName() + " is not Serializable!");
-		}
+				@Override
+				public void run() {
+					log.info("Writing cache");
+					synchronized(cache){
+						if(cache instanceof Serializable) {
+							FileOutputStream fos = null;
+							ObjectOutputStream oos = null;
+							try {
+								File file = getCacheFile();
+								fos = new FileOutputStream(
+										file);
+								oos = new ObjectOutputStream(
+										fos);
+								oos.writeObject((Serializable) cache);
+							} catch (Exception e) {
+								throw new RuntimeException(e);
+							} finally {
+								try {
+									if(fos != null){
+										fos.close();
+									}
+									if(oos != null){
+										oos.close();
+									}
+								} catch (IOException e) {
+									throw new RuntimeException(e);
+								}
+							}
+						} else {
+							throw new RuntimeException(cache.getClass().getName() + " is not Serializable!");
+						}
+					}
+				}
+			});
 	}
 	
 	/**
