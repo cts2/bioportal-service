@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<success>
+  <accessedResource>/bioportal/ontologies/versions/1416</accessedResource>
+  <accessDate>2011-12-02 13:15:15.862 PST</accessDate>
+  <data>
+    <list>
+      <ontologyBean>
+        <id>42157</id>
+        <ontologyId>1416</ontologyId>
+        <virtualViewIds/>
+        <internalVersionNumber>1</internalVersionNumber>
+        <userIds>
+          <int>7296</int>
+        </userIds>
+        <versionNumber>2009_04_30</versionNumber>
+        <isRemote>0</isRemote>
+        <statusId>3</statusId>
+        <dateCreated>2010-01-11 08:41:21.0 PST</dateCreated>
+        <dateReleased>2009-04-30 00:00:00.0 PDT</dateReleased>
+        <isManual>1</isManual>
+        <displayLabel>SNOMED Terminos Clinicos</displayLabel>
+        <description>SNOMED Terminos Clinicos (SNOMED CT), Edicion en Espanol, Distribucion Internacional, Octubre de 2008, 2009_04_30</description>
+        <abbreviation>SCTSPA</abbreviation>
+        <format>RRF</format>
+        <contactEmail>custserv@nlm.nih.gov</contactEmail>
+        <codingScheme>urn:oid:2.16.840.1.113883.6.96.1|2009_04_30</codingScheme>
+        <targetTerminologies>SCTSPA</targetTerminologies>
+        <isFoundry>0</isFoundry>
+        <userAcl/>
+        <isView>true</isView>
+        <categoryIds>
+          <int>5058</int>
+        </categoryIds>
+        <groupIds>
+          <int>6008</int>
+        </groupIds>
+        <filenames>
+          <string>fake.zip</string>
+          <string>######DIR######</string>
+        </filenames>
+        <filePath>/1416/1</filePath>
+        <hasViews/>
+        <viewOnOntologyVersionId>
+          <int>42122</int>
+        </viewOnOntologyVersionId>
+      </ontologyBean>
+      <ontologyBean>
+        <id>42157</id>
+        <ontologyId>1416</ontologyId>
+        <virtualViewIds/>
+        <internalVersionNumber>1</internalVersionNumber>
+        <userIds>
+          <int>7296</int>
+        </userIds>
+        <versionNumber>2009_04_30</versionNumber>
+        <isRemote>0</isRemote>
+        <statusId>3</statusId>
+        <dateCreated>2010-01-11 08:41:21.0 PST</dateCreated>
+        <dateReleased>2009-04-30 00:00:00.0 PDT</dateReleased>
+        <isManual>1</isManual>
+        <displayLabel>SNOMED Terminos Clinicos</displayLabel>
+        <description>SNOMED Terminos Clinicos (SNOMED CT), Edicion en Espanol, Distribucion Internacional, Octubre de 2008, 2009_04_30</description>
+        <abbreviation>SCTSPA</abbreviation>
+        <format>RRF</format>
+        <contactEmail>custserv@nlm.nih.gov</contactEmail>
+        <codingScheme>urn:oid:2.16.840.1.113883.6.96.1|2009_04_30</codingScheme>
+        <targetTerminologies>SCTSPA</targetTerminologies>
+        <isFoundry>0</isFoundry>
+        <userAcl/>
+        <isView>true</isView>
+        <categoryIds>
+          <int>5058</int>
+        </categoryIds>
+        <groupIds>
+          <int>6008</int>
+        </groupIds>
+        <filenames>
+          <string>fake.zip</string>
+          <string>######DIR######</string>
+        </filenames>
+        <filePath>/1416/1</filePath>
+        <hasViews/>
+        <viewOnOntologyVersionId>
+          <int>42122</int>
+        </viewOnOntologyVersionId>
+      </ontologyBean>
+    </list>
+  </data>
+</success>

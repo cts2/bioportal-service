@@ -363,8 +363,8 @@ public abstract class AbstractBioportalOntologyVersionTransformTemplate<R extend
 
 		entry.setDocumentURI(this.getIdentityConverter().getDocumentUri(ontologyVersionId));
 		String version= this.getIdentityConverter().codeSystemVersionNameToVersion(resourceVersionName);
-		entry.setHref(this.getHref(resourceName, version));
-		
+//		entry.setHref(this.getHref(resourceName, version));
+		entry.setHref(getHref(resourceName, resourceVersionName, ontologyId, ontologyVersionId ));
 		entry.setOfficialResourceVersionId(version);
 		
 		entry = this.decorateResourceVersionSummary(node, resourceName, entry);
@@ -372,6 +372,11 @@ public abstract class AbstractBioportalOntologyVersionTransformTemplate<R extend
 		return entry;
 	}
 	
+	
+	protected String getHref(String resourceName, String resourceVersionName, String ontologyId, String ontologyVersionId) {
+		String version= this.getIdentityConverter().codeSystemVersionNameToVersion(resourceVersionName);
+		return this.getHref(resourceName, version);
+	}
 	/**
 	 * Gets the date released.
 	 *

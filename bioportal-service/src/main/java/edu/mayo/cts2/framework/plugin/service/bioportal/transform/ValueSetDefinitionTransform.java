@@ -114,6 +114,9 @@ public class ValueSetDefinitionTransform extends AbstractBioportalOntologyVersio
 		return this.getUrlConstructor().createValueSetDefinitionUrl(resourceName, resourceVersionName);
 	}
 
+	protected String getHref(String resourceName, String resourceVersionName, String ontologyId, String ontologyVersionId) {
+		return this.getHref(resourceName, ontologyVersionId);
+	}	
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#decorateResourceVersionSummary(org.w3c.dom.Node, java.lang.String, org.cts2.core.ResourceVersionDescriptionDirectoryEntry)
 	 */
