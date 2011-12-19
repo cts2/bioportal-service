@@ -16,6 +16,7 @@ import edu.mayo.cts2.framework.model.core.ModelAttributeReference
 import edu.mayo.cts2.framework.model.core.types.TargetReferenceType
 import edu.mayo.cts2.framework.service.constant.ExternalCts2Constants
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference
+import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQuery
 
 @RunWith(SpringJUnit4ClassRunner)
 @ContextConfiguration(locations="/bioportal-test-context-non-webapp.xml")
@@ -33,9 +34,16 @@ public class BioportalRestEntityDescriptionQueryServiceTestIT {
 				matchValue:"thing",
 				modelAttributeReference: new ModelAttributeReference(content:ExternalCts2Constants.MA_RESOURCE_NAME_NAME),
 				referenceType:TargetReferenceType.ATTRIBUTE)
+		
+		def q = [
+			getFilterComponent : { [filter] as Set },
+			getReadContext : { },
+			getQuery : { },
+			getRestrictions : { }
+		] as EntityDescriptionQuery
 
 		def result = 
-			service.getAllEntityDescriptions(null, [filter] as Set, new Page(page:2,maxtoreturn:10))
+			service.getAllEntityDescriptions(q, null, new Page(page:2,maxtoreturn:10))
 			
 		assertEquals 10, result.getEntries().size()
 		

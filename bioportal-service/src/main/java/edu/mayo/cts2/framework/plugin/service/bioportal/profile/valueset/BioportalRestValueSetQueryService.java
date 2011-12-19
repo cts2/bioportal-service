@@ -41,12 +41,10 @@ import edu.mayo.cts2.framework.filter.match.ExactMatcher;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
 import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
+import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntrySummary;
@@ -58,9 +56,9 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory.Value
 import edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory.ValueSetDirectoryBuilder.ValueSetCodeSystemExtractor;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.TransformUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.ValueSetTransform;
-import edu.mayo.cts2.framework.service.command.restriction.ValueSetQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
+import edu.mayo.cts2.framework.service.profile.valueset.ValueSetQuery;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetQueryService;
 
 /**
@@ -240,10 +238,8 @@ public class BioportalRestValueSetQueryService
 	 */
 	@Override
 	public DirectoryResult<ValueSetCatalogEntrySummary> getResourceSummaries(
-			Query query, 
-			Set<ResolvedFilter> filterComponent,
-			ValueSetQueryServiceRestrictions restrictions, 
-			ResolvedReadContext readContext,
+			ValueSetQuery query, 
+			SortCriteria sort,
 			Page page) {
 		ValueSetDirectoryBuilder builder = 
 				new ValueSetDirectoryBuilder(
@@ -255,11 +251,11 @@ public class BioportalRestValueSetQueryService
 						);
 
 			return builder.
-					restrict(restrictions).
-					restrict(filterComponent).
+					restrict(query.getRestrictions()).
+					restrict(query.getFilterComponent()).
 					addStart(page.getStart()).
 					addMaxToReturn(page.getMaxToReturn()).
-					restrict(query).
+					restrict(query.getQuery()).
 					resolve();
 	}
 
@@ -268,10 +264,8 @@ public class BioportalRestValueSetQueryService
 	 */
 	@Override
 	public DirectoryResult<ValueSetCatalogEntry> getResourceList(
-			Query query,
-			Set<ResolvedFilter> filterComponent,
-			ValueSetQueryServiceRestrictions restrictions, 
-			ResolvedReadContext readContext,
+			ValueSetQuery query, 
+			SortCriteria sort,
 			Page page) {
 		throw new UnsupportedOperationException();
 	}
@@ -281,9 +275,7 @@ public class BioportalRestValueSetQueryService
 	 */
 	@Override
 	public int count(
-			Query query, 
-			Set<ResolvedFilter> filterComponent,
-			ValueSetQueryServiceRestrictions restrictions) {
+			ValueSetQuery query) {
 		
 			ValueSetDirectoryBuilder builder = 
 				new ValueSetDirectoryBuilder(
@@ -295,9 +287,9 @@ public class BioportalRestValueSetQueryService
 						);
 
 			return builder.
-					restrict(restrictions).
-					restrict(filterComponent).
-					restrict(query).
+					restrict(query.getRestrictions()).
+					restrict(query.getFilterComponent()).
+					restrict(query.getQuery()).
 					count();
 	}
 

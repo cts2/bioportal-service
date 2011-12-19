@@ -40,6 +40,7 @@ import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
+import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
@@ -59,6 +60,7 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.transform.TransformUtils
 import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
+import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQuery;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQueryService;
 
 /**
@@ -558,28 +560,28 @@ public class BioportalRestEntityDescriptionQueryService
 	 */
 	@Override
 	public DirectoryResult<EntityDirectoryEntry> getResourceSummaries(
-			Query query, 
-			Set<ResolvedFilter> filterComponent,
-			EntityDescriptionQueryServiceRestrictions restrictions, 
-			ResolvedReadContext readContext,
+			EntityDescriptionQuery query, 
+			SortCriteria sort,
 			Page page) {
 		
-		if(restrictions.getCodeSystemVersion() != null){
+		EntityDescriptionQueryServiceRestrictions restrictions = query.getRestrictions();
+		
+		if(restrictions != null && restrictions.getCodeSystemVersion() != null){
 			
 			String codeSystemVersionName = restrictions.getCodeSystemVersion().getName();
 			
 			String codeSystemName = this.identityConverter.codeSystemVersionNameCodeSystemName(codeSystemVersionName);
 			
 			return this.getEntityDescriptionsOfCodeSystemVersion(
-					query, 
-					filterComponent, 
+					query.getQuery(), 
+					query.getFilterComponent(), 
 					page,
 					codeSystemName,
 					codeSystemVersionName);
 		} else {
 			return this.getAllEntityDescriptions(
-					query,
-					filterComponent,
+					query.getQuery(), 
+					query.getFilterComponent(), 
 					page);
 		}
 	}
@@ -589,10 +591,8 @@ public class BioportalRestEntityDescriptionQueryService
 	 */
 	@Override
 	public DirectoryResult<EntityDescription> getResourceList(
-			Query query,
-			Set<ResolvedFilter> filterComponent,
-			EntityDescriptionQueryServiceRestrictions restrictions, 
-			ResolvedReadContext readContext,
+			EntityDescriptionQuery query, 
+			SortCriteria sort,
 			Page page) {
 		throw new UnsupportedOperationException();
 	}
@@ -602,9 +602,7 @@ public class BioportalRestEntityDescriptionQueryService
 	 */
 	@Override
 	public int count(
-			Query query, 
-			Set<ResolvedFilter> filterComponent,
-			EntityDescriptionQueryServiceRestrictions restrictions) {
+			EntityDescriptionQuery query) {
 		throw new UnsupportedOperationException();
 	}
 

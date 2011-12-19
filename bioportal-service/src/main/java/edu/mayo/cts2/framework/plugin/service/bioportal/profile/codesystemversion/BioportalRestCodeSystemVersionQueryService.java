@@ -43,14 +43,12 @@ import edu.mayo.cts2.framework.filter.match.ResolvablePredicateReference;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.Property;
+import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.core.StatementTarget;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestQueryService;
@@ -61,6 +59,7 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.util.BioportalConstants;
 import edu.mayo.cts2.framework.service.command.restriction.CodeSystemVersionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
+import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionQuery;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionQueryService;
 
 /**
@@ -197,14 +196,15 @@ public class BioportalRestCodeSystemVersionQueryService
 	 */
 	@Override
 	public DirectoryResult<CodeSystemVersionCatalogEntrySummary> getResourceSummaries(
-			Query query, 
-			Set<ResolvedFilter> filterComponent,
-			CodeSystemVersionQueryServiceRestrictions restrictions, 
-			ResolvedReadContext readContext,
+			CodeSystemVersionQuery query, 
+			SortCriteria sort,
 			Page page) {
+		
+		CodeSystemVersionQueryServiceRestrictions restrictions = query.getRestrictions();
+		
 		String xml;
 		
-		if(restrictions.getCodeSystem() != null){
+		if(restrictions != null && restrictions.getCodeSystem() != null){
 			//TODO: This does not resolve the URI if the restriction is a CodeSystemURI
 			String ontologyId = 
 					this.identityConverter.codeSystemNameToOntologyId(
@@ -222,7 +222,7 @@ public class BioportalRestCodeSystemVersionQueryService
 				);
 		
 		return builder.
-				restrict(filterComponent).
+				restrict(query.getFilterComponent()).
 				addMaxToReturn(page.getMaxToReturn()).
 				addStart(page.getStart()).
 				resolve();
@@ -233,20 +233,17 @@ public class BioportalRestCodeSystemVersionQueryService
 	 */
 	@Override
 	public DirectoryResult<CodeSystemVersionCatalogEntry> getResourceList(
-			Query query, 
-			Set<ResolvedFilter> filterComponent,
-			CodeSystemVersionQueryServiceRestrictions restrictions,
-			ResolvedReadContext readContext, Page page) {
-		// TODO Auto-generated method stub
-		return null;
+			CodeSystemVersionQuery query, 
+			SortCriteria sort,
+			Page page) {
+		throw new UnsupportedOperationException();
 	}
 
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.service.profile.QueryService#count(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object)
 	 */
 	@Override
-	public int count(Query query, Set<ResolvedFilter> filterComponent,
-			CodeSystemVersionQueryServiceRestrictions restrictions) {
+	public int count(CodeSystemVersionQuery query) {
 	String xml = this.bioportalRestService.getLatestOntologyVersions();
 		
 		CodeSystemVersionDirectoryBuilder builder = new CodeSystemVersionDirectoryBuilder(
@@ -256,6 +253,6 @@ public class BioportalRestCodeSystemVersionQueryService
 					null
 					);
 	
-		return builder.restrict(filterComponent).count();
+		return builder.restrict(query.getFilterComponent()).count();
 	}
 }

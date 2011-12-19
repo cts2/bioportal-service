@@ -43,15 +43,13 @@ import edu.mayo.cts2.framework.filter.match.ResolvablePredicateReference;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.Property;
+import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.core.StatementTarget;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
-import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestQueryService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
@@ -60,6 +58,7 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.transform.CodeSystemTran
 import edu.mayo.cts2.framework.plugin.service.bioportal.util.BioportalConstants;
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
+import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService;
 
 /**
@@ -232,10 +231,8 @@ public class BioportalRestCodeSystemQueryService
 	 */
 	@Override
 	public DirectoryResult<CodeSystemCatalogEntrySummary> getResourceSummaries(
-			Query query, 
-			Set<ResolvedFilter> filterComponent, 
-			Void restrictions,
-			ResolvedReadContext readContext,
+			ResourceQuery query, 
+			SortCriteria sortCriteria,
 			Page page) {
 		
 		CodeSystemDirectoryBuilder builder = 
@@ -247,7 +244,7 @@ public class BioportalRestCodeSystemQueryService
 					this.getSupportedProperties()
 					);
 
-		return builder.restrict(filterComponent).
+		return builder.restrict(query.getFilterComponent()).
 			addStart(page.getStart()).
 			addMaxToReturn(page.getMaxToReturn()).resolve();
 	}
@@ -259,10 +256,8 @@ public class BioportalRestCodeSystemQueryService
 	 */
 	@Override
 	public DirectoryResult<CodeSystemCatalogEntry> getResourceList(
-			Query query,
-			Set<ResolvedFilter> filterComponent, 
-			Void restrictions, 
-			ResolvedReadContext readContext,
+			ResourceQuery query, 
+			SortCriteria sortCriteria,
 			Page page) {
 		throw new UnsupportedOperationException();
 	}
@@ -273,8 +268,7 @@ public class BioportalRestCodeSystemQueryService
 	 * @see edu.mayo.cts2.framework.service.profile.QueryService#count(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object)
 	 */
 	@Override
-	public int count(Query query, Set<ResolvedFilter> filterComponent,
-			Void restrictions) {
+	public int count(ResourceQuery query) {
 		throw new UnsupportedOperationException();
 	}
 }

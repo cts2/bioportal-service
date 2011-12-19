@@ -29,7 +29,6 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -40,24 +39,22 @@ import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
 import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
+import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
-import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionDirectoryEntry;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestQueryService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory.ValueSetDefinitionDirectoryBuilder;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.ValueSetDefinitionTransform;
-import edu.mayo.cts2.framework.service.command.restriction.ResolvedValueSetQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.command.restriction.ValueSetDefinitionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
+import edu.mayo.cts2.framework.service.profile.valuesetresolution.ResolvedValueSetQuery;
 import edu.mayo.cts2.framework.service.profile.valuesetresolution.ResolvedValueSetQueryService;
 
 /**
@@ -264,10 +261,10 @@ public class BioportalRestValueSetResolutionQueryService
 
 	@Override
 	public DirectoryResult<ResolvedValueSetDirectoryEntry> getResourceSummaries(
-			Query query, Set<ResolvedFilter> filterComponent,
-			ResolvedValueSetQueryServiceRestrictions restrictions, Page page) {
-		// TODO Auto-generated method stub
-		return null;
+			ResolvedValueSetQuery query,
+			SortCriteria sort,
+			Page page) {
+		throw new UnsupportedOperationException();
 	}
 
 

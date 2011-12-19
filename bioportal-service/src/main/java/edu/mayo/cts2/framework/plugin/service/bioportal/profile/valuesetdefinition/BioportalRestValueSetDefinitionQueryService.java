@@ -40,9 +40,9 @@ import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
 import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
+import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
@@ -56,6 +56,7 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.transform.ValueSetDefini
 import edu.mayo.cts2.framework.service.command.restriction.ValueSetDefinitionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
+import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionQuery;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionQueryService;
 
 /**
@@ -265,23 +266,23 @@ public class BioportalRestValueSetDefinitionQueryService
 	 */
 	@Override
 	public DirectoryResult<ValueSetDefinitionDirectoryEntry> getResourceSummaries(
-			Query query, 
-			Set<ResolvedFilter> filterComponent,
-			ValueSetDefinitionQueryServiceRestrictions restrictions, 
-			ResolvedReadContext readContext,
+			ValueSetDefinitionQuery query, 
+			SortCriteria sort,
 			Page page) {
-		String valueSetName = restrictions.getValueset();
+		ValueSetDefinitionQueryServiceRestrictions restrictions = query.getRestrictions();
 		
-		if(StringUtils.isNotBlank(valueSetName)){
+		if(restrictions != null &&
+				restrictions.getValueSet() != null &&
+				StringUtils.isNotBlank(restrictions.getValueSet().getName())){
 			return this.getValueSetDefinitionsOfValueSet(
-					query, 
-					filterComponent,
+					query.getQuery(), 
+					query.getFilterComponent(),
 					page, 
-					valueSetName);
+					restrictions.getValueSet().getName());
 		} else {
 			return this.getValueSetDefinitions(
-					query, 
-					filterComponent,
+					query.getQuery(), 
+					query.getFilterComponent(),
 					page);
 		}
 	}
@@ -291,10 +292,8 @@ public class BioportalRestValueSetDefinitionQueryService
 	 */
 	@Override
 	public DirectoryResult<ValueSetDefinition> getResourceList(
-			Query query,
-			Set<ResolvedFilter> filterComponent,
-			ValueSetDefinitionQueryServiceRestrictions restrictions, 
-			ResolvedReadContext readContext,
+			ValueSetDefinitionQuery query, 
+			SortCriteria sort,
 			Page page) {
 		throw new UnsupportedOperationException();
 	}
@@ -303,20 +302,20 @@ public class BioportalRestValueSetDefinitionQueryService
 	 * @see edu.mayo.cts2.framework.service.profile.QueryService#count(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object)
 	 */
 	@Override
-	public int count(Query query,
-			Set<ResolvedFilter> filterComponent,
-			ValueSetDefinitionQueryServiceRestrictions restrictions) {
-		String valueSetName = restrictions.getValueset();
-		
-		if(StringUtils.isNotBlank(valueSetName)){
+	public int count(ValueSetDefinitionQuery query) {
+		ValueSetDefinitionQueryServiceRestrictions restrictions = query.getRestrictions();
+	
+		if(restrictions != null &&
+				restrictions.getValueSet() != null &&
+				StringUtils.isNotBlank(restrictions.getValueSet().getName())){
 			return this.getValueSetDefinitionsOfValueSetCount(
-					query, 
-					filterComponent,
-					valueSetName);
+					query.getQuery(), 
+					query.getFilterComponent(),
+					restrictions.getValueSet().getName());
 		} else {
 			return this.getValueSetDefinitionsCount(
-					query, 
-					filterComponent);
+					query.getQuery(), 
+					query.getFilterComponent());
 		}
 	}
 
