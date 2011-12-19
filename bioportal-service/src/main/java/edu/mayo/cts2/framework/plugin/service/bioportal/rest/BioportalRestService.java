@@ -41,8 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.annotation.Resource;
 
@@ -87,11 +85,9 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	@Resource
 	private PluginConfig pluginConfig;
 	
-	private Map<String,String> cache = new HashMap<String,String>();
+	private Map<String,String> cache;
 	
 	private RestTemplate restTemplate = new RestTemplate();
-	
-	private ExecutorService executorService = Executors.newFixedThreadPool(1);
 	
 	private String apiKey = "9a305fa2-40fb-4bd8-a630-8c201fca3792";
 	private static final String API_KEY_PARAM = "apikey";
@@ -126,6 +122,10 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 		DEFINITIONS.setContent(DEFINITIONS_NAME);
 		DEFINITIONS.setUri(DEFINITIONS_URI);
 	};
+	
+	protected Map<String,String> createCache(){
+		 return new HashMap<String,String>();
+	}
 
 	public String getLatestViews(){
 		String url = buildGetLatestViewsUrl();
@@ -590,6 +590,7 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
      */
     @SuppressWarnings("unchecked")
 	public void afterPropertiesSet() throws IOException {
+    	
     	if(StringUtils.isBlank(this.cachePath)){
     		this.cachePath = this.pluginConfig.getWorkDirectory().getPath() + File.separator + "cache";
     	}
@@ -617,7 +618,7 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 				log.info("Creating new cache - " + file.getPath());
 				file.createNewFile();
 				
-				this.cache = new HashMap<String,String>();
+				this.cache = this.createCache();
 
 			} finally {
 				if(fis != null){
@@ -633,7 +634,7 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 			file.getParentFile().mkdirs();
 			file.createNewFile();
 			
-			this.cache = new HashMap<String,String>();
+			this.cache = this.createCache();
 		}
 		
 		this.startRssChangeTimer();
@@ -747,42 +748,37 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private void writeCache() {
-			this.executorService.execute(new Runnable(){
 
-				@Override
-				public void run() {
-					log.info("Writing cache");
-					synchronized(cache){
-						if(cache instanceof Serializable) {
-							FileOutputStream fos = null;
-							ObjectOutputStream oos = null;
-							try {
-								File file = getCacheFile();
-								fos = new FileOutputStream(
-										file);
-								oos = new ObjectOutputStream(
-										fos);
-								oos.writeObject((Serializable) cache);
-							} catch (Exception e) {
-								throw new RuntimeException(e);
-							} finally {
-								try {
-									if(fos != null){
-										fos.close();
-									}
-									if(oos != null){
-										oos.close();
-									}
-								} catch (IOException e) {
-									throw new RuntimeException(e);
-								}
-							}
-						} else {
-							throw new RuntimeException(cache.getClass().getName() + " is not Serializable!");
+		log.info("Writing cache");
+		synchronized(cache){
+			if(cache instanceof Serializable) {
+				FileOutputStream fos = null;
+				ObjectOutputStream oos = null;
+				try {
+					File file = getCacheFile();
+					fos = new FileOutputStream(
+							file);
+					oos = new ObjectOutputStream(
+							fos);
+					oos.writeObject((Serializable) cache);
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				} finally {
+					try {
+						if(fos != null){
+							fos.close();
 						}
+						if(oos != null){
+							oos.close();
+						}
+					} catch (IOException e) {
+						throw new RuntimeException(e);
 					}
 				}
-			});
+			} else {
+				throw new RuntimeException(cache.getClass().getName() + " is not Serializable!");
+			}
+		}
 	}
 	
 	/**
