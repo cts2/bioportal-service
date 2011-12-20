@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<success>
+  <accessedResource>/bioportal/concepts/44103</accessedResource>
+  <accessDate>2011-12-20 05:29:43.258 PST</accessDate>
+  <data>
+    <classBean>
+      <id>O80-O84.9</id>
+      <fullId>http://purl.bioontology.org/ontology/ICD10/O80-O84.9</fullId>
+
+      <label>Delivery</label>
+      <type>class</type>
+      <relations>
+        <entry>
+          <string>SubClass</string>
+          <list>
+            <classBean>
+
+              <id>O84</id>
+              <fullId>http://purl.bioontology.org/ontology/ICD10/O84</fullId>
+              <label>Multiple delivery</label>
+              <type>class</type>
+              <relations>
+                <entry>
+                  <string>ChildCount</string>
+
+                  <int>5</int>
+                </entry>
+              </relations>
+            </classBean>
+            <classBean>
+              <id>O83</id>
+              <fullId>http://purl.bioontology.org/ontology/ICD10/O83</fullId>
+
+              <label>Other assisted single delivery</label>
+              <type>class</type>
+              <relations>
+                <entry>
+                  <string>ChildCount</string>
+                  <int>7</int>
+                </entry>
+
+              </relations>
+            </classBean>
+            <classBean>
+              <id>O82</id>
+              <fullId>http://purl.bioontology.org/ontology/ICD10/O82</fullId>
+              <label>Single delivery by caesarean section</label>
+              <type>class</type>
+
+              <relations>
+                <entry>
+                  <string>ChildCount</string>
+                  <int>5</int>
+                </entry>
+              </relations>
+            </classBean>
+            <classBean>
+
+              <id>O81</id>
+              <fullId>http://purl.bioontology.org/ontology/ICD10/O81</fullId>
+              <label>Single delivery by forceps and vacuum extractor</label>
+              <type>class</type>
+              <relations>
+                <entry>
+                  <string>ChildCount</string>
+
+                  <int>6</int>
+                </entry>
+              </relations>
+            </classBean>
+            <classBean>
+              <id>O80</id>
+              <fullId>http://purl.bioontology.org/ontology/ICD10/O80</fullId>
+
+              <label>Single spontaneous delivery</label>
+              <type>class</type>
+              <relations>
+                <entry>
+                  <string>ChildCount</string>
+                  <int>4</int>
+                </entry>
+
+              </relations>
+            </classBean>
+          </list>
+        </entry>
+        <entry>
+          <string>PAR</string>
+          <list>
+            <classBean>
+
+              <id>O00-O99.9</id>
+              <fullId>http://purl.bioontology.org/ontology/ICD10/O00-O99.9</fullId>
+              <label>Pregnancy, childbirth and the puerperium</label>
+              <type>class</type>
+              <relations>
+                <entry>
+                  <string>ChildCount</string>
+
+                  <int>8</int>
+                </entry>
+              </relations>
+            </classBean>
+          </list>
+        </entry>
+        <entry>
+          <string>ChildCount</string>
+
+          <int>5</int>
+        </entry>
+        <entry>
+          <string>Semantic_Type</string>
+          <list>
+            <string>Therapeutic or Preventive Procedure</string>
+          </list>
+
+        </entry>
+        <entry>
+          <string>TUI</string>
+          <list>
+            <string>T061</string>
+          </list>
+        </entry>
+        <entry>
+
+          <string>UMLS_CUI</string>
+          <list>
+            <string>C0011209</string>
+          </list>
+        </entry>
+        <entry>
+          <string>SuperClass</string>
+
+          <list>
+            <classBean>
+              <id>O00-O99.9</id>
+              <fullId>http://purl.bioontology.org/ontology/ICD10/O00-O99.9</fullId>
+              <label>Pregnancy, childbirth and the puerperium</label>
+              <type>class</type>
+              <relations>
+
+                <entry>
+                  <string>ChildCount</string>
+                  <int>8</int>
+                </entry>
+              </relations>
+            </classBean>
+          </list>
+        </entry>
+
+      </relations>
+    </classBean>
+  </data>
+</success>

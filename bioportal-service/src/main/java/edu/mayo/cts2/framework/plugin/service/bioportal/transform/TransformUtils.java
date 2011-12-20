@@ -27,15 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang.ArrayUtils;
@@ -60,10 +52,6 @@ public class TransformUtils {
 	private static final String PAGE_SIZE = "success.data.page.pageSize";
 	private static final String NUMBER_OF_PAGES = "success.data.page.numPages";
 
-	private static final XPath XPATH = XPathFactory.newInstance().newXPath();
-
-	private static final Map<String, XPathExpression> EXPRESSION_CACHE = new HashMap<String, XPathExpression>();
-
 	/**
 	 * Instantiates a new transform utils.
 	 */
@@ -71,21 +59,6 @@ public class TransformUtils {
 		super();
 	}
 	
-	/**
-	 * Eval xpath expression for node list.
-	 *
-	 * @param expression the expression
-	 * @param node the node
-	 * @return the node list
-	 */
-	public static NodeList evalXpathExpressionForNodeList(
-			XPathExpression expression, Node node) {
-		try {
-			return (NodeList) expression.evaluate(node, XPathConstants.NODESET);
-		} catch (Exception e) {
-			throw new UnspecifiedCts2RuntimeException(e);
-		}
-	}
 
 	/**
 	 * Gets the input source.
@@ -103,41 +76,7 @@ public class TransformUtils {
 		}
 	}
 
-	/**
-	 * Eval xpath expression for node list.
-	 *
-	 * @param expression the expression
-	 * @param xml the xml
-	 * @return the node list
-	 */
-	public static NodeList evalXpathExpressionForNodeList(
-			XPathExpression expression, String xml) {
-		try {
-			InputSource is = getInputSource(xml);
 
-			return (NodeList) expression.evaluate(is, XPathConstants.NODESET);
-		} catch (Exception e) {
-			throw new UnspecifiedCts2RuntimeException(e);
-		}
-	}
-
-	/**
-	 * Gets the xpath expression.
-	 *
-	 * @param expression the expression
-	 * @return the xpath expression
-	 */
-	public static XPathExpression getXpathExpression(String expression) {
-		try {
-			if (!EXPRESSION_CACHE.containsKey(expression)) {
-				EXPRESSION_CACHE.put(expression, XPATH.compile(expression));
-			}
-
-			return EXPRESSION_CACHE.get(expression);
-		} catch (XPathExpressionException e) {
-			throw new UnspecifiedCts2RuntimeException(e);
-		}
-	}
 
 	/**
 	 * Url encode.

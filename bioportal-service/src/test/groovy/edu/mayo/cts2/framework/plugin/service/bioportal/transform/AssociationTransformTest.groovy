@@ -6,12 +6,13 @@ import javax.xml.transform.*
 import javax.xml.transform.dom.*
 import javax.xml.transform.stream.*
 
+import org.apache.commons.io.IOUtils
 import org.junit.Test
+import org.springframework.core.io.ClassPathResource
 import org.w3c.dom.*
 
 import edu.mayo.cts2.framework.core.url.UrlConstructor
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter
-import edu.mayo.cts2.framework.plugin.service.bioportal.transform.AssociationTransform;
 
 class AssociationTransformTest {
 	
@@ -21,7 +22,8 @@ class AssociationTransformTest {
 	] as UrlConstructor
 
 	def idConverter = [
-		getCodeSystemAbout: {cs, defNs -> "http://about" }
+		getCodeSystemAbout: {cs, defNs -> "http://about" },
+		codeSystemVersionNameToVersion: {csvn -> csvn }
 	] as IdentityConverter
 
 	@Test
@@ -106,5 +108,48 @@ class AssociationTransformTest {
 		assertTrue associations.findAll {
 			it.predicate.name == "SubClass"
 		}.size > 0
+	}
+	
+	
+	@Test
+	void testTransformURIAndEntityNameForRelationships(){
+		def transform = new AssociationTransform()
+		transform.setUrlConstructor(urlConstructor)
+		transform.setIdentityConverter(idConverter)
+		
+		def resource = new ClassPathResource("xml/entity.xml")
+		
+		StringWriter writer = new StringWriter();
+		IOUtils.copy(resource.getInputStream(), writer, "UTF-8");
+		String xml = writer.toString();
+		
+		def result = transform.transformURIAndEntityNameForRelationships(xml, "csname", "csvname", "SuperClass")
+		
+		assertEquals 1, result.length
+		assertEquals "O00-O99.9", result[0].getName();
+		assertEquals "http://purl.bioontology.org/ontology/ICD10/O00-O99.9", result[0].getUri();
+		assertNotNull result[0].getHref()
+	}
+	
+	@Test
+	void testTransformEntitiesForRelationship(){
+		def transform = new AssociationTransform()
+		transform.setUrlConstructor(urlConstructor)
+		transform.setIdentityConverter(idConverter)
+		
+		def resource = new ClassPathResource("xml/entity.xml")
+		
+		StringWriter writer = new StringWriter();
+		IOUtils.copy(resource.getInputStream(), writer, "UTF-8");
+		String xml = writer.toString();
+		
+		def result = transform.transformEntitiesForRelationship(xml, "csname", "csvname", "SubClass")
+		
+		assertEquals 5, result.size()
+		
+		result.each {
+			assertNotNull it.getHref()	
+			assertNotNull it.getAbout()
+		}
 	}
 }

@@ -26,13 +26,10 @@ package edu.mayo.cts2.framework.plugin.service.bioportal.transform;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.xpath.XPathExpression;
-
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.google.common.collect.Iterables;
 
@@ -43,7 +40,6 @@ import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.StatementTarget;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.entity.Designation;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
@@ -58,34 +54,6 @@ public class AssociationTransform extends AbstractTransform{
 	
 	private static final String NODE = "success.data.classBean";
 
-	/**
-	 * Transform associations for code system version.
-	 *
-	 * @param xml the xml
-	 * @param codeSystemName the code system name
-	 * @param codeSystemVersionName the code system version name
-	 * @return the list
-	 * @throws Exception the exception
-	 */
-	public List<AssociationDirectoryEntry> transformAssociationsForCodeSystemVersion(
-			String xml,
-			String codeSystemName,
-			String codeSystemVersionName) throws Exception {
-		List<EntityDirectoryEntry> returnList = new ArrayList<EntityDirectoryEntry>();
-		
-		List<Node> nodeList = this.getSourceNodes(xml);
-		
-		for(Node node : nodeList){
-			
-			returnList.addAll(this.transformEntityNodeForRelationships(
-					codeSystemName, 
-					codeSystemVersionName, 
-					null, node));
-		}
-
-		return null;//returnList;
-	}
-	
 	/**
 	 * Transform entities for relationship.
 	 *
@@ -107,9 +75,55 @@ public class AssociationTransform extends AbstractTransform{
 		return transformEntityNodeForRelationships(
 				codeSystemName, 
 				codeSystemVersionName,
-				predicateName, node);
+				predicateName, 
+				node);
 	}
 
+	private interface Transform<T> {
+		public T transform(Node node);
+	}
+	
+	private <T> List<T> doTransformEntityNodeForRelationships(
+			Transform<T> transform,
+			String codeSystemName,
+			String codeSystemVersionName, 
+			String predicateName, 
+			Node node) {
+		
+		List<Node> predicates = new ArrayList<Node>();
+		
+		List<Node> entries = 
+				TransformUtils.getNodeListWithPath(node, "relations.entry");
+
+		if(StringUtils.isNotBlank(predicateName)){
+			for(Node predicate : entries){
+				String foundPredicateName = 
+						TransformUtils.getNamedChildText(predicate, "string");
+				
+				if(StringUtils.equals(predicateName, foundPredicateName)){
+					predicates.add(predicate);
+				}
+			}
+		} else {
+			predicates = entries;
+		}
+		
+		List<T> returnList = new ArrayList<T>();
+		
+		for(Node predicate : predicates){
+
+			List<Node> targets = this.getTargetNodes(predicate);
+			
+			for(Node entryNode : targets){
+
+				T entry = transform.transform(entryNode);
+				
+				returnList.add(entry);
+			}
+		}		
+		return returnList;
+		
+	}
 	/**
 	 * Transform entity node for relationships.
 	 *
@@ -119,58 +133,43 @@ public class AssociationTransform extends AbstractTransform{
 	 * @param node the node
 	 * @return the list
 	 */
-	private List<EntityDirectoryEntry> transformEntityNodeForRelationships(
-			String codeSystemName,
-			String codeSystemVersionName, 
-			String predicateName, Node node) {
-		List<EntityDirectoryEntry> entryList = new ArrayList<EntityDirectoryEntry>();
+	protected List<EntityDirectoryEntry> transformEntityNodeForRelationships(
+			final String codeSystemName,
+			final String codeSystemVersionName, 
+			final String predicateName, 
+			final Node xmlNode) {
+		
+		return this.doTransformEntityNodeForRelationships(new Transform<EntityDirectoryEntry>(){
 
-		XPathExpression relationships;
-		if(StringUtils.isNotBlank(predicateName)){
-			relationships = TransformUtils.getXpathExpression(					
-					"relations/entry[string/text()='" + predicateName + "']");
-		} else {
-
-			relationships = TransformUtils.getXpathExpression(
-			"relations/entry");
-		}
-
-		NodeList predicateNodeList = 
-			TransformUtils.evalXpathExpressionForNodeList(relationships, node);
-
-		for(int i=0;i<predicateNodeList.getLength();i++){
-
-			Node predicate = predicateNodeList.item(i);
-
-			List<Node> targets = this.getTargetNodes(predicate);
-			
-			for(Node entryNode : targets){
-
+			@Override
+			public EntityDirectoryEntry transform(Node entryNode) {
 				EntityDirectoryEntry entry = new EntityDirectoryEntry();
 
-				String about = this.getAbout(entryNode);
-				String name = this.getName(entryNode);
-				String label = this.getLabel(entryNode);
+				String about = getAbout(entryNode);
+				String name = getName(entryNode);
+				String label = getLabel(entryNode);
 				
-
 				entry.setAbout(about);
-				String version= this.getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
-				entry.addKnownEntityDescription(this.createKnownEntityDescription(
+				String version = getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
+				entry.addKnownEntityDescription(createKnownEntityDescription(
 						codeSystemName, 
 						codeSystemVersionName, 
 						label));
 				
-				entry.setHref(this.getUrlConstructor().createEntityUrl(
+				entry.setHref(getUrlConstructor().createEntityUrl(
 						codeSystemName, 
 						version, 
 						name));
 				entry.setName(ModelUtils.createScopedEntityName(name, codeSystemName));
-
-				entryList.add(entry);
+				
+				return entry;
 			}
-		}
+		}, 
+		codeSystemName, 
+		codeSystemVersionName, 
+		predicateName, 
+		xmlNode);
 
-		return entryList;
 	}
 
 
@@ -183,57 +182,41 @@ public class AssociationTransform extends AbstractTransform{
 	 * @param node the node
 	 * @return the list
 	 */
-	public   URIAndEntityName[] transformURIAndEntityNameForRelationships(
+	public URIAndEntityName[] transformURIAndEntityNameForRelationships(
 			String xml,
-			String codeSystemName,
-			String codeSystemVersionName, 
-			String predicateName) {
-		List<URIAndEntityName> entityList = new ArrayList<URIAndEntityName>();
-		Node node = TransformUtils.getNamedChildWithPath(BioportalRestUtils.getDocument(xml), NODE);
+			final String codeSystemName,
+			final String codeSystemVersionName, 
+			final String predicateName) {
+		
+		Node xmlNode = TransformUtils.getNamedChildWithPath(BioportalRestUtils.getDocument(xml), NODE);
 
+		List<URIAndEntityName> returnList = this.doTransformEntityNodeForRelationships(new Transform<URIAndEntityName>(){
 
-		XPathExpression relationships;
-		if(StringUtils.isNotBlank(predicateName)){
-			relationships = TransformUtils.getXpathExpression(					
-					"relations/entry[string/text()='" + predicateName + "']");
-		} else {
-
-			relationships = TransformUtils.getXpathExpression(
-			"relations/entry");
-		}
-
-		NodeList predicateNodeList = 
-			TransformUtils.evalXpathExpressionForNodeList(relationships, node);
-
-		for(int i=0;i<predicateNodeList.getLength();i++){
-
-			Node predicate = predicateNodeList.item(i);
-
-			List<Node> targets = this.getTargetNodes(predicate);
-			
-			for(Node entryNode : targets){
-
+			@Override
+			public URIAndEntityName transform(Node entryNode) {
 				URIAndEntityName entityName = new URIAndEntityName();
 
-				String about = this.getAbout(entryNode);
-				String name = this.getName(entryNode);
-				String label = this.getLabel(entryNode);
-				
-
+				String about = getAbout(entryNode);
+				String name = getName(entryNode);
+			
 				entityName.setName(name);
 				entityName.setNamespace(codeSystemName);
-				String version= this.getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
-				entityName.setHref(this.getUrlConstructor().createEntityUrl(
+				String version = getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
+				entityName.setHref(getUrlConstructor().createEntityUrl(
 						codeSystemName, 
 						version, 
 						name));
-				//entityName.setUri(uri)
+				entityName.setUri(about);
 				
-
-				entityList.add(entityName);
+				return entityName;
 			}
-		}		
-		return Iterables.toArray(entityList, URIAndEntityName.class);
+		}, 
+		codeSystemName, 
+		codeSystemVersionName, 
+		predicateName, 
+		xmlNode);
+	
+		return Iterables.toArray(returnList, URIAndEntityName.class);
 	}
 	
 	
@@ -442,23 +425,6 @@ public class AssociationTransform extends AbstractTransform{
 		}
 
 		return TransformUtils.getNodeList(list, "classBean");
-	}
-	
-	/**
-	 * Gets the source nodes.
-	 *
-	 * @param xml the xml
-	 * @return the source nodes
-	 */
-	private List<Node> getSourceNodes(String xml){
-		Document doc = 
-			BioportalRestUtils.getDocument(xml);
-		
-		Node node = 
-			TransformUtils.getNamedChildWithPath(doc, "success.data.page.contents.classBeanResultList");
-		
-		
-		return TransformUtils.getNodeList(node, "classBean");
 	}
 	
 	/**
