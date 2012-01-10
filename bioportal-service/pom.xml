@@ -55,10 +55,12 @@
 					<instructions>
 						<Import-Package>
 							!com.sun.*,
-							!org.apache.avalon.*,
-							!javax.mail.*,
-							!javax.jms.*,
-							!sun.*,
+							!com.caucho.*,
+							!javax.el,
+							!javax.faces*,
+							!javax.portlet*,
+							!javax.xml.rpc*,
+							org.codehaus.jackson*;resolution:=optional,
 							edu.mayo.cts2.*,
 							edu.mayo.cts2.framework.core.xml,
 							com.atlassian.plugin.spring,
@@ -76,7 +78,7 @@
 							edu.mayo.cts2.framework.model.service.valueset,
 							edu.mayo.cts2.framework.model.service.valuesetdefinition,
 							edu.mayo.cts2.framework.service.provider,
-							*;resolution:=optional
+							*
 						</Import-Package>
 						<Embed-Transitive>true</Embed-Transitive>
 						<Embed-Dependency>commons-httpclient,rome,spring-web</Embed-Dependency>

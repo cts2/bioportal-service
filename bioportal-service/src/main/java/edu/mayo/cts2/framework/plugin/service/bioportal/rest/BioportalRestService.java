@@ -695,7 +695,9 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
     	
     	Date lastUpdateFromFeed = this.getLastUpdateFromFeed(feed);
     	
-    	if(lastUpdate == null || lastUpdateFromFeed.after(lastUpdate)){
+    	//account for a null feed coming back from bioportal
+    	if(lastUpdateFromFeed != null &&
+    			(lastUpdate == null || lastUpdateFromFeed.after(lastUpdate)) ){
     		List<String> ontologyIds = 
     			this.getUpdatedOntologies(feed, lastUpdateFromFeed);
     		
