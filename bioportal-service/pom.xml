@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -7,11 +8,12 @@
 		<artifactId>base-service-plugin</artifactId>
 		<version>0.4.9-SNAPSHOT</version>
 	</parent>
-	
+
 	<artifactId>bioportal-service</artifactId>
 	<version>0.4.5-SNAPSHOT</version>
 	<name>bioportal-service</name>
-	
+	<packaging>bundle</packaging>
+
 	<developers>
 		<developer>
 			<id>kevin</id>
@@ -31,7 +33,7 @@
 
 	<properties>
 		<service.provider.class>
-		edu.mayo.cts2.framework.plugin.service.bioportal.profile.provider.BioportalServiceProvider
+			edu.mayo.cts2.framework.plugin.service.bioportal.profile.provider.BioportalServiceProvider
 		</service.provider.class>
 	</properties>
 
@@ -41,6 +43,51 @@
 			<url>scp://informatics.mayo.edu:/home/informatics/homes/cts2framework/public_html/sites/${project.artifactId}</url>
 		</site>
 	</distributionManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>2.3.6</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Import-Package>
+							!com.sun.*,
+							!org.apache.avalon.*,
+							!javax.mail.*,
+							!javax.jms.*,
+							!sun.*,
+							edu.mayo.cts2.*,
+							edu.mayo.cts2.framework.core.xml,
+							com.atlassian.plugin.spring,
+							org.springframework.context.config,
+							edu.mayo.cts2.framework.model.service.association,
+							edu.mayo.cts2.framework.model.service.codesystem,
+							edu.mayo.cts2.framework.model.service.codesystemversion,
+							edu.mayo.cts2.framework.model.service.conceptdomain,
+							edu.mayo.cts2.framework.model.service.conceptdomainbinding,
+							edu.mayo.cts2.framework.model.service.entitydescription,
+							edu.mayo.cts2.framework.model.service.map,
+							edu.mayo.cts2.framework.model.service.mapentry,
+							edu.mayo.cts2.framework.model.service.mapversion,
+							edu.mayo.cts2.framework.model.service.statement,
+							edu.mayo.cts2.framework.model.service.valueset,
+							edu.mayo.cts2.framework.model.service.valuesetdefinition,
+							edu.mayo.cts2.framework.service.provider,
+							*;resolution:=optional
+						</Import-Package>
+						<Embed-Transitive>true</Embed-Transitive>
+						<Embed-Dependency>commons-httpclient,rome,spring-web</Embed-Dependency>
+						<Spring-Context>*;timeout:=60</Spring-Context>
+						<_exportcontents>*</_exportcontents>
+						<_nouses>true</_nouses>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 	<dependencies>
 
@@ -86,11 +133,11 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>xerces</groupId>
-		    <artifactId>xercesImpl</artifactId>
-		    <version>2.4.0</version>
+			<groupId>xerces</groupId>
+			<artifactId>xercesImpl</artifactId>
+			<version>2.4.0</version>
 		</dependency>
 
 		<dependency>
@@ -120,7 +167,6 @@
 			<scope>test</scope>
 		</dependency>
 
-
 		<dependency>
 			<groupId>rome</groupId>
 			<artifactId>rome</artifactId>
@@ -140,6 +186,13 @@
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>edu.mayo.cts2.framework</groupId>
+			<artifactId>plugin-util</artifactId>
+			<version>${develpment.framework.version}</version>
+		</dependency>
+		
 
 	</dependencies>
 </project>

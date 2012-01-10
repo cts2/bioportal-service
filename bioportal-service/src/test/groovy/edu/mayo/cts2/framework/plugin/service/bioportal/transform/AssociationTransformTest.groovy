@@ -117,7 +117,7 @@ class AssociationTransformTest {
 		transform.setUrlConstructor(urlConstructor)
 		transform.setIdentityConverter(idConverter)
 		
-		def resource = new ClassPathResource("xml/entity.xml")
+		def resource = new ClassPathResource("bioportalXml/entity.xml")
 		
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(resource.getInputStream(), writer, "UTF-8");
@@ -137,7 +137,7 @@ class AssociationTransformTest {
 		transform.setUrlConstructor(urlConstructor)
 		transform.setIdentityConverter(idConverter)
 		
-		def resource = new ClassPathResource("xml/entity.xml")
+		def resource = new ClassPathResource("bioportalXml/entity.xml")
 		
 		StringWriter writer = new StringWriter();
 		IOUtils.copy(resource.getInputStream(), writer, "UTF-8");

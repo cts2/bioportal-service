@@ -61,7 +61,8 @@ import org.springframework.web.client.RestTemplate;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 
-import edu.mayo.cts2.framework.core.config.PluginConfig;
+import edu.mayo.cts2.framework.core.config.option.Option;
+import edu.mayo.cts2.framework.core.plugin.PluginConfigManager;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
@@ -77,13 +78,17 @@ import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
  */
 public class BioportalRestService extends BaseCacheObservable implements InitializingBean {
 	
+	public static final String BIOPORTAL_CONFIG_NAMESPACE = "bioportal-service";
+	
+	public static final String CACHE_CONFIG_PROP = "cache";
+	
 	private static Log log = LogFactory.getLog(BioportalRestService.class);
 	
 	@Resource
 	private BioportalRssFeedClient bioportalRssFeedClient;
 	
 	@Resource
-	private PluginConfig pluginConfig;
+	private PluginConfigManager pluginConfigManager;
 	
 	private Map<String,String> cache;
 	
@@ -592,7 +597,17 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	public void afterPropertiesSet() throws IOException {
     	
     	if(StringUtils.isBlank(this.cachePath)){
-    		this.cachePath = this.pluginConfig.getWorkDirectory().getPath() + File.separator + "cache";
+    		Option cachePath = this.pluginConfigManager.
+    			getPluginConfigProperties(BIOPORTAL_CONFIG_NAMESPACE).
+    				getStringOption(CACHE_CONFIG_PROP);
+    		
+    		if(cachePath != null && StringUtils.isNotBlank(cachePath.getOptionValueAsString())){
+    			this.cachePath = cachePath.getOptionValueAsString();
+    		} else {
+	    		this.cachePath = 
+	    				this.pluginConfigManager.getPluginConfig(BIOPORTAL_CONFIG_NAMESPACE).
+	    					getWorkDirectory().getPath() + File.separator + "cache";
+    		}
     	}
 
 		File file = getCacheFile();

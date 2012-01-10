@@ -23,36 +23,17 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.provider;
 
-import java.util.Set;
+import org.springframework.stereotype.Component;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import edu.mayo.cts2.framework.core.config.option.Option;
-import edu.mayo.cts2.framework.service.provider.AbstractSpringServiceProvider;
+import edu.mayo.cts2.framework.util.spring.AbstractSpringServiceProvider;
 
 /**
  * The Class BioportalServiceProvider.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
+@Component("bioportalServiceProvider")
 public class BioportalServiceProvider extends AbstractSpringServiceProvider {
 
-	@Override
-	protected ApplicationContext getApplicationContext(ApplicationContext parent) {
-		return new ClassPathXmlApplicationContext(new String[]{"bioportal-context.xml"}, parent);
-	}
-
-	@Override
-	protected ApplicationContext getIntegrationTestApplicationContext(
-			ApplicationContext parent) {
-		return new ClassPathXmlApplicationContext(new String[]{"bioportal-test-context.xml"}, parent);
-	}
-
-	@Override
-	public Set<Option> getPluginOptions() {
-		//TODO: Need to add 'apikey' here
-		return null;
-	}
-
+//
 }

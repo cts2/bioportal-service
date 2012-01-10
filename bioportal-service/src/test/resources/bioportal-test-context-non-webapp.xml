@@ -5,13 +5,17 @@
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
 	<context:component-scan base-package="edu.mayo.cts2.framework.plugin.service.bioportal" />
+	
+	<bean id="configInitializer" class="edu.mayo.cts2.framework.core.config.TestConfigInitializerSpringFactory"/>
 
-	<bean id="pluginConfig" class="edu.mayo.cts2.framework.plugin.service.bioportal.profile.TestPluginConfig"/>
-
-	<bean class="edu.mayo.cts2.framework.core.url.UrlConstructorSpringFactory"/>	
+	<bean class="edu.mayo.cts2.framework.util.spring.UrlConstructorSpringFactory"/>	
+	
+	<bean id="pluginConfigManager" class="edu.mayo.cts2.framework.core.plugin.DefaultPluginConfigManager"/>
 
 	<bean id="bioportalRestService" class="edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService">
 		<property name="cachePath" value="src/test/resources/cache" />
 	</bean>
+	
+	<bean id="serviceConfigManager" class="edu.mayo.cts2.framework.core.config.ServiceConfigManager"/>
 	
 </beans>
