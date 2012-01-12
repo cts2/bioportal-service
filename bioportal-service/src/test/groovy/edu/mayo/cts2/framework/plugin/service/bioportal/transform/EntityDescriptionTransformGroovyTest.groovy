@@ -2,28 +2,23 @@ package edu.mayo.cts2.framework.plugin.service.bioportal.transform
 
 import static org.junit.Assert.*
 
-import javax.annotation.Resource
 import javax.xml.transform.*
 import javax.xml.transform.dom.*
 import javax.xml.transform.stream.*
 
+import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.springframework.core.io.UrlResource
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.w3c.dom.*
 
 import edu.mayo.cts2.framework.core.url.UrlConstructor
 import edu.mayo.cts2.framework.core.xml.DelegatingMarshaller
 import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter
-@RunWith(SpringJUnit4ClassRunner)
-@ContextConfiguration(locations="/bioportal-test-context-non-webapp.xml")
+
 class EntityDescriptionTransformGroovyTest {
 	
-	//@Resource EntityDescriptionTransform entityDescriptionTransform;
-	@Resource AssociationTransform associationTransform;
+	AssociationTransform associationTransform
 	
 	def urlConstructor = [
 		createEntityUrl: {cs, csv, sub -> "http://entity/uri" },
@@ -34,6 +29,12 @@ class EntityDescriptionTransformGroovyTest {
 		getCodeSystemAbout: {cs, ns -> "http://test.doc.uri" }
 	] as IdentityConverter
 
+	@Before
+	void setUpAssociationTransform(){
+		associationTransform = new AssociationTransform();
+		associationTransform.setUrlConstructor(urlConstructor)
+		associationTransform.setIdentityConverter(idConverter)
+	}
 
 	@Test
 	void "Validate Entity XML"(){

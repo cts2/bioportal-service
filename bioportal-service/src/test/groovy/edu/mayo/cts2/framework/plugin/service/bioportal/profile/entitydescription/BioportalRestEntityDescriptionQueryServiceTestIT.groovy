@@ -19,7 +19,7 @@ import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQuery
 
 @RunWith(SpringJUnit4ClassRunner)
-@ContextConfiguration(locations="/bioportal-test-context-non-webapp.xml")
+@ContextConfiguration(locations="/bioportal-test-context.xml")
 public class BioportalRestEntityDescriptionQueryServiceTestIT {
 	
 	@Resource
@@ -27,6 +27,7 @@ public class BioportalRestEntityDescriptionQueryServiceTestIT {
 
 	@Test
 	public void testGetPageCorrectlyCallBioportal(){
+		
 			MatchAlgorithmReference matchAlgorithm = new MatchAlgorithmReference(content:"contains")
 		
 		def filter = new ResolvedFilter(

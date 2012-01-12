@@ -81,6 +81,8 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	public static final String BIOPORTAL_CONFIG_NAMESPACE = "bioportal-service";
 	
 	public static final String CACHE_CONFIG_PROP = "cache";
+
+	private static final String API_KEY_PROP = "apiKey";
 	
 	private static Log log = LogFactory.getLog(BioportalRestService.class);
 	
@@ -94,7 +96,8 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	
 	private RestTemplate restTemplate = new RestTemplate();
 	
-	private String apiKey = "9a305fa2-40fb-4bd8-a630-8c201fca3792";
+	private String apiKey;
+	
 	private static final String API_KEY_PARAM = "apikey";
 	
 	/* every hour default */
@@ -590,11 +593,37 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 		return response.getBody();
 	}
 	
+	protected void setApiKey(){
+		//check for environment varialbe
+		String apiKeyEnvVar = System.getProperty(API_KEY_PROP);
+		if(StringUtils.isNotBlank(apiKeyEnvVar)){
+			log.info("Using APIKEY from System Property.");
+			this.apiKey = apiKeyEnvVar;
+			
+			return;
+		}
+		
+		Option apiKey = this.pluginConfigManager.
+    			getPluginConfigProperties(BIOPORTAL_CONFIG_NAMESPACE).
+    				getStringOption(API_KEY_PROP);
+		
+		if(apiKey != null && StringUtils.isNotBlank(apiKey.getOptionValueAsString())){
+			log.info("Using APIKEY from Configuration File.");
+			this.apiKey = apiKey.getOptionValueAsString();
+			
+			return;
+		}
+		
+		log.warn("No Bioportal API Key Set! Please sent one via the System Variable: " 
+				+ API_KEY_PROP + " or in the Bioportal config file.");
+	}
+	
     /* (non-Javadoc)
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     @SuppressWarnings("unchecked")
 	public void afterPropertiesSet() throws IOException {
+    	this.setApiKey();
     	
     	if(StringUtils.isBlank(this.cachePath)){
     		Option cachePath = this.pluginConfigManager.
@@ -869,4 +898,13 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	public void setCachePath(String cachePath) {
 		this.cachePath = cachePath;
 	}
+
+	public String getApiKey() {
+		return apiKey;
+	}
+
+	public void setApiKey(String apiKey) {
+		this.apiKey = apiKey;
+	}
+	
 }

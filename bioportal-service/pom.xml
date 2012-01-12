@@ -188,13 +188,13 @@
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>edu.mayo.cts2.framework</groupId>
 			<artifactId>plugin-util</artifactId>
 			<version>${develpment.framework.version}</version>
 		</dependency>
-		
+
 
 	</dependencies>
 </project>

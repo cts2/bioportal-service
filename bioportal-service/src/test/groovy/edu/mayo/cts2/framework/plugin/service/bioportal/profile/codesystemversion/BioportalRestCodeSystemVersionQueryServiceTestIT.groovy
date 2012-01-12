@@ -14,7 +14,7 @@ import edu.mayo.cts2.framework.service.command.restriction.CodeSystemVersionQuer
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionQuery
 
 @RunWith(SpringJUnit4ClassRunner)
-@ContextConfiguration(locations="/bioportal-test-context-non-webapp.xml")
+@ContextConfiguration(locations="/bioportal-test-context.xml")
 public class BioportalRestCodeSystemVersionQueryServiceTestIT {
 	
 	@Resource

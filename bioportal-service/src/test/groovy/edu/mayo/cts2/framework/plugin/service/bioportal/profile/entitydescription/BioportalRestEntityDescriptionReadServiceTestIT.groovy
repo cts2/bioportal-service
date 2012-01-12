@@ -14,8 +14,8 @@ import edu.mayo.cts2.framework.model.util.ModelUtils
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId
 
 @RunWith(SpringJUnit4ClassRunner)
-@ContextConfiguration(locations="/bioportal-test-context-non-webapp.xml")
-public class BioportalRestEntityDescriptionReadServiceTestIT {
+@ContextConfiguration(locations="/bioportal-test-context.xml")
+public class BioportalRestEntiyDescriptionReadServiceTestIT {
 	
 	@Resource
 	private BioportalRestEntityDescriptionReadService service
