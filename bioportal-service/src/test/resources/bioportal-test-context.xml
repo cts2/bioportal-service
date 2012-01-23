@@ -32,5 +32,4 @@
 
 	<bean id="serviceConfigManager"
 		class="edu.mayo.cts2.framework.core.config.ServiceConfigManager" />
-
 </beans>

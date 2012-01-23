@@ -37,7 +37,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
+import edu.mayo.cts2.framework.model.exception.Cts2RuntimeException;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
 
 /**
@@ -72,7 +72,7 @@ public class TransformUtils {
 
 			return new InputSource(is);
 		} catch (UnsupportedEncodingException e) {
-			throw new UnspecifiedCts2RuntimeException(e);
+			throw new Cts2RuntimeException(e);
 		}
 	}
 
@@ -88,7 +88,7 @@ public class TransformUtils {
 		try {
 			return URIUtil.encodePath(url);
 		} catch (Exception e) {
-			throw new UnspecifiedCts2RuntimeException(e);
+			throw new Cts2RuntimeException(e);
 		}
 	}
 

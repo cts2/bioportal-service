@@ -32,7 +32,7 @@ import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.exception.UnspecifiedCts2RuntimeException;
+import edu.mayo.cts2.framework.model.exception.Cts2RuntimeException;
 
 /**
  * The Class BioportalRestUtils.
@@ -48,7 +48,7 @@ public class BioportalRestUtils {
 		try{
 		DOCUMENT_BUILDER = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
 		} catch(Exception e){
-			throw new UnspecifiedCts2RuntimeException(e);
+			throw new Cts2RuntimeException(e);
 		}
 	}
 	
@@ -77,7 +77,7 @@ public class BioportalRestUtils {
 				doc = DOCUMENT_BUILDER.parse(inputStream);
 			}
 		} catch (Exception e) {
-			throw new UnspecifiedCts2RuntimeException(e);
+			throw new Cts2RuntimeException(e);
 		} 
 		
 		return doc;
