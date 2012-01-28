@@ -16,13 +16,12 @@ class BaseServiceTestITBase {
 	//Wait until OSGi service installs itself and becomes available
 	@Before
 	void waitForService(){
-		Thread.sleep(10000);
-		
+			
 		boolean wait = true;
 		
 		long startTime = System.currentTimeMillis()
 		while(wait){
-			if( (System.currentTimeMillis() - startTime) > (20*1000)){
+			if( (System.currentTimeMillis() - startTime) > (50*1000)){
 				throw new RuntimeException("Timeout waiting for service to start")
 			}
 			try {
