@@ -16,6 +16,8 @@ class BaseServiceTestITBase {
 	//Wait until OSGi service installs itself and becomes available
 	@Before
 	void waitForService(){
+		Thread.sleep(10000);
+		
 		boolean wait = true;
 		
 		long startTime = System.currentTimeMillis()
