@@ -5,9 +5,10 @@
 	<parent>
 		<groupId>edu.mayo.cts2.framework</groupId>
 		<artifactId>base-service-plugin</artifactId>
-		<version>0.4.9-SNAPSHOT</version>
+		<version>0.5.3-SNAPSHOT</version>
 	</parent>
 
+	<groupId>edu.mayo.cts2.framework</groupId>
 	<artifactId>bioportal-service</artifactId>
 	<version>0.4.5-SNAPSHOT</version>
 	<packaging>bundle</packaging>
