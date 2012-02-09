@@ -316,7 +316,7 @@ public class BioportalRestAssociationQueryService
 			
 		}
 		
-		return new DirectoryResult<GraphNode>(associations,true,true);
+		return new DirectoryResult<GraphNode>(associations,true);
 	}
 
 	

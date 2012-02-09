@@ -475,7 +475,7 @@ public class AssociationTransform extends AbstractTransform{
 					this.transformAssociationForRelationships(
 							xml, 
 							codeSystemName, 
-							codeSystemVersionName), true, true);
+							codeSystemVersionName), true);
 
 		return result;
 	}

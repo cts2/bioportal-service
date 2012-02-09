@@ -51,6 +51,7 @@ public class TransformUtils {
 	private static final String PAGE_NUMBER = "success.data.page.pageNum";
 	private static final String PAGE_SIZE = "success.data.page.pageSize";
 	private static final String NUMBER_OF_PAGES = "success.data.page.numPages";
+	private static final String NUMBER_OF_RESULTS_ON_PAGE = "success.data.page.numResultsPage";
 
 	/**
 	 * Instantiates a new transform utils.
@@ -145,6 +146,11 @@ public class TransformUtils {
 	public static int getNumberOfPages(String xml) {
 		return Integer.valueOf(TransformUtils.getNamedChildTextWithPath(
 				BioportalRestUtils.getDocument(xml), NUMBER_OF_PAGES));
+	}
+	
+	public static int getNumberOfResultsOnPage(String xml) {
+		return Integer.valueOf(TransformUtils.getNamedChildTextWithPath(
+				BioportalRestUtils.getDocument(xml), NUMBER_OF_RESULTS_ON_PAGE));
 	}
 
 	/**

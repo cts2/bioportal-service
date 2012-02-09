@@ -338,13 +338,13 @@ public class EntityDescriptionTransform extends AbstractTransform {
 		}
 		
 		int totalCount = TransformUtils.getTotalCount(xml);
-
-		int numPages = TransformUtils.getNumberOfPages(xml);
 		int page = TransformUtils.getPageNumber(xml);
+		int pageSize = TransformUtils.getPageSize(xml);
+		int numOfResultsOnPage = TransformUtils.getNumberOfResultsOnPage(xml);
 	
-		return new DirectoryResult<EntityDirectoryEntry>(
-				entryList, totalCount == entryList.size(),
-				numPages == page);
+		boolean atEnd = totalCount <= ( ( (page - 1) * pageSize) + numOfResultsOnPage);
+		
+		return new DirectoryResult<EntityDirectoryEntry>(entryList, atEnd);
 	}
 	
 
@@ -452,13 +452,13 @@ public class EntityDescriptionTransform extends AbstractTransform {
 		log.debug("transformEntityDirectoryFromSearch" + (System.currentTimeMillis() - time) + " ms outer");
 		
 		int totalCount = TransformUtils.getTotalCount(xml) - skipped;
-		int numPages = TransformUtils.getNumberOfPages(xml);
 		int page = TransformUtils.getPageNumber(xml);
 		int pageSize = TransformUtils.getPageSize(xml);
+		int numOfResultsOnPage = TransformUtils.getNumberOfResultsOnPage(xml);
 	
-		return new DirectoryResult<EntityDirectoryEntry>(
-				entryList, totalCount == entryList.size(),
-				numPages == page && end == pageSize);
+		boolean atEnd = totalCount <= ( ( (page - 1) * pageSize) + numOfResultsOnPage);
+	
+		return new DirectoryResult<EntityDirectoryEntry>(entryList, atEnd);
 	}
 	
 	/**
