@@ -38,7 +38,7 @@ import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
-import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestQueryService;
+import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.ResolvedValueSetTransform;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetQuery;
@@ -52,8 +52,7 @@ import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSet
 @Component
 @Qualifier("local")
 public class BioportalResResolvedValueSetQueryService 
-	extends AbstractBioportalRestQueryService<
-		edu.mayo.cts2.framework.model.service.valuesetdefinition.ResolvedValueSetQueryService>
+	extends AbstractBioportalRestService
 	implements ResolvedValueSetQueryService {
 
 	@Resource

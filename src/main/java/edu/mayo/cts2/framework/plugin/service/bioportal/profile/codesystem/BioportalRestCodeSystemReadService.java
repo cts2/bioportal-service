@@ -48,7 +48,7 @@ import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService;
 @Component
 @Qualifier("local")
 public class BioportalRestCodeSystemReadService 
-	extends AbstractBioportalRestService<edu.mayo.cts2.framework.model.service.codesystem.CodeSystemReadService>
+	extends AbstractBioportalRestService
 	implements CodeSystemReadService {
 
 	@Resource

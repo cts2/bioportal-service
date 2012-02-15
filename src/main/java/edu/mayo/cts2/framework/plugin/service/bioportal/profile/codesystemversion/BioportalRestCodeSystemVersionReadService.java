@@ -48,7 +48,7 @@ import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersi
 @Component
 @Qualifier("local")
 public class BioportalRestCodeSystemVersionReadService 
-	extends AbstractBioportalRestService<edu.mayo.cts2.framework.model.service.codesystemversion.CodeSystemVersionReadService>
+	extends AbstractBioportalRestService
 	implements CodeSystemVersionReadService {
 
 	@Resource

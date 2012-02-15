@@ -53,7 +53,7 @@ import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDesc
  */
 @Component
 public class BioportalRestEntityDescriptionReadService 
-	extends AbstractBioportalRestService<edu.mayo.cts2.framework.model.service.entitydescription.EntityDescriptionReadService>
+	extends AbstractBioportalRestService
 	implements EntityDescriptionReadService {
 
 	@Resource

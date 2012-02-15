@@ -49,7 +49,7 @@ import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntrySummary;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
-import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestQueryService;
+import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory.ValueSetDirectoryBuilder;
@@ -69,8 +69,7 @@ import edu.mayo.cts2.framework.service.profile.valueset.ValueSetQueryService;
 @Component
 @Qualifier("local")
 public class BioportalRestValueSetQueryService 
-	extends AbstractBioportalRestQueryService<
-		edu.mayo.cts2.framework.model.service.valueset.ValueSetQueryService>
+	extends AbstractBioportalRestService
 	implements ValueSetQueryService {
 
 	@Resource

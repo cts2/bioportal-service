@@ -51,7 +51,7 @@ import edu.mayo.cts2.framework.model.core.StatementTarget;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
-import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestQueryService;
+import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory.CodeSystemVersionDirectoryBuilder;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.CodeSystemVersionTransform;
@@ -70,8 +70,7 @@ import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersi
 @Component
 @Qualifier("local")
 public class BioportalRestCodeSystemVersionQueryService 
-	extends AbstractBioportalRestQueryService<
-		edu.mayo.cts2.framework.model.service.codesystemversion.CodeSystemVersionQueryService>
+	extends AbstractBioportalRestService
 	implements CodeSystemVersionQueryService {
 
 	@Resource

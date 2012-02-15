@@ -54,7 +54,7 @@ import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.entity.EntityList;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
-import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestQueryService;
+import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory.ParentOrChildOfEntityDirectoryBuilder;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.AssociationTransform;
@@ -74,8 +74,7 @@ import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDesc
  */
 @Component
 public class BioportalRestAssociationQueryService 
-	extends AbstractBioportalRestQueryService<
-		edu.mayo.cts2.framework.model.service.association.AssociationQueryService>
+	extends AbstractBioportalRestService
 	implements AssociationQueryService {
 
 	@Resource

@@ -23,33 +23,64 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile;
 
-import edu.mayo.cts2.framework.model.service.core.BaseService;
-import edu.mayo.cts2.framework.service.profile.AbstractService;
+import java.util.List;
+
+import edu.mayo.cts2.framework.model.core.FormatReference;
+import edu.mayo.cts2.framework.model.core.NamespaceReference;
+import edu.mayo.cts2.framework.model.core.OpaqueData;
+import edu.mayo.cts2.framework.model.core.SourceReference;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
+import edu.mayo.cts2.framework.service.profile.BaseService;
+
 
 
 /**
- * The Class AbstractBioportalRestService.
+ * The Class AbstractBioportalRestQueryService.
  *
  * @param <T> the generic type
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public abstract class AbstractBioportalRestService<T extends BaseService> extends AbstractService<T> {
+public abstract class AbstractBioportalRestService implements BaseService {
 	
 	private static final String MAYO = "Mayo Clinic";
 	private static final String DEFAULT_VERSION = "1.0";
 	private static final String DESCRIPTION = "Bioportal -> CTS2 Wrapping Service.";
 
 	@Override
-	protected String getVersion() {
+	public String getServiceVersion() {
 		return DEFAULT_VERSION;
 	}
+	
 	@Override
-	protected String getProvider() {
-		return MAYO;
+	public SourceReference getServiceProvider() {
+		SourceReference ref = new SourceReference();
+		ref.setContent(MAYO);
+		
+		return ref;
 	}
+	
 	@Override
-	protected String getDescription() {
-		return DESCRIPTION;
+	public OpaqueData getServiceDescription() {
+		return ModelUtils.createOpaqueData(DESCRIPTION);
 	}
 
+	@Override
+	public String getServiceName() {
+		return this.getClass().getCanonicalName();
+	}
+
+	@Override
+	public List<FormatReference> getSupportedFormatList() {
+		return null;
+	}
+
+	@Override
+	public FormatReference getDefaultFormat() {
+		return null;
+	}
+
+	@Override
+	public List<NamespaceReference> getKnownNamespaceList() {
+		return null;
+	}
 }

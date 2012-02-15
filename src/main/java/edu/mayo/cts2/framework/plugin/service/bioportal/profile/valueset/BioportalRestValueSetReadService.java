@@ -46,7 +46,7 @@ import edu.mayo.cts2.framework.service.profile.valueset.ValueSetReadService;
 @Component
 @Qualifier("local")
 public class BioportalRestValueSetReadService 
-	extends AbstractBioportalRestService<edu.mayo.cts2.framework.model.service.valueset.ValueSetReadService>
+	extends AbstractBioportalRestService
 	implements ValueSetReadService {
 
 	@Resource

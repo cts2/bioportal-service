@@ -51,7 +51,7 @@ import edu.mayo.cts2.framework.model.core.StatementTarget;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
-import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestQueryService;
+import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory.CodeSystemDirectoryBuilder;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.CodeSystemTransform;
@@ -69,8 +69,7 @@ import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService
 @Component
 @Qualifier("local")
 public class BioportalRestCodeSystemQueryService 
-	extends AbstractBioportalRestQueryService<
-		edu.mayo.cts2.framework.model.service.codesystem.CodeSystemQueryService>
+	extends AbstractBioportalRestService
 	implements CodeSystemQueryService {
 
 	@Resource
