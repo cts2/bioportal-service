@@ -37,8 +37,8 @@ import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.EntityReferenceList;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
+import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.core.VersionTagReference;
@@ -347,25 +347,18 @@ public class BioportalRestEntityDescriptionQueryService
 		return returnSet;
 	}
 
-	public Set<ModelAttributeReference> getSupportedModelAttributes() {
-		Set<ModelAttributeReference> returnSet =
-			new HashSet<ModelAttributeReference>();
+	@Override
+	public Set<PropertyReference> getSupportedSearchReferences() {
+		Set<PropertyReference> returnSet =
+			new HashSet<PropertyReference>();
 		
 		returnSet.add(
-				StandardModelAttributeReference.RESOURCE_SYNOPSIS.getModelAttributeReference());
+				StandardModelAttributeReference.RESOURCE_SYNOPSIS.getPropertyReference());
 
 		returnSet.add(BioportalRestService.DEFINITIONS);
 		returnSet.add(BioportalRestService.PROPERTIES);
 		
 		return returnSet;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getPropertyReference(java.lang.String)
-	 */
-	public PredicateReference getPredicateReference(String nameOrUri) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 	
 	public BioportalRestService getBioportalRestService() {
@@ -631,14 +624,18 @@ public class BioportalRestEntityDescriptionQueryService
 	}
 
 	@Override
-	public Set<? extends PredicateReference> getSupportedProperties() {
-		// TODO Auto-generated method stub
+	public Set<? extends VersionTagReference> getSupportedTags() {
 		return null;
 	}
 
 	@Override
-	public Set<? extends VersionTagReference> getSupportedTags() {
-		// TODO Auto-generated method stub
+	public Set<? extends PropertyReference> getSupportedSortReferences() {
 		return null;
 	}
+
+	@Override
+	public Set<PredicateReference> getKnownProperties() {
+		return null;
+	}
+	
 }

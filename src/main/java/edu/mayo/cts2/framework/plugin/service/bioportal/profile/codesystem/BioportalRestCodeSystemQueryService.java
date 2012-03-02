@@ -38,18 +38,19 @@ import edu.mayo.cts2.framework.filter.match.AttributeResolver;
 import edu.mayo.cts2.framework.filter.match.ContainsMatcher;
 import edu.mayo.cts2.framework.filter.match.ExactMatcher;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
-import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
-import edu.mayo.cts2.framework.filter.match.ResolvablePredicateReference;
+import edu.mayo.cts2.framework.filter.match.ResolvablePropertyReference;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.Property;
+import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.core.StatementTarget;
+import edu.mayo.cts2.framework.model.core.URIAndEntityName;
+import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
@@ -87,19 +88,6 @@ public class BioportalRestCodeSystemQueryService
 
 		return this.codeSystemTransform.transformResources(xml);
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getPropertyReference(java.lang.String)
-	 */
-	public PredicateReference getPredicateReference(String nameOrUri) {
-		for(PredicateReference ref : this.getSupportedProperties()){
-			if(ref.getName().equals(nameOrUri)){
-				return ref;
-			}
-		}
-		
-		throw ExceptionFactory.createUnsupportedPredicateReference(nameOrUri);
-	}
 	
 	public Set<ResolvableMatchAlgorithmReference> getSupportedMatchAlgorithms(){
 		Set<ResolvableMatchAlgorithmReference> returnSet = new HashSet<ResolvableMatchAlgorithmReference>();
@@ -124,12 +112,12 @@ public class BioportalRestCodeSystemQueryService
 	 *
 	 * @return the known predicate references
 	 */
-	public Set<ResolvablePredicateReference<CodeSystemCatalogEntry>> getSupportedProperties(){
-		Set<ResolvablePredicateReference<CodeSystemCatalogEntry>> returnSet =
-			new HashSet<ResolvablePredicateReference<CodeSystemCatalogEntry>>();
+	private Set<ResolvablePropertyReference<CodeSystemCatalogEntry>> getSupportedProperties(){
+		Set<ResolvablePropertyReference<CodeSystemCatalogEntry>> returnSet =
+			new HashSet<ResolvablePropertyReference<CodeSystemCatalogEntry>>();
 		
-		ResolvablePredicateReference<CodeSystemCatalogEntry> ref = 
-			new ResolvablePredicateReference<CodeSystemCatalogEntry>(
+		ResolvablePropertyReference<CodeSystemCatalogEntry> ref = 
+			new ResolvablePropertyReference<CodeSystemCatalogEntry>(
 					
 					new AttributeResolver<CodeSystemCatalogEntry>(){
 
@@ -152,22 +140,26 @@ public class BioportalRestCodeSystemQueryService
 						}
 					});
 		
-		ref.setName(BioportalConstants.BIOPORTAL_ONTOLOGY_ID_NAME);
-		ref.setUri(BioportalConstants.BIOPORTAL_ONTOLOGY_ID_ABOUT);
-		ref.setNamespace(BioportalConstants.BIOPORTAL_NAMESPACE_NAME);
+		URIAndEntityName uriAndName = new URIAndEntityName();
+		uriAndName.setName(BioportalConstants.BIOPORTAL_ONTOLOGY_ID_NAME);
+		uriAndName.setUri(BioportalConstants.BIOPORTAL_ONTOLOGY_ID_ABOUT);
+		uriAndName.setNamespace(BioportalConstants.BIOPORTAL_NAMESPACE_NAME);
+		
+		ref.setReferenceTarget(uriAndName);
+		ref.setReferenceType(TargetReferenceType.PROPERTY);
 		
 		returnSet.add(ref);
 		
 		return returnSet;
 	}
 	
-	public Set<ResolvableModelAttributeReference<CodeSystemCatalogEntry>> getSupportedModelAttributes(){
-		Set<ResolvableModelAttributeReference<CodeSystemCatalogEntry>> returnSet =
-			new HashSet<ResolvableModelAttributeReference<CodeSystemCatalogEntry>>();
+	public Set<ResolvablePropertyReference<CodeSystemCatalogEntry>> getSupportedSearchReferences(){
+		Set<ResolvablePropertyReference<CodeSystemCatalogEntry>> returnSet =
+			new HashSet<ResolvablePropertyReference<CodeSystemCatalogEntry>>();
 		
-		ResolvableModelAttributeReference<CodeSystemCatalogEntry> refName = 
-			ResolvableModelAttributeReference.toModelAttributeReference(
-					StandardModelAttributeReference.RESOURCE_NAME.getModelAttributeReference(), 
+		ResolvablePropertyReference<CodeSystemCatalogEntry> refName = 
+				ResolvablePropertyReference.toPropertyReference(
+					StandardModelAttributeReference.RESOURCE_NAME.getPropertyReference(), 
 					new AttributeResolver<CodeSystemCatalogEntry>(){
 
 						public Iterable<String> resolveAttribute(
@@ -177,9 +169,9 @@ public class BioportalRestCodeSystemQueryService
 						}
 					});
 		
-		ResolvableModelAttributeReference<CodeSystemCatalogEntry> refAbout = 
-			ResolvableModelAttributeReference.toModelAttributeReference(
-					StandardModelAttributeReference.ABOUT.getModelAttributeReference(), 
+		ResolvablePropertyReference<CodeSystemCatalogEntry> refAbout = 
+				ResolvablePropertyReference.toPropertyReference(
+					StandardModelAttributeReference.ABOUT.getPropertyReference(), 
 					new AttributeResolver<CodeSystemCatalogEntry>(){
 
 						public Iterable<String> resolveAttribute(
@@ -189,9 +181,9 @@ public class BioportalRestCodeSystemQueryService
 						}
 					});
 		
-		ResolvableModelAttributeReference<CodeSystemCatalogEntry> refSynopsis = 
-			ResolvableModelAttributeReference.toModelAttributeReference(
-					StandardModelAttributeReference.RESOURCE_SYNOPSIS.getModelAttributeReference(), 
+		ResolvablePropertyReference<CodeSystemCatalogEntry> refSynopsis = 
+				ResolvablePropertyReference.toPropertyReference(
+					StandardModelAttributeReference.RESOURCE_SYNOPSIS.getPropertyReference(), 
 					new AttributeResolver<CodeSystemCatalogEntry>(){
 
 						public Iterable<String> resolveAttribute(
@@ -201,9 +193,9 @@ public class BioportalRestCodeSystemQueryService
 						}
 					});
 		
-		ResolvableModelAttributeReference<CodeSystemCatalogEntry> keyword = 
-			ResolvableModelAttributeReference.toModelAttributeReference(
-					StandardModelAttributeReference.KEYWORD.getModelAttributeReference(), 
+		ResolvablePropertyReference<CodeSystemCatalogEntry> keyword = 
+				ResolvablePropertyReference.toPropertyReference(
+					StandardModelAttributeReference.KEYWORD.getPropertyReference(), 
 					new AttributeResolver<CodeSystemCatalogEntry>(){
 
 						public Iterable<String> resolveAttribute(
@@ -219,6 +211,8 @@ public class BioportalRestCodeSystemQueryService
 		returnSet.add(refAbout);
 		returnSet.add(refSynopsis);
 		returnSet.add(keyword);
+		
+		returnSet.addAll(this.getSupportedProperties());
 		
 		return returnSet;
 	}
@@ -239,9 +233,7 @@ public class BioportalRestCodeSystemQueryService
 					this.codeSystemTransform,
 					this.getAllCodeSystemCatalogEntries(),
 					this.getSupportedMatchAlgorithms(),
-					this.getSupportedModelAttributes(),
-					this.getSupportedProperties()
-					);
+					this.getSupportedSearchReferences());
 
 		return builder.restrict(query.getFilterComponent()).
 			addStart(page.getStart()).
@@ -269,5 +261,15 @@ public class BioportalRestCodeSystemQueryService
 	@Override
 	public int count(ResourceQuery query) {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Set<? extends PropertyReference> getSupportedSortReferences() {
+		return null;
+	}
+
+	@Override
+	public Set<PredicateReference> getKnownProperties() {
+		return null;
 	}
 }

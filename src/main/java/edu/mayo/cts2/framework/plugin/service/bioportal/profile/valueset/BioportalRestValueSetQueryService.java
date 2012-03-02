@@ -39,10 +39,11 @@ import edu.mayo.cts2.framework.filter.match.AttributeResolver;
 import edu.mayo.cts2.framework.filter.match.ContainsMatcher;
 import edu.mayo.cts2.framework.filter.match.ExactMatcher;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
-import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
+import edu.mayo.cts2.framework.filter.match.ResolvablePropertyReference;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
+import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
@@ -128,13 +129,13 @@ public class BioportalRestValueSetQueryService
 		return returnSet;
 	}
 	
-	public Set<ResolvableModelAttributeReference<ValueSetCatalogEntry>> getSupportedModelAttributes(){
-		Set<ResolvableModelAttributeReference<ValueSetCatalogEntry>> returnSet =
-			new HashSet<ResolvableModelAttributeReference<ValueSetCatalogEntry>>();
+	public Set<ResolvablePropertyReference<ValueSetCatalogEntry>> getSupportedSearchReferences(){
+		Set<ResolvablePropertyReference<ValueSetCatalogEntry>> returnSet =
+			new HashSet<ResolvablePropertyReference<ValueSetCatalogEntry>>();
 		
-		ResolvableModelAttributeReference<ValueSetCatalogEntry> refName = 
-			ResolvableModelAttributeReference.toModelAttributeReference(
-					StandardModelAttributeReference.RESOURCE_NAME.getModelAttributeReference(), 
+		ResolvablePropertyReference<ValueSetCatalogEntry> refName = 
+			ResolvablePropertyReference.toPropertyReference(
+					StandardModelAttributeReference.RESOURCE_NAME.getPropertyReference(), 
 					new AttributeResolver<ValueSetCatalogEntry>(){
 
 						public Iterable<String> resolveAttribute(
@@ -144,9 +145,9 @@ public class BioportalRestValueSetQueryService
 						}
 					});
 		
-		ResolvableModelAttributeReference<ValueSetCatalogEntry> refAbout = 
-			ResolvableModelAttributeReference.toModelAttributeReference(
-					StandardModelAttributeReference.ABOUT.getModelAttributeReference(), 
+		ResolvablePropertyReference<ValueSetCatalogEntry> refAbout = 
+			ResolvablePropertyReference.toPropertyReference(
+					StandardModelAttributeReference.ABOUT.getPropertyReference(), 
 					new AttributeResolver<ValueSetCatalogEntry>(){
 
 						public Iterable<String> resolveAttribute(
@@ -156,9 +157,9 @@ public class BioportalRestValueSetQueryService
 						}
 					});
 		
-		ResolvableModelAttributeReference<ValueSetCatalogEntry> refSynopsis = 
-			ResolvableModelAttributeReference.toModelAttributeReference(
-					StandardModelAttributeReference.RESOURCE_SYNOPSIS.getModelAttributeReference(), 
+		ResolvablePropertyReference<ValueSetCatalogEntry> refSynopsis = 
+			ResolvablePropertyReference.toPropertyReference(
+					StandardModelAttributeReference.RESOURCE_SYNOPSIS.getPropertyReference(), 
 					new AttributeResolver<ValueSetCatalogEntry>(){
 
 						public Iterable<String> resolveAttribute(
@@ -168,9 +169,9 @@ public class BioportalRestValueSetQueryService
 						}
 					});
 		
-		ResolvableModelAttributeReference<ValueSetCatalogEntry> keyword = 
-			ResolvableModelAttributeReference.toModelAttributeReference(
-					StandardModelAttributeReference.KEYWORD.getModelAttributeReference(), 
+		ResolvablePropertyReference<ValueSetCatalogEntry> keyword = 
+			ResolvablePropertyReference.toPropertyReference(
+					StandardModelAttributeReference.KEYWORD.getPropertyReference(), 
 					new AttributeResolver<ValueSetCatalogEntry>(){
 
 						public Iterable<String> resolveAttribute(
@@ -246,8 +247,7 @@ public class BioportalRestValueSetQueryService
 						this.getAllValueSetCatalogEntries(),
 						new CodeSystemExtractor(), 
 						this.getSupportedMatchAlgorithms(),
-						this.getSupportedModelAttributes()
-						);
+						this.getSupportedSearchReferences());
 
 			return builder.
 					restrict(query.getRestrictions()).
@@ -282,7 +282,7 @@ public class BioportalRestValueSetQueryService
 						this.getAllValueSetCatalogEntries(),
 						new CodeSystemExtractor(), 
 						this.getSupportedMatchAlgorithms(),
-						this.getSupportedModelAttributes()
+						this.getSupportedSearchReferences()
 						);
 
 			return builder.
@@ -293,8 +293,13 @@ public class BioportalRestValueSetQueryService
 	}
 
 	@Override
-	public Set<? extends PredicateReference> getSupportedProperties() {
-		// TODO Auto-generated method stub
+	public Set<? extends PropertyReference> getSupportedSortReferences() {
 		return null;
 	}
+
+	@Override
+	public Set<PredicateReference> getKnownProperties() {
+		return null;
+	}
+
 }

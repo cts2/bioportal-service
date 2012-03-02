@@ -12,10 +12,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import edu.mayo.cts2.framework.model.command.Page
 import edu.mayo.cts2.framework.model.command.ResolvedFilter
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference
-import edu.mayo.cts2.framework.model.core.ModelAttributeReference
-import edu.mayo.cts2.framework.model.core.types.TargetReferenceType
-import edu.mayo.cts2.framework.service.constant.ExternalCts2Constants
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference
+import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQuery
 
 @RunWith(SpringJUnit4ClassRunner)
@@ -33,8 +31,7 @@ public class BioportalRestEntityDescriptionQueryServiceTestIT {
 		def filter = new ResolvedFilter(
 				matchAlgorithmReference:StandardMatchAlgorithmReference.STARTS_WITH.getMatchAlgorithmReference(),
 				matchValue:"thing",
-				modelAttributeReference: new ModelAttributeReference(content:ExternalCts2Constants.MA_RESOURCE_NAME_NAME),
-				referenceType:TargetReferenceType.ATTRIBUTE)
+				propertyReference: StandardModelAttributeReference.RESOURCE_NAME.propertyReference)
 		
 		def q = [
 			getFilterComponent : { [filter] as Set },
@@ -44,7 +41,7 @@ public class BioportalRestEntityDescriptionQueryServiceTestIT {
 		] as EntityDescriptionQuery
 
 		def result = 
-			service.getAllEntityDescriptions(q, null, new Page(page:2,maxtoreturn:10))
+			service.getResourceSummaries(q, null, new Page(page:2,maxtoreturn:10))
 			
 		assertEquals 10, result.getEntries().size()
 		

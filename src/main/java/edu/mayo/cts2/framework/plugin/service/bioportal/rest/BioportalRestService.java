@@ -65,7 +65,7 @@ import edu.mayo.cts2.framework.core.config.option.Option;
 import edu.mayo.cts2.framework.core.plugin.PluginConfigManager;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.core.ModelAttributeReference;
+import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.service.constant.ExternalCts2Constants;
@@ -117,18 +117,22 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	
 	public static final String PROPERTIES_NAME = "properties";
 	public static final String PROPERTIES_URI = ExternalCts2Constants.buildModelAttributeUri(PROPERTIES_NAME);
-	public static final ModelAttributeReference PROPERTIES = new ModelAttributeReference();
+	public static final PropertyReference PROPERTIES = new PropertyReference();
 	static {
-		PROPERTIES.setContent(PROPERTIES_NAME);
-		PROPERTIES.setUri(PROPERTIES_URI);
+		PROPERTIES.setReferenceType(TargetReferenceType.PROPERTY);
+		PROPERTIES.setReferenceTarget(new URIAndEntityName());
+		PROPERTIES.getReferenceTarget().setName(PROPERTIES_NAME);
+		PROPERTIES.getReferenceTarget().setUri(PROPERTIES_URI);
 	};
 	
 	public static final String DEFINITIONS_NAME = "definitions";
 	public static final String DEFINITIONS_URI = ExternalCts2Constants.buildModelAttributeUri(DEFINITIONS_NAME);
-	public static final ModelAttributeReference DEFINITIONS = new ModelAttributeReference();
+	public static final PropertyReference DEFINITIONS = new PropertyReference();
 	static {
-		DEFINITIONS.setContent(DEFINITIONS_NAME);
-		DEFINITIONS.setUri(DEFINITIONS_URI);
+		DEFINITIONS.setReferenceType(TargetReferenceType.PROPERTY);
+		DEFINITIONS.setReferenceTarget(new URIAndEntityName());
+		DEFINITIONS.getReferenceTarget().setName(DEFINITIONS_NAME);
+		DEFINITIONS.getReferenceTarget().setUri(DEFINITIONS_URI);
 	};
 	
 	protected Map<String,String> createCache(){
@@ -480,18 +484,17 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	 * @return the bioportal query string for filter
 	 * 
 	 */
-	private String getBioportalQueryStringForFilter(ResolvedFilter filter) {
+	protected String getBioportalQueryStringForFilter(ResolvedFilter filter) {
 		StringBuffer sb = new StringBuffer();
+
+		URIAndEntityName target = filter.getPropertyReference().getReferenceTarget();
 		
-		if(filter.getReferenceType().equals(TargetReferenceType.PROPERTY)){
-			URIAndEntityName target = filter.getPropertyReference();
-			
-			if(StringUtils.equals(target.getName(),DEFINITIONS_NAME)){
-				sb.append("&includedefinitions=true");
-			} else if(StringUtils.equals(target.getName(),PROPERTIES_NAME)){
-				sb.append("&includeproperties=true");
-			}
+		if(StringUtils.equals(target.getName(),DEFINITIONS_NAME)){
+			sb.append("&includedefinitions=true");
+		} else if(StringUtils.equals(target.getName(),PROPERTIES_NAME)){
+			sb.append("&includeproperties=true");
 		}
+			
 		return sb.toString();
 	}
 	

@@ -29,8 +29,7 @@ import java.util.Set;
 
 import edu.mayo.cts2.framework.filter.directory.AbstractRemovingDirectoryBuilder;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
-import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
-import edu.mayo.cts2.framework.filter.match.ResolvablePredicateReference;
+import edu.mayo.cts2.framework.filter.match.ResolvablePropertyReference;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntrySummary;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.CodeSystemTransform;
@@ -70,12 +69,10 @@ public class CodeSystemDirectoryBuilder extends AbstractRemovingDirectoryBuilder
 			CodeSystemTransform codeSystemTransform,
 			List<CodeSystemCatalogEntry> allPossibleResults,
 			Set<ResolvableMatchAlgorithmReference> matchAlgorithmReferences,
-			Set<ResolvableModelAttributeReference<CodeSystemCatalogEntry>> resolvableModelAttributeReferences,
-			Set<ResolvablePredicateReference<CodeSystemCatalogEntry>> resolvablePredicateReferences) {
+			Set<ResolvablePropertyReference<CodeSystemCatalogEntry>> resolvablePropertyReference) {
 		super(allPossibleResults, 
 				matchAlgorithmReferences,
-				resolvableModelAttributeReferences,
-				resolvablePredicateReferences);
+				resolvablePropertyReference);
 		this.codeSystemTransform = codeSystemTransform;
 	}
 

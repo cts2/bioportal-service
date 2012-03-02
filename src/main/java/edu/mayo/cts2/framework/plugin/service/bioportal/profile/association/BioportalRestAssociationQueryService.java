@@ -36,7 +36,7 @@ import edu.mayo.cts2.framework.filter.match.AttributeResolver;
 import edu.mayo.cts2.framework.filter.match.ContainsMatcher;
 import edu.mayo.cts2.framework.filter.match.ExactMatcher;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
-import edu.mayo.cts2.framework.filter.match.ResolvableModelAttributeReference;
+import edu.mayo.cts2.framework.filter.match.ResolvablePropertyReference;
 import edu.mayo.cts2.framework.model.association.Association;
 import edu.mayo.cts2.framework.model.association.AssociationDirectoryEntry;
 import edu.mayo.cts2.framework.model.association.GraphNode;
@@ -47,6 +47,7 @@ import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
+import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.core.types.AssociationDirection;
@@ -123,7 +124,7 @@ public class BioportalRestAssociationQueryService
 							codeSystemVersionName, 
 							predicateName),
 						this.getSupportedMatchAlgorithms(),
-						this.getSupportedModelAttributes()
+						this.getSupportedSearchReferences()
 					);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -135,13 +136,14 @@ public class BioportalRestAssociationQueryService
 			resolve();
 	}
 
-	public Set<ResolvableModelAttributeReference<EntityDirectoryEntry>> getSupportedModelAttributes() {
-		Set<ResolvableModelAttributeReference<EntityDirectoryEntry>> returnSet =
-			new HashSet<ResolvableModelAttributeReference<EntityDirectoryEntry>>();
+	@Override
+	public Set<ResolvablePropertyReference<EntityDirectoryEntry>> getSupportedSearchReferences() {
+		Set<ResolvablePropertyReference<EntityDirectoryEntry>> returnSet =
+			new HashSet<ResolvablePropertyReference<EntityDirectoryEntry>>();
 		
-		ResolvableModelAttributeReference<EntityDirectoryEntry> refName = 
-			ResolvableModelAttributeReference.toModelAttributeReference(
-					StandardModelAttributeReference.RESOURCE_NAME.getModelAttributeReference(), 
+		ResolvablePropertyReference<EntityDirectoryEntry> refName = 
+				ResolvablePropertyReference.toPropertyReference(
+					StandardModelAttributeReference.RESOURCE_NAME.getPropertyReference(), 
 					new AttributeResolver<EntityDirectoryEntry>(){
 
 						public Iterable<String> resolveAttribute(
@@ -150,9 +152,9 @@ public class BioportalRestAssociationQueryService
 						}
 					});
 		
-		ResolvableModelAttributeReference<EntityDirectoryEntry> refAbout = 
-			ResolvableModelAttributeReference.toModelAttributeReference(
-					StandardModelAttributeReference.ABOUT.getModelAttributeReference(), 
+		ResolvablePropertyReference<EntityDirectoryEntry> refAbout = 
+				ResolvablePropertyReference.toPropertyReference(
+					StandardModelAttributeReference.ABOUT.getPropertyReference(), 
 					new AttributeResolver<EntityDirectoryEntry>(){
 
 						public Iterable<String> resolveAttribute(
@@ -186,15 +188,6 @@ public class BioportalRestAssociationQueryService
 		return returnSet;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getPropertyReference(java.lang.String)
-	 */
-	public PredicateReference getPropertyReference(String nameOrUri) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getResourceSummaries(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object, edu.mayo.cts2.framework.service.command.Page)
 	 */
@@ -264,11 +257,15 @@ public class BioportalRestAssociationQueryService
 	}
 
 	@Override
-	public Set<? extends PredicateReference> getSupportedProperties() {
-		// TODO Auto-generated method stub
+	public Set<? extends PropertyReference> getSupportedSortReferences() {
 		return null;
 	}
-	
+
+	@Override
+	public Set<PredicateReference> getKnownProperties() {
+		return null;
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.service.profile.association.AdvancedAssociationQueryService#getAssociationGraph(edu.mayo.cts2.framework.service.profile.entitydescription.id.EntityDescriptionId, edu.mayo.cts2.framework.model.association.types.GraphDirection, long)
 	 */
