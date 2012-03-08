@@ -95,6 +95,12 @@ public class BioportalResResolvedValueSetQueryService
 		return null;
 	}
 
+	@Override
+	public int count(ResolvedValueSetQuery query) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	
 	
 }
