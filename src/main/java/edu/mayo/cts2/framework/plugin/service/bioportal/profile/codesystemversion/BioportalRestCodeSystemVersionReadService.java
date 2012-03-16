@@ -23,6 +23,8 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.codesystemversion;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,8 +33,8 @@ import org.springframework.web.client.RestClientException;
 
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
+import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
-import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
@@ -78,7 +80,7 @@ public class BioportalRestCodeSystemVersionReadService
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#exists(java.lang.Object)
 	 */
 	@Override
-	public boolean exists(NameOrURI codeSystemVersion, ReadContext readContext) {
+	public boolean exists(NameOrURI codeSystemVersion, ResolvedReadContext readContext) {
 		String ontologyVersionId = this.identityConverter
 				.codeSystemVersionNameToOntologyVersionId(codeSystemVersion.getName());
 
@@ -92,30 +94,20 @@ public class BioportalRestCodeSystemVersionReadService
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService#existsCodeSystemVersionForCodeSystem(java.lang.String, java.lang.String)
-	 */
 	@Override
-	public boolean existsCodeSystemVersionForCodeSystem(NameOrURI codeSystem,
-			String tagName) {
+	public CodeSystemVersionCatalogEntry readByTag(NameOrURI parentIdentifier,
+			VersionTagReference tag, ResolvedReadContext readContext) {
 		throw new UnsupportedOperationException();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService#getCodeSystemVersionForCodeSystem(java.lang.String, java.lang.String)
-	 */
 	@Override
-	public CodeSystemVersionCatalogEntry getCodeSystemVersionForCodeSystem(
-			NameOrURI codeSystem, 
-			String tagName, 
-			ResolvedReadContext readContext) {
+	public boolean existsByTag(NameOrURI parentIdentifier,
+			VersionTagReference tag, ResolvedReadContext readContext) {
 		throw new UnsupportedOperationException();
 	}
 
-
 	@Override
-	public CodeSystemVersionCatalogEntry getCodeSystemVersionForCodeSystem(
-			NameOrURI codeSystem, String tagName) {
+	public List<VersionTagReference> getSupportedTags() {
 		throw new UnsupportedOperationException();
 	}
 

@@ -23,19 +23,7 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.transform;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
-import org.w3c.dom.Node;
-
-import edu.mayo.cts2.framework.model.core.CodeSystemReference;
-import edu.mayo.cts2.framework.model.core.ValueSetReference;
-import edu.mayo.cts2.framework.model.core.VersionTagReference;
-import edu.mayo.cts2.framework.model.core.types.SetOperator;
-import edu.mayo.cts2.framework.model.valuesetdefinition.CompleteCodeSystemReference;
-import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinition;
-import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionDirectoryEntry;
-import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionEntry;
-import edu.mayo.cts2.framework.plugin.service.bioportal.util.BioportalConstants;
 
 /**
  * The Class ValueSetDefinitionTransform.

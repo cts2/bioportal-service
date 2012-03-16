@@ -33,7 +33,6 @@ import org.springframework.web.client.RestClientException;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
-import edu.mayo.cts2.framework.model.service.core.ReadContext;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
@@ -63,7 +62,7 @@ public class BioportalRestCodeSystemReadService
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.plugin.service.CodeSystemService#doesCodeSystemExist(java.lang.String)
 	 */
-	public boolean exists(NameOrURI codeSystemName, ReadContext readContext) {
+	public boolean exists(NameOrURI codeSystemName, ResolvedReadContext readContext) {
 		String ontologyId = this.identityConverter
 				.codeSystemNameToOntologyId(codeSystemName.getName());
 
