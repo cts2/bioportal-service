@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -214,6 +216,12 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	 * @return the entity by ontology id and entity id
 	 */
 	public String getEntityByOntologyIdAndEntityId(String ontologyId, String entityId){
+		try {
+			entityId = URLEncoder.encode(entityId, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+		
 		String url = "http://rest.bioontology.org/bioportal/virtual/ontology/" + ontologyId + "?" 
 				+ "conceptid=" + entityId;
 
@@ -597,7 +605,13 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	}
 	
 	protected void setApiKey(){
-		//check for environment varialbe
+		//check for environment variable
+		if(StringUtils.isNotBlank(this.apiKey)){
+			log.info("Using APIKEY from pre-set Property.");
+			
+			return;
+		}
+		
 		String apiKeyEnvVar = System.getProperty(API_KEY_PROP);
 		if(StringUtils.isNotBlank(apiKeyEnvVar)){
 			log.info("Using APIKEY from System Property.");

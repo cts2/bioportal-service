@@ -92,6 +92,15 @@ public class AbstractTransform {
 			scopedName.setName(nameParts[1]);	
 		}
 
+		return this.sanitizeNcNameNamespace(scopedName);
+	}
+
+	private ScopedEntityName sanitizeNcNameNamespace(ScopedEntityName scopedName) {
+		if(! XMLChar.isValidNCName(scopedName.getNamespace())){
+			scopedName.setNamespace("ns" + Integer.toString(
+				scopedName.getNamespace().hashCode()));
+		}
+		
 		return scopedName;
 	}
 

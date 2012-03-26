@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metatype:MetaData xmlns:metatype="http://www.osgi.org/xmlns/metatype/v1.0.0">
+	<OCD description="Bioportal Service" name="Bioportal Service" id="edu.mayo.cts2.framework.plugin.service.bioportal">
+		<AD name="Bioportal Api Key" id="apiKey" required="false" type="String"  />
+	</OCD>
+	<Designate pid="edu.mayo.cts2.framework.plugin.service.bioportal">
+        <Object ocdref="edu.mayo.cts2.framework.plugin.service.bioportal"/>
+    </Designate>
+	
+</metatype:MetaData>

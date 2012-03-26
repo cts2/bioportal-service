@@ -3,12 +3,14 @@ package edu.mayo.cts2.framework.plugin.service.bioportal.profile.entitydescripti
 import static org.junit.Assert.*
 
 import javax.annotation.Resource
+import javax.xml.transform.stream.StreamResult
 
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 
+import edu.mayo.cts2.framework.core.xml.Cts2Marshaller
 import edu.mayo.cts2.framework.model.command.Page
 import edu.mayo.cts2.framework.model.command.ResolvedFilter
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference
@@ -22,6 +24,9 @@ public class BioportalRestEntityDescriptionQueryServiceTestIT {
 	
 	@Resource
 	private BioportalRestEntityDescriptionQueryService service
+	
+	@Resource
+	private Cts2Marshaller marshaller
 
 	@Test
 	public void testGetPageCorrectlyCallBioportal(){
@@ -44,6 +49,32 @@ public class BioportalRestEntityDescriptionQueryServiceTestIT {
 			service.getResourceSummaries(q, null, new Page(page:2,maxtoreturn:10))
 			
 		assertEquals 10, result.getEntries().size()
+		
+	}
+	
+	@Test
+	public void testSearchForEntitiesNamespaceValidate(){
+		
+		MatchAlgorithmReference matchAlgorithm = new MatchAlgorithmReference(content:"contains")
+		
+		def filter = new ResolvedFilter(
+				matchAlgorithmReference:StandardMatchAlgorithmReference.CONTAINS.getMatchAlgorithmReference(),
+				matchValue:"Vertebro",
+				propertyReference: StandardModelAttributeReference.RESOURCE_NAME.propertyReference)
+		
+		def q = [
+			getFilterComponent : { [filter] as Set },
+			getReadContext : { },
+			getQuery : { },
+			getRestrictions : { }
+		] as EntityDescriptionQuery
+
+		def result =
+			service.getResourceSummaries(q, null, new Page())
+			
+		result.entries.each {
+			marshaller.marshal(it, new StreamResult(new StringWriter()))
+		}
 		
 	}
 }

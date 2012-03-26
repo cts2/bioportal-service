@@ -3,10 +3,18 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:osgi="http://www.springframework.org/schema/osgi"
+	xmlns:osgix="http://www.springframework.org/schema/osgi-compendium"
 	xsi:schemaLocation="http://www.springframework.org/schema/osgi http://www.springframework.org/schema/osgi/spring-osgi-1.2.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/osgi-compendium http://www.springframework.org/schema/osgi-compendium/spring-osgi-compendium.xsd">
+		
+	<osgix:cm-properties id="props" persistent-id="edu.mayo.cts2.framework.plugin.service.bioportal">
+		<prop key="apiKey"></prop>
+	</osgix:cm-properties>
 
+	<context:property-placeholder properties-ref="props"/>
+	
 	<osgi:reference id="pluginConfigManager" interface="edu.mayo.cts2.framework.core.plugin.PluginConfigManager"/>
 	
 	<osgi:reference id="cts2Marshaller" interface="edu.mayo.cts2.framework.core.xml.Cts2Marshaller"/>

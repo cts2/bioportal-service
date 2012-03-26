@@ -85,6 +85,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 	private final static String SKOS_URI = "http://www.w3.org/2004/02/skos/core#";
 	private final static String SKOS_NAMESPACE = "skos";
 	private static final String PARENT_PREDICATE = "SuperClass";
+	private static final String CHILD_COUNT = "ChildCount";
 
 	@Resource
 	private AssociationTransform associationTransform;
@@ -137,8 +138,12 @@ public class EntityDescriptionTransform extends AbstractTransform {
 		
 		entity.setDescribingCodeSystemVersion(this.buildCodeSystemVersionReference(codeSystemName, codeSystemVersionName));
 		
-		entity.setChildren(
+		int children = this.getChildCount(node);
+		if(children != 0){
+			entity.setChildren(
 				this.getUrlConstructor().createChildrenUrl(codeSystemName, version, name));
+		}
+		
 		entity.setSubjectOf(this.getUrlConstructor().createSourceUrl(codeSystemName, version, name));
 		
 		entity.addEntityType(this.getEntityType(type));
@@ -289,6 +294,17 @@ public class EntityDescriptionTransform extends AbstractTransform {
 			}
 
 		return Iterables.toArray(returnList, Property.class);
+	}
+	
+	public int getChildCount(Node node){
+		for(Node entryNode : TransformUtils.getNodeListWithPath(node, "relations.entry")){
+			String string = TransformUtils.getNamedChildText(entryNode, "string");
+			if(string.equals(CHILD_COUNT)){
+				return Integer.parseInt(TransformUtils.getNamedChildText(entryNode, "int"));
+			}
+		}
+		
+		return 0;
 	}
 
 	/**

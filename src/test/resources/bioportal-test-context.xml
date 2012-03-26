@@ -32,4 +32,7 @@
 
 	<bean id="serviceConfigManager"
 		class="edu.mayo.cts2.framework.core.config.ServiceConfigManager" />
+		
+	<bean id="cts2Marshaller" class="edu.mayo.cts2.framework.core.xml.DelegatingMarshaller"/>
+		
 </beans>

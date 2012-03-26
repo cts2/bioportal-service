@@ -31,4 +31,60 @@ public class BioportalRestEntiyDescriptionReadServiceTestIT {
 		assertEquals "29506000", ed.getChoiceValue().getEntityID().getName()
 		
 	}
+	
+	@Test
+	public void testGetEntityCallBioportalReadByUri(){
+		def name = new EntityDescriptionReadId(
+			"http://purl.bioontology.org/ontology/ICD10/D45",
+			ModelUtils.nameOrUriFromName("ICD10_1998_RRF"))
+		
+		def ed = service.read(name, null)
+		
+		assertEquals "D45", ed.getChoiceValue().getEntityID().getName()
+		
+	}
+	
+	@Test
+	public void testGetEntityCallBioportalReadByUriWithDot(){
+		def name = new EntityDescriptionReadId(
+			"http://purl.bioontology.org/ontology/ICD10/G45.0",
+			ModelUtils.nameOrUriFromName("ICD10_1998_RRF"))
+		
+		def ed = service.read(name, null)
+		
+		assertEquals "G45.0", ed.getChoiceValue().getEntityID().getName()
+		
+	}
+	
+	@Test
+	public void testGetEntityCallBioportalReadByUriWithNoChildren(){
+		def name = new EntityDescriptionReadId(
+			"http://purl.bioontology.org/ontology/ICD10/G45.0",
+			ModelUtils.nameOrUriFromName("ICD10_1998_RRF"))
+		
+		def ed = service.read(name, null)
+		
+		assertEquals "G45.0", ed.getChoiceValue().getEntityID().getName()
+		
+		assertNull ed.getChoiceValue().children
+		
+	}
+	
+	@Test
+	public void testGetEntityCallBioportalReadByUriWithChildren(){
+		def name = new EntityDescriptionReadId(
+			"http://purl.bioontology.org/ontology/ICD10/G40-G47.9",
+			ModelUtils.nameOrUriFromName("ICD10_1998_RRF"))
+		
+		def ed = service.read(name, null)
+		
+		assertEquals "G40-G47.9", ed.getChoiceValue().getEntityID().getName()
+		
+		assertNotNull ed.getChoiceValue().children
+		
+	}
+	
+	
+	
+	
 }

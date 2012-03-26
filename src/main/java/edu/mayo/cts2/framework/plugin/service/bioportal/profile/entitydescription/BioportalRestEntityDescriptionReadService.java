@@ -88,7 +88,15 @@ public class BioportalRestEntityDescriptionReadService
 		String codeSystemName = this.identityConverter.
 				codeSystemVersionNameCodeSystemName(codeSystemVersionName);
 		
+		String searchId;
+		
 		ScopedEntityName entityName = id.getEntityName();
+		
+		if(entityName != null){
+			searchId = entityName.getName();
+		} else {
+			searchId = id.getUri();
+		}
 		
 		String ontologyId = this.identityConverter
 				.codeSystemNameToOntologyId(codeSystemName);
@@ -96,7 +104,7 @@ public class BioportalRestEntityDescriptionReadService
 		String xml = this.bioportalRestService
 				.getEntityByOntologyIdAndEntityId(
 						ontologyId,
-						entityName.getName());
+						searchId);
 
 		return ModelUtils.toEntityDescription(
 				entityDescriptionTransform.transformEntityDescription(xml,
