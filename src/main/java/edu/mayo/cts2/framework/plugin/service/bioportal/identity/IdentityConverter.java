@@ -401,7 +401,14 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 	 */
 	private void cacheVersionNameAndOntologyVersionId(String ontologyId) {
 		try {
-			String xml = this.bioportalRestService.getOntologyVersionsByOntologyId(ontologyId);
+			String xml;
+			try {
+				xml = this.bioportalRestService
+						.getOntologyVersionsByOntologyId(ontologyId);
+			} catch (Exception e) {
+				log.warn("Error caching OntologyId: " + ontologyId + ". Skipping.", e);
+				return;
+			}
 
 			Document doc = BioportalRestUtils.getDocument(xml);
 

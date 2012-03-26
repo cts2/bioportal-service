@@ -45,6 +45,18 @@ public class BioportalRestEntiyDescriptionReadServiceTestIT {
 	}
 	
 	@Test
+	public void testGetEntityCallBioportalReadByUriNotFound(){
+		def name = new EntityDescriptionReadId(
+			"http://__INVALIDpurl.bioontology.org/ontology/__INVALID___",
+			ModelUtils.nameOrUriFromName("ICD10_1998_RRF"))
+		
+		def ed = service.read(name, null)
+		
+		assertNull ed
+		
+	}
+	
+	@Test
 	public void testGetEntityCallBioportalReadByUriWithDot(){
 		def name = new EntityDescriptionReadId(
 			"http://purl.bioontology.org/ontology/ICD10/G45.0",
@@ -83,8 +95,5 @@ public class BioportalRestEntiyDescriptionReadServiceTestIT {
 		assertNotNull ed.getChoiceValue().children
 		
 	}
-	
-	
-	
 	
 }

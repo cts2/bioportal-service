@@ -252,7 +252,7 @@ public class BioportalRestAssociationQueryService
 				id.getCodeSystemVersion().getName(),
 				id.getEntityName().getName(),
 				CHILDREN_PREDICATE,
-				query.getFilterComponent(),
+				query != null ? query.getFilterComponent() : null,
 				page);
 	}
 

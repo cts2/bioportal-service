@@ -27,7 +27,9 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
@@ -101,10 +103,17 @@ public class BioportalRestEntityDescriptionReadService
 		String ontologyId = this.identityConverter
 				.codeSystemNameToOntologyId(codeSystemName);
 
-		String xml = this.bioportalRestService
-				.getEntityByOntologyIdAndEntityId(
-						ontologyId,
-						searchId);
+		String xml = null;
+		try {
+			xml = this.bioportalRestService
+					.getEntityByOntologyIdAndEntityId(
+							ontologyId,
+							searchId);
+		} catch (HttpClientErrorException e) {
+			if(e.getStatusCode().equals(HttpStatus.NOT_FOUND)){
+				return null;
+			}
+		}
 
 		return ModelUtils.toEntityDescription(
 				entityDescriptionTransform.transformEntityDescription(xml,
