@@ -134,7 +134,7 @@ public class BioportalRestEntityDescriptionReadService
 	public EntityList readEntityDescriptions(
 			EntityNameOrURI entityId,
 			ResolvedReadContext readContext) {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Lookup by URI is currently not supported without specifying a CodeSystemVersion.");
 	}
 
 	@Override
@@ -155,14 +155,14 @@ public class BioportalRestEntityDescriptionReadService
 	@Override
 	public EntityReference availableDescriptions(EntityNameOrURI entityId,
 			ResolvedReadContext readContext) {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Lookup by URI is currently not supported without specifying a CodeSystemVersion.");
 	}
 
 	@Override
 	public DirectoryResult<EntityListEntry> readEntityDescriptions(
 			EntityNameOrURI entityId, SortCriteria sortCriteria,
 			ResolvedReadContext readContext, Page page) {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Lookup by URI is currently not supported without specifying a CodeSystemVersion.");
 	}
 
 }
