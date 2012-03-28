@@ -78,7 +78,7 @@ public class BioportalRestEntiyDescriptionReadServiceTestIT {
 		
 		assertEquals "G45.0", ed.getChoiceValue().getEntityID().getName()
 		
-		assertNull ed.getChoiceValue().children
+		assertEquals "", ed.getChoiceValue().children
 		
 	}
 	
