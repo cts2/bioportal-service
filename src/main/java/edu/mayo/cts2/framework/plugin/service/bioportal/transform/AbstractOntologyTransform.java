@@ -222,8 +222,25 @@ public abstract class AbstractOntologyTransform extends AbstractTransform {
 		ValueSetDefinitionReference ref = new ValueSetDefinitionReference();
 		ref.setValueSet(this.buildDefinitionOfValueSetReference(valueSetName));
 		NameAndMeaningReference def = new NameAndMeaningReference();
-		def.setContent(valueSetName);
-		def.setHref(this.getUrlConstructor().createValueSetDefinitionUrl(valueSetName, valueSetDefinitionName));
+		def.setContent(valueSetDefinitionName);
+
+		ref.setValueSetDefinition(def);
+		
+		return ref;
+	}
+	
+	protected ValueSetDefinitionReference getValueSetDefinitionReference(
+			String ontologyId, String ontologyVersionId){
+		String valueSetName = this.getIdentityConverter().ontologyIdToValueSetName(ontologyId);
+
+		String valueSetDefinitionName = this.getIdentityConverter().
+			ontologyVersionIdToValueSetDefinitionName(ontologyId, ontologyVersionId);
+		
+		ValueSetDefinitionReference ref = new ValueSetDefinitionReference();
+		ref.setValueSet(this.buildDefinitionOfValueSetReference(valueSetName));
+		NameAndMeaningReference def = new NameAndMeaningReference();
+		def.setContent(valueSetDefinitionName);
+
 		ref.setValueSetDefinition(def);
 		
 		return ref;

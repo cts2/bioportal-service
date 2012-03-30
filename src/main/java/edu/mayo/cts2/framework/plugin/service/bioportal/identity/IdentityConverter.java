@@ -298,6 +298,19 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 		return this.ontologyVersionIdToName.get(ontologyVersionId);
 	}
 	
+	public String ontologyVersionIdToCodeSystemVersionName(
+			String ontologyVersionId){
+
+		if(! this.ontologyVersionIdToName.containsKey(ontologyVersionId)){
+		
+			if(! this.ontologyVersionIdToName.containsKey(ontologyVersionId)){
+				this.cacheVersionNameAndOntologyVersionIdWithOntologyVersionId(ontologyVersionId);
+			}
+		}
+		
+		return this.ontologyVersionIdToName.get(ontologyVersionId);
+	}
+	
 	/**
 	 * Ontology version id to value set definition name.
 	 *
@@ -517,9 +530,12 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 
 				if(StringUtils.isNotBlank(abbreviation)){
 					return abbreviation;
-				} else {
+				}
+				if(StringUtils.isNotBlank(displayLabel)){
 					return displayLabel;
 				}
+				
+				throw new RuntimeException("Could not find a name for node.");
 
 			} catch (Exception e) {
 				throw new Cts2RuntimeException(e);
@@ -535,8 +551,8 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 	private String buildVersionName(Node node, boolean useVersion){
 
 		try {
-
-			String abbreviation = TransformUtils.getNamedChildText(node, ABBREVIATION);;
+			String abbreviation = this.buildName(node);
+		
 			String format = TransformUtils.getNamedChildText(node, FORMAT);
 			String version;
 			if (useVersion) {

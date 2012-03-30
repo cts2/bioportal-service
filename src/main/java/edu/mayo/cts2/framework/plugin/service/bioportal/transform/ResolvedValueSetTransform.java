@@ -23,14 +23,82 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.transform;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
+import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetHeader;
+import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
 
 /**
- * The Class ValueSetDefinitionTransform.
+ * The Class CodeSystemVersionTransform.
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @Component
-public class ResolvedValueSetTransform {
+public class ResolvedValueSetTransform extends AbstractOntologyTransform {
+
+	/* (non-Javadoc)
+	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#createNewResourceVersion()
+	 */
+	public List<ResolvedValueSetDirectoryEntry> transfrom(String xml) {
+		Document doc = BioportalRestUtils.getDocument(xml);
+
+		List<Node> nodeList = TransformUtils.getNodeListWithPath(doc, "success.data.list.ontologyBean");
+	
+		List<ResolvedValueSetDirectoryEntry> returnList = new ArrayList<ResolvedValueSetDirectoryEntry>();
+		
+		for(Node node : nodeList){
+			ResolvedValueSetDirectoryEntry entry = new ResolvedValueSetDirectoryEntry();
+
+			String ontologyVersionId = TransformUtils.getNamedChildText(node, ONTOLOGY_VERSION_ID);
+			
+			ResolvedValueSetHeader header = this.getHeader(node);
+		
+			entry.setResolvedHeader(header);
+			
+			entry.setHref(this.getUrlConstructor().createResolvedValueSetUrl(
+					header.getResolutionOf().getValueSet().getContent(), 
+					header.getResolutionOf().getValueSetDefinition().getContent(), 
+					ontologyVersionId));
+			
+			entry.setResolvedValueSetURI(header.getResolutionOf().getValueSet().getUri() + "/resolution/" + ontologyVersionId);
+			
+			returnList.add(entry);
+		}
+		
+		return returnList;
+	}
+	
+	public ResolvedValueSetHeader getHeader(Node node){
+		String ontologyId = TransformUtils.getNamedChildText(node, ONTOLOGY_ID);
+		String ontologyVersionId = TransformUtils.getNamedChildText(node, ONTOLOGY_VERSION_ID);
+		
+		ResolvedValueSetHeader header = new ResolvedValueSetHeader();
+		header.setResolutionOf(this.getValueSetDefinitionReference(ontologyId, ontologyVersionId));
+		
+		List<Node> resolvedCodeSystemVersions = TransformUtils.getNodeListWithPath(node, "viewOnOntologyVersionId.int");
+		for(Node resolvedCodeSystemVersion : resolvedCodeSystemVersions){
+			String codeSystemVersionOntologyVersionId = 
+					TransformUtils.getNodeText(resolvedCodeSystemVersion);
+				
+			String codeSystemVersionName = 
+					this.getIdentityConverter().ontologyVersionIdToCodeSystemVersionName(codeSystemVersionOntologyVersionId);
+			
+			String codeSystemName = 
+					this.getIdentityConverter().codeSystemVersionNameCodeSystemName(codeSystemVersionName);
+			
+			header.addResolvedUsingCodeSystem(
+					this.buildCodeSystemVersionReference(
+							codeSystemName, 
+							codeSystemVersionName));	
+		}
+
+		return header;
+	}
 
 }
