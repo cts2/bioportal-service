@@ -99,10 +99,19 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() throws Exception {
-		this.bioportalRestService.addObserver(this);
+		try {
+			this.bioportalRestService.addObserver(this);
+			this.cacheNameAndId();
+		} catch (Exception e) {
+			log.error("Error Starting BioPortal Service", e);
+		}
+	}
+
+	@Override
+	public void onApiKeyChange() {
 		this.cacheNameAndId();
 	}
-	
+
 	/**
 	 * Code system about to name.
 	 *

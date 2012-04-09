@@ -57,19 +57,21 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 
-import edu.mayo.cts2.framework.core.config.option.Option;
 import edu.mayo.cts2.framework.core.plugin.PluginConfigManager;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.core.PropertyReference;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
+import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.service.constant.ExternalCts2Constants;
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 
@@ -116,6 +118,8 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	private Map<String,String> memCache = new LRUMap(DEFAULT_MEM_CACHE_SIZE);
 
 	private String cachePath;
+	
+	private boolean propertiesSet = false;
 	
 	public static final String PROPERTIES_NAME = "properties";
 	public static final String PROPERTIES_URI = ExternalCts2Constants.buildModelAttributeUri(PROPERTIES_NAME);
@@ -595,11 +599,22 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 		HttpHeaders headers = new HttpHeaders();
 		headers.set( "Accept", "application/xml" );
 		
-		ResponseEntity<String> response = this.restTemplate.exchange(
-				url, 
-				HttpMethod.GET, 
-				new HttpEntity<Void>(headers), 
-				String.class);
+		ResponseEntity<String> response;
+		
+		try {
+			response = this.restTemplate.exchange(
+					url, 
+					HttpMethod.GET, 
+					new HttpEntity<Void>(headers), 
+					String.class);
+		} catch (HttpStatusCodeException e) {
+			if(e.getStatusCode().equals(HttpStatus.NOT_FOUND)){
+				throw e;
+			} else {
+				log.error("Error calling BioPortal REST Service", e);
+				throw ExceptionFactory.createUnknownException("Error calling NCBO BioPortal: " + e.getMessage());
+			}
+		}
 		
 		return response.getBody();
 	}
@@ -619,18 +634,7 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 			
 			return;
 		}
-		
-		Option apiKey = this.pluginConfigManager.
-    			getPluginConfigProperties(BIOPORTAL_CONFIG_NAMESPACE).
-    				getStringOption(API_KEY_PROP);
-		
-		if(apiKey != null && StringUtils.isNotBlank(apiKey.getOptionValueAsString())){
-			log.info("Using APIKEY from Configuration File.");
-			this.apiKey = apiKey.getOptionValueAsString();
-			
-			return;
-		}
-		
+
 		log.warn("No Bioportal API Key Set! Please sent one via the System Variable: " 
 				+ API_KEY_PROP + " or in the Bioportal config file.");
 	}
@@ -640,20 +644,14 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
      */
     @SuppressWarnings("unchecked")
 	public void afterPropertiesSet() throws IOException {
+    	this.propertiesSet = true;
+    	
     	this.setApiKey();
     	
     	if(StringUtils.isBlank(this.cachePath)){
-    		Option cachePath = this.pluginConfigManager.
-    			getPluginConfigProperties(BIOPORTAL_CONFIG_NAMESPACE).
-    				getStringOption(CACHE_CONFIG_PROP);
-    		
-    		if(cachePath != null && StringUtils.isNotBlank(cachePath.getOptionValueAsString())){
-    			this.cachePath = cachePath.getOptionValueAsString();
-    		} else {
-	    		this.cachePath = 
-	    				this.pluginConfigManager.getPluginConfig(BIOPORTAL_CONFIG_NAMESPACE).
-	    					getWorkDirectory().getPath() + File.separator + "cache";
-    		}
+    		this.cachePath = 
+				this.pluginConfigManager.getPluginWorkDirectory(BIOPORTAL_CONFIG_NAMESPACE).
+					getPath() + File.separator + "cache";
     	}
 
 		File file = getCacheFile();
@@ -922,6 +920,9 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 
 	public void setApiKey(String apiKey) {
 		this.apiKey = apiKey;
+		if(this.propertiesSet){
+			this.fireApiKeyChangeEvent();
+		}
 	}
 	
 }

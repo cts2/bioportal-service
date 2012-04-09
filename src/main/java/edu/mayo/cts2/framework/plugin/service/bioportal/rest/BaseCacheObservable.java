@@ -60,4 +60,10 @@ public class BaseCacheObservable implements CacheObservable {
 			observer.onCodeSystemsChangeEvent(ontologyIds);
 		}
 	}
+	
+	protected void fireApiKeyChangeEvent(){
+		for (CacheObserver observer : observers) {
+			observer.onApiKeyChange();
+		}
+	}
 }

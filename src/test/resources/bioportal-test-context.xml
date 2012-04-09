@@ -11,7 +11,7 @@
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
-				<value>file:target/testconfigdir/webapp-rest/bioportal-service.properties</value>
+				<value>file:target/testconfigdir/webapp-rest/config/bioportal-service.properties</value>
 			</list>
 		</property>
 	</bean>
@@ -29,9 +29,8 @@
 		class="edu.mayo.cts2.framework.core.plugin.DefaultPluginConfigManager" />
 
 	<bean class="edu.mayo.cts2.framework.util.spring.UrlConstructorSpringFactory" />
-
-	<bean id="serviceConfigManager"
-		class="edu.mayo.cts2.framework.core.config.ServiceConfigManager" />
+	
+	<bean class="edu.mayo.cts2.framework.core.config.TestServerContext"	/>
 		
 	<bean id="cts2Marshaller" class="edu.mayo.cts2.framework.core.xml.DelegatingMarshaller"/>
 		

@@ -41,5 +41,7 @@ public interface CacheObserver {
 	 * @param changedOntologyIds the changed ontology ids
 	 */
 	public void onCodeSystemsChangeEvent(List<String> changedOntologyIds);
+	
+	public void onApiKeyChange();
 
 }
