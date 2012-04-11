@@ -22,19 +22,7 @@ public class BioportalRestAssociationQueryServiceTestIT {
 	private BioportalRestAssociationQueryService service
 
 	
-	@Test
-	public void testGetChildren(){
-		
-		def sen = new ScopedEntityName(name:"G40-G47.9", namespace:"ICD10")
-		def name = new EntityDescriptionReadId(
-			sen,
-			ModelUtils.nameOrUriFromName("ICD10_1998_RRF"))
-		
-		def ed = service.getChildrenAssociationsOfEntity(name, null, null, new Page())
-		
-		assertTrue ed.entries.size > 0
-
-	}
+	
 	
 	
 	

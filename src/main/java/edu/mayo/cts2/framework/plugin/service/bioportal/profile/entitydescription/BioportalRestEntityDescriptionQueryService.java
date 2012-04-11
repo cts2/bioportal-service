@@ -52,12 +52,14 @@ import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
+import edu.mayo.cts2.framework.plugin.service.bioportal.profile.association.BioportalRestAssociationQueryService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory.EntityDirectoryBuilder;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.EntityDescriptionTransform;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.TransformUtils;
 import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
+import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions.HierarchyRestriction.HierarchyType;
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQuery;
@@ -81,7 +83,12 @@ public class BioportalRestEntityDescriptionQueryService
 
 	@Resource
 	private IdentityConverter identityConverter;
-
+	
+	@Resource
+	private BioportalRestAssociationQueryService bioportalRestAssociationQueryService;
+	
+	private static final String CHILDREN_PREDICATE = "SubClass";
+	
 	/**
 	 * Gets the entity description name from uri.
 	 *
@@ -558,7 +565,25 @@ public class BioportalRestEntityDescriptionQueryService
 		
 		EntityDescriptionQueryServiceRestrictions restrictions = query.getRestrictions();
 		
-		if(restrictions != null && restrictions.getCodeSystemVersion() != null){
+		if(restrictions != null && restrictions.getHierarchyRestriction()!= null){
+
+			if(restrictions.getHierarchyRestriction().getHierarchyType() != HierarchyType.CHILDREN){
+				throw new UnsupportedOperationException("Only CHILDREN queries supported.");
+			}
+			
+			String codeSystemVersionName = restrictions.getCodeSystemVersion().getName();
+			
+			String codeSystemName = this.identityConverter.codeSystemVersionNameCodeSystemName(codeSystemVersionName);
+			
+			return this.bioportalRestAssociationQueryService.doGetAssociationsOfEntity(
+					codeSystemName, 
+					codeSystemVersionName, 
+					restrictions.getHierarchyRestriction().getEntity().getEntityName().getName(), 
+					CHILDREN_PREDICATE, 
+					query.getFilterComponent(), 
+					page);
+		
+		} else if(restrictions != null && restrictions.getCodeSystemVersion() != null){
 			
 			String codeSystemVersionName = restrictions.getCodeSystemVersion().getName();
 			
@@ -588,29 +613,20 @@ public class BioportalRestEntityDescriptionQueryService
 			Page page) {
 		throw new UnsupportedOperationException();
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.QueryService#count(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object)
-	 */
-	@Override
-	public int count(
-			EntityDescriptionQuery query) {
-		throw new UnsupportedOperationException();
-	}
+	
+	
 
 	@Override
 	public boolean isEntityInSet(EntityNameOrURI entity, Query query,
 			Set<ResolvedFilter> filterComponent,
-			EntityDescriptionQueryServiceRestrictions restrictions,
-			ResolvedReadContext readContext) {
+			EntityDescriptionQuery restrictions, ResolvedReadContext readContext) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public EntityReferenceList resolveAsEntityReferenceList(Query query,
 			Set<ResolvedFilter> filterComponent,
-			EntityDescriptionQueryServiceRestrictions restrictions,
-			ResolvedReadContext readContext) {
+			EntityDescriptionQuery restrictions, ResolvedReadContext readContext) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -618,8 +634,16 @@ public class BioportalRestEntityDescriptionQueryService
 	public EntityNameOrURIList intersectEntityList(
 			Set<EntityNameOrURI> entities, Query query,
 			Set<ResolvedFilter> filterComponent,
-			EntityDescriptionQueryServiceRestrictions restrictions,
-			ResolvedReadContext readContext) {
+			EntityDescriptionQuery restrictions, ResolvedReadContext readContext) {
+		throw new UnsupportedOperationException();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mayo.cts2.framework.service.profile.QueryService#count(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object)
+	 */
+	@Override
+	public int count(
+			EntityDescriptionQuery query) {
 		throw new UnsupportedOperationException();
 	}
 

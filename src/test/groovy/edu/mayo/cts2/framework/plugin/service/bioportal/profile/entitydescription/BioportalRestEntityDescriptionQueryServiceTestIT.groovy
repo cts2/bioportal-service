@@ -14,6 +14,12 @@ import edu.mayo.cts2.framework.core.xml.Cts2Marshaller
 import edu.mayo.cts2.framework.model.command.Page
 import edu.mayo.cts2.framework.model.command.ResolvedFilter
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference
+import edu.mayo.cts2.framework.model.core.ScopedEntityName
+import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI
+import edu.mayo.cts2.framework.model.util.ModelUtils
+import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions
+import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions.HierarchyRestriction
+import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions.HierarchyRestriction.HierarchyType
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQuery
@@ -76,5 +82,31 @@ public class BioportalRestEntityDescriptionQueryServiceTestIT {
 			marshaller.marshal(it, new StreamResult(new StringWriter()))
 		}
 		
+	}
+	
+	@Test
+	public void testGetChildren(){
+		
+		def sen = new ScopedEntityName(name:"G40-G47.9", namespace:"ICD10")
+		def e = new EntityNameOrURI(entityName: sen)
+		
+		def restrictions = new EntityDescriptionQueryServiceRestrictions()
+		restrictions.hierarchyRestriction = 
+			new HierarchyRestriction(
+				hierarchyType: HierarchyType.CHILDREN,
+				entity: e)
+		restrictions.codeSystemVersion = ModelUtils.nameOrUriFromName("ICD10_1998_RRF")
+				
+		def q = [
+			getFilterComponent : {  },
+			getReadContext : { },
+			getQuery : { },
+			getRestrictions : { restrictions }
+		] as EntityDescriptionQuery
+
+		def ed = service.getResourceSummaries(q, null, new Page())
+		
+		assertTrue ed.entries.size > 0
+
 	}
 }

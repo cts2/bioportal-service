@@ -57,6 +57,7 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.transform.TransformUtils
 import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
+import edu.mayo.cts2.framework.service.profile.entitydescription.EntitiesFromAssociationsQuery;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQuery;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetResolutionService;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedValueSetReadId;
@@ -125,6 +126,11 @@ public class BioportalRestResolvedValueSetResolutionService extends AbstractBiop
 						ModelUtils.nameOrUriFromName(valueSetDefinitionName));
 				
 				return restrictions;
+			}
+
+			@Override
+			public EntitiesFromAssociationsQuery getEntitiesFromAssociationsQuery() {
+				return null;
 			}
 		};
 		

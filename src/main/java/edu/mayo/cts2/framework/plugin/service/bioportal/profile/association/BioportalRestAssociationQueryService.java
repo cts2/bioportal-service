@@ -44,7 +44,6 @@ import edu.mayo.cts2.framework.model.association.types.GraphDirection;
 import edu.mayo.cts2.framework.model.association.types.GraphFocus;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.PropertyReference;
@@ -53,19 +52,16 @@ import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.core.types.AssociationDirection;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
-import edu.mayo.cts2.framework.model.entity.EntityList;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory.ParentOrChildOfEntityDirectoryBuilder;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.AssociationTransform;
 import edu.mayo.cts2.framework.service.command.restriction.AssociationQueryServiceRestrictions;
-import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
 import edu.mayo.cts2.framework.service.profile.association.AssociationQuery;
 import edu.mayo.cts2.framework.service.profile.association.AssociationQueryService;
-import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQuery;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
 /**
@@ -86,55 +82,6 @@ public class BioportalRestAssociationQueryService
 	
 	@Resource
 	private AssociationTransform associationTransform;
-	
-	private static final String CHILDREN_PREDICATE = "SubClass";
-
-	/**
-	 * Do get associations of entity.
-	 *
-	 * @param codeSystemName the code system name
-	 * @param codeSystemVersionName the code system version name
-	 * @param entity the entity
-	 * @param predicateName the predicate name
-	 * @param filterComponent the filter component
-	 * @param page the page
-	 * @return the directory result
-	 */
-	protected DirectoryResult<EntityDirectoryEntry> doGetAssociationsOfEntity(
-			final String codeSystemName, 
-			final String codeSystemVersionName, 
-			final String entity,
-			final String predicateName,
-			Set<ResolvedFilter> filterComponent,
-			Page page) {
-
-		String ontologyVersionId = 
-			this.identityConverter.codeSystemVersionNameToOntologyVersionId(
-					codeSystemVersionName);
-
-		final String xml = this.bioportalRestService.
-			getEntityByOntologyVersionIdAndEntityId(ontologyVersionId, entity);
-		
-		ParentOrChildOfEntityDirectoryBuilder builder;
-		try {
-			builder = new ParentOrChildOfEntityDirectoryBuilder(
-					this.associationTransform.transformEntitiesForRelationship(
-							xml, 
-							codeSystemName,
-							codeSystemVersionName, 
-							predicateName),
-						this.getSupportedMatchAlgorithms(),
-						this.getSupportedSearchReferences()
-					);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		
-		return builder.restrict(filterComponent).
-			addStart(page.getStart()).
-			addMaxToReturn(page.getMaxToReturn()).
-			resolve();
-	}
 
 	@Override
 	public Set<ResolvablePropertyReference<EntityDirectoryEntry>> getSupportedSearchReferences() {
@@ -187,6 +134,42 @@ public class BioportalRestAssociationQueryService
 		
 		return returnSet;
 	}
+	
+	public DirectoryResult<EntityDirectoryEntry> doGetAssociationsOfEntity(
+			final String codeSystemName, 
+			final String codeSystemVersionName, 
+			final String entity,
+			final String predicateName,
+			Set<ResolvedFilter> filterComponent,
+			Page page) {
+
+		String ontologyVersionId = 
+			this.identityConverter.codeSystemVersionNameToOntologyVersionId(
+					codeSystemVersionName);
+
+		final String xml = this.bioportalRestService.
+			getEntityByOntologyVersionIdAndEntityId(ontologyVersionId, entity);
+		
+		ParentOrChildOfEntityDirectoryBuilder builder;
+		try {
+			builder = new ParentOrChildOfEntityDirectoryBuilder(
+					this.associationTransform.transformEntitiesForRelationship(
+							xml, 
+							codeSystemName,
+							codeSystemVersionName, 
+							predicateName),
+						getSupportedMatchAlgorithms(),
+						getSupportedSearchReferences()
+					);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		
+		return builder.restrict(filterComponent).
+			addStart(page.getStart()).
+			addMaxToReturn(page.getMaxToReturn()).
+			resolve();
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getResourceSummaries(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object, edu.mayo.cts2.framework.service.command.Page)
@@ -237,6 +220,7 @@ public class BioportalRestAssociationQueryService
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.service.profile.association.AssociationQueryService#getChildrenAssociationsOfEntity(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, edu.mayo.cts2.framework.service.command.Page, edu.mayo.cts2.framework.service.profile.entitydescription.id.EntityDescriptionId)
 	 */
+	/*
 	@Override
 	public DirectoryResult<EntityDirectoryEntry> getChildrenAssociationsOfEntity(
 			EntityDescriptionReadId id,
@@ -255,6 +239,7 @@ public class BioportalRestAssociationQueryService
 				query != null ? query.getFilterComponent() : null,
 				page);
 	}
+	*/
 
 	@Override
 	public Set<? extends PropertyReference> getSupportedSortReferences() {
@@ -332,76 +317,5 @@ public class BioportalRestAssociationQueryService
 					codeSystemName, 
 					id.getCodeSystemVersion().getName());
 			
-	}
-
-	@Override
-	public DirectoryResult<EntityDirectoryEntry> getChildrenAssociationsOfEntityList(
-			EntityDescriptionReadId entity, EntityDescriptionQuery query,
-			ResolvedReadContext readContext, Page page) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public DirectoryResult<EntityDirectoryEntry> getSourceEntities(
-			AssociationQueryServiceRestrictions associationRestrictions,
-			EntityDescriptionQueryServiceRestrictions entityRestrictions,
-			ResolvedReadContext readContext, Page page) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public DirectoryResult<EntityList> getSourceEntitiesList(
-			AssociationQueryServiceRestrictions associationRestrictions,
-			EntityDescriptionQueryServiceRestrictions entityRestrictions,
-			ResolvedReadContext readContext, Page page) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public DirectoryResult<EntityDirectoryEntry> getTargetEntities(
-			AssociationQuery associationQuery,
-			EntityDescriptionQuery entityDescriptionQuery,
-			ResolvedReadContext readContext, Page page) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public DirectoryResult<EntityList> getTargetEntitiesList(
-			AssociationQuery associationQuery,
-			EntityDescriptionQuery entityDescriptionQuery,
-			ResolvedReadContext readContext, Page page) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public DirectoryResult<EntityDirectoryEntry> getAllSourceAndTargetEntities(
-			AssociationQuery associationQuery,
-			EntityDescriptionQuery entityDescriptionQuery,
-			ResolvedReadContext readContext, Page page) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public DirectoryResult<EntityList> getAllSourceAndTargetEntitiesList(
-			AssociationQuery associationQuery,
-			EntityDescriptionQuery entityDescriptionQuery,
-			ResolvedReadContext readContext, Page page) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public DirectoryResult<EntityDirectoryEntry> getPredicates(
-			AssociationQuery associationQuery,
-			EntityDescriptionQuery entityDescriptionQuery,
-			ResolvedReadContext readContext, Page page) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public DirectoryResult<EntityList> getPredicatesList(
-			AssociationQuery associationQuery,
-			EntityDescriptionQuery entityDescriptionQuery,
-			ResolvedReadContext readContext, Page page) {
-		throw new UnsupportedOperationException();
 	}
 }
