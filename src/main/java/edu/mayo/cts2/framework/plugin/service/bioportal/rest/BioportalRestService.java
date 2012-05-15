@@ -31,8 +31,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -53,6 +51,7 @@ import org.apache.commons.lang.SerializationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -80,7 +79,8 @@ import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
  *
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
-public class BioportalRestService extends BaseCacheObservable implements InitializingBean {
+public class BioportalRestService extends BaseCacheObservable 
+	implements InitializingBean, DisposableBean {
 	
 	public static final String BIOPORTAL_CONFIG_NAMESPACE = "bioportal-service";
 	
@@ -140,6 +140,12 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 		DEFINITIONS.getReferenceTarget().setName(DEFINITIONS_NAME);
 		DEFINITIONS.getReferenceTarget().setUri(DEFINITIONS_URI);
 	};
+	
+	@Override
+	public void destroy() throws Exception {
+		log.info("Shutting down... writing cache to file.");
+		this.writeCache();
+	}
 	
 	protected Map<String,String> createCache(){
 		 return new HashMap<String,String>();
@@ -205,7 +211,16 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	 * @return the entity by ontology version id and entity id
 	 */
 	public String getEntityByOntologyVersionIdAndEntityId(String ontologyVersionId, String entityId){
-		String url = "http://rest.bioontology.org/bioportal/concepts/" + ontologyVersionId + "/" + entityId;
+		/*
+		try {
+			entityId = URLEncoder.encode(entityId, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+		*/
+		
+		String url = "http://rest.bioontology.org/bioportal/concepts/" + ontologyVersionId + "?" 
+				+ "conceptid=" + entityId;
 
 		String xml = this.doCallBioportalMemCache(url);
 
@@ -219,6 +234,8 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 	 * @param entityId the entity id
 	 * @return the entity by ontology id and entity id
 	 */
+	
+	/*
 	public String getEntityByOntologyIdAndEntityId(String ontologyId, String entityId){
 		try {
 			entityId = URLEncoder.encode(entityId, "UTF-8");
@@ -233,6 +250,7 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 
 		return xml;
 	}
+	*/
 	
 	/**
 	 * Gets the hierarchy roots by ontoloty version id.
@@ -536,13 +554,7 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 			String xml = this.callBioportal(fullUrl);
 			
 			this.cache.put(fullUrl, xml);
-			
-			try {
-				this.writeCache();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-			
+
 			return xml;
 		} else {
 			return new String(this.cache.get(fullUrl));
@@ -924,5 +936,4 @@ public class BioportalRestService extends BaseCacheObservable implements Initial
 			this.fireApiKeyChangeEvent();
 		}
 	}
-	
 }

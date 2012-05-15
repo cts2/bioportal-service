@@ -23,6 +23,8 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.provider;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.stereotype.Component;
 
 import edu.mayo.cts2.framework.util.spring.AbstractSpringServiceProvider;
@@ -35,5 +37,9 @@ import edu.mayo.cts2.framework.util.spring.AbstractSpringServiceProvider;
 @Component("bioportalServiceProvider")
 public class BioportalServiceProvider extends AbstractSpringServiceProvider {
 
-//
+	protected ApplicationContext decorateApplicationContext(ApplicationContext context) {
+		((AbstractApplicationContext)context).registerShutdownHook();
+		
+		return context;
+	}
 }

@@ -49,6 +49,8 @@ public class AbstractTransform {
 	
 	protected Log log = LogFactory.getLog(getClass());
 	
+	protected static final String PREDICATE_URI_PREFIX = "http://purl.bioontology.org/predicate/";
+	
 	@Resource
 	private UrlConstructor urlConstructor;
 

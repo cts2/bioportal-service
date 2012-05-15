@@ -58,6 +58,7 @@ import edu.mayo.cts2.framework.model.entity.PredicateDescription;
 import edu.mayo.cts2.framework.model.entity.types.DesignationRole;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
+import edu.mayo.cts2.framework.plugin.service.bioportal.util.UriUtils;
 
 /**
  * The Class EntityDescriptionTransform.
@@ -109,8 +110,8 @@ public class EntityDescriptionTransform extends AbstractTransform {
 		
 		String type = TransformUtils.getNamedChildText(node, TYPE);
 		String about = TransformUtils.getNamedChildText(node, ABOUT);
-		String name = TransformUtils.getNamedChildText(node, NAME);
-		name= name.replaceFirst(":", "_");
+		String name = UriUtils.getLocalName(TransformUtils.getNamedChildText(node, NAME));
+		
 		String label = TransformUtils.getNamedChildText(node, LABEL);
 		
 		NamedEntityDescription entity = this.createNamedEntityDescription(type);
@@ -146,7 +147,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 			entity.setChildren("");
 		}
 		
-		entity.setSubjectOf(this.getUrlConstructor().createSourceUrl(codeSystemName, version, name));
+		entity.setSubjectOf(this.getUrlConstructor().createSubjectOfUrl(codeSystemName, version, name));
 		
 		entity.addEntityType(this.getEntityType(type));
 		
@@ -282,6 +283,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 						PredicateReference predicateRef = new PredicateReference();
 						predicateRef.setName(predicateName);
 						predicateRef.setNamespace(codeSystemName);
+						predicateRef.setUri(PREDICATE_URI_PREFIX + predicateName);
 						
 						prop.setPredicate(predicateRef);
 						
@@ -333,8 +335,8 @@ public class EntityDescriptionTransform extends AbstractTransform {
 			Node node = nodeList.get(i);
 		
 			String about = TransformUtils.getNamedChildText(node, ABOUT);
-			String name = TransformUtils.getNamedChildText(node, NAME);
-			name= name.replaceFirst(":", "_");
+			String name = UriUtils.getLocalName(TransformUtils.getNamedChildText(node, NAME));
+		
 			String label = TransformUtils.getNamedChildText(node, LABEL);
 			
 			entry.setAbout(about);
@@ -375,6 +377,15 @@ public class EntityDescriptionTransform extends AbstractTransform {
 	private String buildResourceName(ScopedEntityName scopedEntityName) {
 		return scopedEntityName.getNamespace() + ":" + scopedEntityName.getName();
 	}
+	
+	public String getUriFromSearch(String xml) {
+		Document doc = BioportalRestUtils.getDocument(xml);
+		
+		List<Node> nodeList = TransformUtils.getNodeListWithPath(doc, SEARCH_NODELIST);
+		
+		return TransformUtils.getNamedChildText(nodeList.get(0), "conceptId");
+	}
+		
 
 	/**
 	 * Transform entity directory from search.
@@ -418,8 +429,8 @@ public class EntityDescriptionTransform extends AbstractTransform {
 							preferredNameKey, ontologyIdKey, ontologyVersionIdKey);
 
 			String about = resultMap.get(conceptIdKey);
-			String name = resultMap.get(conceptIdShortKey);
-			name= name.replaceFirst(":", "_");
+			String name = UriUtils.getLocalName( resultMap.get(conceptIdShortKey) );
+
 			String label = resultMap.get(preferredNameKey);
 			String ontologyId = resultMap.get(ontologyIdKey);
 			String ontologyVersionId = resultMap.get(ontologyVersionIdKey);

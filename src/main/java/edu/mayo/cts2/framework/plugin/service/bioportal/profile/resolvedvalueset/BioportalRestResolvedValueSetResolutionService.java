@@ -41,7 +41,9 @@ import edu.mayo.cts2.framework.model.core.EntitySynopsis;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.PropertyReference;
+import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
@@ -61,6 +63,7 @@ import edu.mayo.cts2.framework.service.profile.entitydescription.EntitiesFromAss
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQuery;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetResolutionService;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedValueSetReadId;
+import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResolutionEntityQuery;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResult;
 
 /**
@@ -85,7 +88,16 @@ public class BioportalRestResolvedValueSetResolutionService extends AbstractBiop
 	private BioportalRestEntityDescriptionQueryService bioportalRestEntityDescriptionQueryService;
 	
 	@Override
-	public ResolvedValueSetResult getResolution(
+	public ResolvedValueSetResult<EntitySynopsis> getResolution(
+			ResolvedValueSetReadId identifier,
+			final Set<ResolvedFilter> filterComponent, 
+			Page page) {
+		Result result = this.doGetResolution(identifier, filterComponent, page);
+		
+		return this.toResolvedValueSetResult(result.entities, result.getHeader());
+	}
+	
+	protected Result doGetResolution(
 			ResolvedValueSetReadId identifier,
 			final Set<ResolvedFilter> filterComponent, 
 			Page page) {
@@ -142,8 +154,27 @@ public class BioportalRestResolvedValueSetResolutionService extends AbstractBiop
 
 		ResolvedValueSetHeader header = this.getResolvedValueSetHeader(ontologyVersionId);
 		
-		return this.toResolvedValueSetResult(entities, header);
+		return new Result(entities, header);
+	}
+	
+	private class Result {
+		private DirectoryResult<EntityDirectoryEntry> entities;
+		private ResolvedValueSetHeader header;
 
+		public Result(DirectoryResult<EntityDirectoryEntry> entities,
+				ResolvedValueSetHeader header) {
+			super();
+			this.entities = entities;
+			this.header = header;
+		}
+
+		private DirectoryResult<EntityDirectoryEntry> getEntities() {
+			return entities;
+		}
+	
+		private ResolvedValueSetHeader getHeader() {
+			return header;
+		}	
 	}
 	
 	private ResolvedValueSetHeader getResolvedValueSetHeader(String ontologyVersionId){
@@ -156,13 +187,13 @@ public class BioportalRestResolvedValueSetResolutionService extends AbstractBiop
 		return this.resolvedValueSetTransform.getHeader(node);
 	}
 	
-	protected ResolvedValueSetResult toResolvedValueSetResult(DirectoryResult<EntityDirectoryEntry> entities, ResolvedValueSetHeader header){
+	protected ResolvedValueSetResult<EntitySynopsis> toResolvedValueSetResult(DirectoryResult<EntityDirectoryEntry> entities, ResolvedValueSetHeader header){
 		List<EntitySynopsis> list = new ArrayList<EntitySynopsis>();
 		for(EntityDirectoryEntry entry : entities.getEntries()){
 			list.add(this.entityDirectoryEntryToEntitySynopsis(entry));
 		}
 
-		return new ResolvedValueSetResult(header, list, entities.isAtEnd());
+		return new ResolvedValueSetResult<EntitySynopsis>(header, list, entities.isAtEnd());
 	}
 	
 	protected EntitySynopsis entityDirectoryEntryToEntitySynopsis(EntityDirectoryEntry entry){
@@ -209,5 +240,26 @@ public class BioportalRestResolvedValueSetResolutionService extends AbstractBiop
 		returnSet.add(StandardModelAttributeReference.RESOURCE_SYNOPSIS.getPropertyReference());
 		
 		return returnSet;
+	}
+
+	@Override
+	public ResolvedValueSetResult<EntityDirectoryEntry> getEntities(
+			ResolvedValueSetReadId identifier,
+			ResolvedValueSetResolutionEntityQuery query,
+			SortCriteria sortCriteria, Page page) {
+		Result result = this.doGetResolution(identifier, query.getFilterComponent(), page);
+		
+		return new ResolvedValueSetResult<EntityDirectoryEntry>(
+				result.getHeader(), 
+				result.getEntities().getEntries(), 
+				result.getEntities().isAtEnd());
+	}
+
+	@Override
+	public DirectoryResult<EntityDescription> getEntityList(
+			ResolvedValueSetReadId identifier,
+			ResolvedValueSetResolutionEntityQuery query,
+			SortCriteria sortCriteria, Page page) {
+		throw new UnsupportedOperationException();
 	}	
 }

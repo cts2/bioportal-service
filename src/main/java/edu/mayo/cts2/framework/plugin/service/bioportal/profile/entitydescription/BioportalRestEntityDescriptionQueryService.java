@@ -39,7 +39,6 @@ import edu.mayo.cts2.framework.model.core.EntityReferenceList;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.PropertyReference;
-import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
@@ -49,7 +48,6 @@ import edu.mayo.cts2.framework.model.entity.NamedEntityDescription;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURIList;
 import edu.mayo.cts2.framework.model.service.core.Query;
-import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.association.BioportalRestAssociationQueryService;
@@ -272,34 +270,6 @@ public class BioportalRestEntityDescriptionQueryService
 	 */
 	private int calculateTransformEnd(Page bioportalPage, int start, int max){
 		return this.calculateTransformStart(bioportalPage, start) + max;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.cts2.rest.service.EntityDescriptionService#getEntityDescriptionByEntityName(java.lang.String, java.lang.String, java.lang.String)
-	 */
-	/**
-	 * Gets the entity description by name.
-	 *
-	 * @param codeSystemName the code system name
-	 * @param codeSystemVersionName the code system version name
-	 * @param entityName the entity name
-	 * @return the entity description by name
-	 */
-	public EntityDescription getEntityDescriptionByName(
-			String codeSystemName, 
-			String codeSystemVersionName,
-			ScopedEntityName entityName) {
-		String ontologyId = this.identityConverter
-				.codeSystemNameToOntologyId(codeSystemName);
-
-		String xml = this.bioportalRestService
-				.getEntityByOntologyIdAndEntityId(
-						ontologyId,
-						entityName.getName());
-
-		return ModelUtils.toEntityDescription(
-				entityDescriptionTransform.transformEntityDescription(xml,
-					codeSystemName, codeSystemVersionName));
 	}
 
 	/* (non-Javadoc)
@@ -578,7 +548,7 @@ public class BioportalRestEntityDescriptionQueryService
 			return this.bioportalRestAssociationQueryService.doGetAssociationsOfEntity(
 					codeSystemName, 
 					codeSystemVersionName, 
-					restrictions.getHierarchyRestriction().getEntity().getEntityName().getName(), 
+					restrictions.getHierarchyRestriction().getEntity().getEntityName(), 
 					CHILDREN_PREDICATE, 
 					query.getFilterComponent(), 
 					page);

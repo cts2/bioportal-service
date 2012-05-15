@@ -57,6 +57,7 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioporta
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory.ParentOrChildOfEntityDirectoryBuilder;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.AssociationTransform;
+import edu.mayo.cts2.framework.plugin.service.bioportal.util.EntityResolver;
 import edu.mayo.cts2.framework.service.command.restriction.AssociationQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
@@ -82,6 +83,9 @@ public class BioportalRestAssociationQueryService
 	
 	@Resource
 	private AssociationTransform associationTransform;
+	
+	@Resource
+	private EntityResolver entityResolver;
 
 	@Override
 	public Set<ResolvablePropertyReference<EntityDirectoryEntry>> getSupportedSearchReferences() {
@@ -138,7 +142,7 @@ public class BioportalRestAssociationQueryService
 	public DirectoryResult<EntityDirectoryEntry> doGetAssociationsOfEntity(
 			final String codeSystemName, 
 			final String codeSystemVersionName, 
-			final String entity,
+			final ScopedEntityName entity,
 			final String predicateName,
 			Set<ResolvedFilter> filterComponent,
 			Page page) {
@@ -147,8 +151,10 @@ public class BioportalRestAssociationQueryService
 			this.identityConverter.codeSystemVersionNameToOntologyVersionId(
 					codeSystemVersionName);
 
-		final String xml = this.bioportalRestService.
-			getEntityByOntologyVersionIdAndEntityId(ontologyVersionId, entity);
+		final String xml = 
+			this.entityResolver.getEntityXml(entity, ontologyVersionId);
+				//this.bioportalRestService.
+			//getEntityByOntologyVersionIdAndEntityId(ontologyVersionId, entity);
 		
 		ParentOrChildOfEntityDirectoryBuilder builder;
 		try {
@@ -281,7 +287,10 @@ public class BioportalRestAssociationQueryService
 		if(focusEntityName.getName().equals("TOP_NODE")){
 			xml = bioportalRestService.getHierarchyRootsByOntolotyVersionId(ontologyVersionId);
 		} else {
-			xml = bioportalRestService.getEntityByOntologyVersionIdAndEntityId(ontologyVersionId, focusEntityName.getName());
+			xml = 
+				this.entityResolver.getEntityXml(
+						focusEntityName, 
+						ontologyVersionId);
 		}
 		
 	
@@ -309,8 +318,9 @@ public class BioportalRestAssociationQueryService
 			String codeSystemName = this.identityConverter.
 					codeSystemVersionNameCodeSystemName(id.getCodeSystemVersion().getName());
 
-			final String xml = this.bioportalRestService.
-				getEntityByOntologyVersionIdAndEntityId(ontologyVersionId, id.getEntityName().getName());
+			final String xml = this.entityResolver.getEntityXml(
+						id.getEntityName(), 
+						ontologyVersionId);
 		
 			return this.associationTransform.transformSubjectOfAssociationsForEntity(
 					xml, 

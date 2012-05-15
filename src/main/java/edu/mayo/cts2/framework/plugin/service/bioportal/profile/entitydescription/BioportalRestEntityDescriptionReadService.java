@@ -27,9 +27,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.springframework.http.HttpStatus;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
@@ -49,6 +48,7 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConvert
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.EntityDescriptionTransform;
+import edu.mayo.cts2.framework.plugin.service.bioportal.util.EntityResolver;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
 
@@ -70,6 +70,9 @@ public class BioportalRestEntityDescriptionReadService
 
 	@Resource
 	private IdentityConverter identityConverter;
+	
+	@Resource
+	private EntityResolver entityResolver;
 
 	/**
 	 * Gets the entity description name from uri.
@@ -90,36 +93,32 @@ public class BioportalRestEntityDescriptionReadService
 		String codeSystemName = this.identityConverter.
 				codeSystemVersionNameCodeSystemName(codeSystemVersionName);
 		
-		String searchId;
-		
 		ScopedEntityName entityName = id.getEntityName();
 		
-		if(entityName != null){
-			searchId = entityName.getName();
-		} else {
-			searchId = id.getUri();
-		}
+		String ontologyVersionId = this.identityConverter.
+				codeSystemVersionNameToOntologyVersionId(codeSystemVersionName);
 		
-		String ontologyId = this.identityConverter
-				.codeSystemNameToOntologyId(codeSystemName);
-
-		String xml = null;
-		try {
-			xml = this.bioportalRestService
-					.getEntityByOntologyIdAndEntityId(
-							ontologyId,
-							searchId);
-		} catch (HttpClientErrorException e) {
-			if(e.getStatusCode().equals(HttpStatus.NOT_FOUND)){
-				return null;
-			}
+		String xml;
+		
+		if(entityName != null){
+			xml = this.entityResolver.getEntityXml(
+					entityName, 
+					ontologyVersionId);		
+		} else {
+			xml = this.entityResolver.getEntityXml(
+					id.getUri(), 
+					ontologyVersionId);
 		}
 
-		return ModelUtils.toEntityDescription(
+		if(StringUtils.isBlank(xml)){
+			return null;
+		} else  {
+			return ModelUtils.toEntityDescription(
 				entityDescriptionTransform.transformEntityDescription(xml,
 					codeSystemName, codeSystemVersionName));
+		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.service.profile.ReadService#exists(java.lang.Object)
 	 */
@@ -127,8 +126,6 @@ public class BioportalRestEntityDescriptionReadService
 	public boolean exists(EntityDescriptionReadId identifier, ResolvedReadContext readContext) {
 		throw new UnsupportedOperationException();
 	}
-
-	
 
 	@Override
 	public EntityList readEntityDescriptions(

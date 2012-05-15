@@ -96,4 +96,16 @@ public class BioportalRestEntiyDescriptionReadServiceTestIT {
 		
 	}
 	
+	@Test
+	public void testGetEntityCallBioportalReadByName(){
+		def name = new EntityDescriptionReadId(
+			new ScopedEntityName(name:"Disposition", namespace:"snap"),
+			ModelUtils.nameOrUriFromName("BFO_1-1_OWL"))
+		
+		def ed = service.read(name, null)
+		
+		assertEquals "Disposition", ed.getChoiceValue().getEntityID().getName()
+		assertEquals "snap", ed.getChoiceValue().getEntityID().getNamespace()
+	}
+	
 }

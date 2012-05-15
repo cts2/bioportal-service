@@ -138,6 +138,7 @@ public abstract class AbstractOntologyTransform extends AbstractTransform {
 		prop.setPredicate(new PredicateReference());
 		prop.getPredicate().setName(predicateName);
 		prop.getPredicate().setNamespace(predicateNamespace);
+		prop.getPredicate().setUri(PREDICATE_URI_PREFIX + predicateName);
 		
 		StatementTarget target = new StatementTarget();
 		target.setLiteral(ModelUtils.createOpaqueData(value));
