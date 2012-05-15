@@ -233,12 +233,67 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 	 * Cache name and id.
 	 */
 	private void cacheNameAndId() {
-		String codeSystemXml = this.bioportalRestService.getLatestOntologyVersions();
-		String valueSetXml = this.bioportalRestService.getLatestViews();
+		String codeSystemXml = this.bioportalRestService.getLatestOntologyVersions(true);
+		String valueSetXml = this.bioportalRestService.getLatestViews(true);
 
 		this.cachNameAndId(codeSystemXml, NameType.CODESYSTEM);
 
 		this.cachNameAndId(valueSetXml, NameType.VALUESET);
+		
+		this.updateStaleCache(codeSystemXml);
+		this.updateStaleCache(valueSetXml);
+	}
+	
+	private void updateStaleCache(){
+		String codeSystemXml = this.bioportalRestService.getLatestOntologyVersions(true);
+		String valueSetXml = this.bioportalRestService.getLatestViews(true);
+		
+		this.updateStaleCache(codeSystemXml);
+		this.updateStaleCache(valueSetXml);
+	}
+	
+	private void updateStaleCache(String xml){
+		int highestCachedVersionId = 0;
+		for(String ontologyVersionId : this.ontologyVersionIdToName.keySet()){
+			int versionId = Integer.parseInt(ontologyVersionId);
+			if(highestCachedVersionId < versionId){
+				highestCachedVersionId = versionId;
+			}
+		}
+		
+		int highestFoundVersionId = this.getHighestVersionId(xml);
+		
+		if(highestFoundVersionId > highestCachedVersionId){
+			for(int i=highestCachedVersionId+1;i<=highestFoundVersionId;i++){
+				try { 
+					this.cacheVersionNameAndOntologyVersionIdWithOntologyVersionId(Integer.toString(i));
+				} catch (Exception e) {
+					log.error("Error Starting BioPortal Service", e);
+				}
+			}
+		}
+	}
+	
+	private int getHighestVersionId(String xml){
+		int highestVersionId = 0;
+		Document document = BioportalRestUtils.getDocument(xml);
+	
+
+		List<Node> nodeList = TransformUtils.getNodeListWithPath(document,
+				"success.data.list.ontologyBean");
+
+		for (Node node : nodeList) {
+			String ontologyVersionId = TransformUtils.getNamedChildText(node,
+					ONTOLOGY_VERSION_ID);
+			
+			int versionId = Integer.parseInt(ontologyVersionId);
+			
+			if(versionId > highestVersionId){
+				highestVersionId = versionId;
+			}
+		}
+
+		return highestVersionId;
 	}
 	
 	/**
@@ -279,7 +334,14 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 	 * @return the string
 	 */	
 	public String codeSystemVersionNameToVersion(String codeSystemVersionName) {		
-		return this.codeSystemVersionNameToVersion.get(codeSystemVersionName);
+		String version = this.codeSystemVersionNameToVersion.get(codeSystemVersionName);
+		
+		//if there's no version, just return the full name
+		if(version == null){
+			version = codeSystemVersionName;
+		}
+		
+		return version;
 	}
 		
 	
@@ -297,7 +359,7 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 			String ontologyVersionId){
 
 		if(! this.ontologyVersionIdToName.containsKey(ontologyVersionId)){
-			this.cacheVersionNameAndOntologyVersionId(ontologyId);
+			this.cacheVersionNameAndOntologyVersionId(ontologyId, true);
 			
 			if(! this.ontologyVersionIdToName.containsKey(ontologyVersionId)){
 				this.cacheVersionNameAndOntologyVersionIdWithOntologyVersionId(ontologyVersionId);
@@ -344,7 +406,10 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 			String codeSystemVersionName){
 
 		if(! this.nameToOntologyVersionId.containsKey(codeSystemVersionName)){		
-			throw new RuntimeException("OntologyVersionId should be cached.");
+			this.updateStaleCache();
+			if(! this.nameToOntologyVersionId.containsKey(codeSystemVersionName)){		
+				throw new RuntimeException("OntologyVersionId should be cached.");
+			}
 		}
 		
 		return this.nameToOntologyVersionId.get(codeSystemVersionName);
@@ -353,8 +418,11 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 	public String codeSystemVersionNameCodeSystemName(
 			String codeSystemVersionName){
 
-		if(! this.nameToOntologyVersionId.containsKey(codeSystemVersionName)){		
-			throw new RuntimeException("OntologyVersionId should be cached.");
+		if(! this.nameToOntologyVersionId.containsKey(codeSystemVersionName)){	
+			this.updateStaleCache();
+			if(! this.nameToOntologyVersionId.containsKey(codeSystemVersionName)){	
+				throw new RuntimeException("OntologyVersionId should be cached.");
+			}
 		}
 		
 		return this.versionNameToName.get(codeSystemVersionName);
@@ -363,12 +431,40 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 	public String codeSystemNameAndVersionIdToCodeSystemVersionName(
 			String codeSystemName,
 			String versionId){
-
-		if(! this.codeSystemNameAndVersionIdToCodeSystemVersionName.containsKey(
-				this.createNameVersionIdKey(codeSystemName, versionId))){		
-			throw new RuntimeException("OntologyVersionId should be cached.");
+		String name = this.doGetCodeSystemNameAndVersionIdToCodeSystemVersionName(
+				codeSystemName, 
+				versionId);
+		
+		//try it twice -- the first time will fire a cache refresh.
+		if(name == null){
+			name = this.doGetCodeSystemNameAndVersionIdToCodeSystemVersionName(
+					codeSystemName, 
+					versionId);
 		}
 		
+		if(name == null){
+			throw new RuntimeException("OntologyVersionId should be cached.");
+		}	
+		
+		return name;
+	}
+	
+	private String doGetCodeSystemNameAndVersionIdToCodeSystemVersionName(
+			String codeSystemName,
+			String versionId){
+
+		if(! this.codeSystemNameAndVersionIdToCodeSystemVersionName.containsKey(
+				this.createNameVersionIdKey(codeSystemName, versionId))){	
+			
+			//If the 'versionId' is the CodeSystemVersionName
+			if(this.codeSystemVersionNameToVersion.containsKey(versionId)){
+				return versionId;
+			} else {
+				this.updateStaleCache();
+
+			}
+		}
+
 		return this.codeSystemNameAndVersionIdToCodeSystemVersionName.get(
 				this.createNameVersionIdKey(codeSystemName, versionId));
 	}
@@ -383,7 +479,10 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 			String valueSetDefinitionName){
 
 		if(! this.nameToOntologyVersionId.containsKey(valueSetDefinitionName)){		
-			throw new RuntimeException("OntologyVersionId should be cached.");
+			this.updateStaleCache();
+			if(! this.nameToOntologyVersionId.containsKey(valueSetDefinitionName)){	
+				throw new RuntimeException("OntologyVersionId should be cached.");
+			}
 		}
 		
 		return this.nameToOntologyVersionId.get(valueSetDefinitionName);
@@ -416,17 +515,17 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 				throw new Cts2RuntimeException(e);
 		  }
 	}
-	/**
-	 * Cache version name and ontology version id.
-	 *
-	 * @param ontologyId the ontology id
-	 */
+
 	private void cacheVersionNameAndOntologyVersionId(String ontologyId) {
+		this.cacheVersionNameAndOntologyVersionId(ontologyId, false);
+	}
+	
+	private void cacheVersionNameAndOntologyVersionId(String ontologyId, boolean forceRefresh) {
 		try {
 			String xml;
 			try {
 				xml = this.bioportalRestService
-						.getOntologyVersionsByOntologyId(ontologyId);
+						.getOntologyVersionsByOntologyId(ontologyId, forceRefresh);
 			} catch (Exception e) {
 				log.warn("Error caching OntologyId: " + ontologyId + ". Skipping.", e);
 				return;
@@ -513,11 +612,25 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 
 			Node node = TransformUtils.getNamedChildWithPath(doc, "success.data.ontologyBean");
 
-			String version_name = this.buildVersionName(node, false);
+			String versionName = this.buildVersionName(node, false);
 
-			this.nameToOntologyVersionId.put(version_name, ontologyVersionId);
-			this.ontologyVersionIdToName.put(ontologyVersionId, version_name);
-			//this.ontologyVersionIdToVersion.put(ontologyVersionId, version_name);
+			this.nameToOntologyVersionId.put(versionName, ontologyVersionId);
+			this.ontologyVersionIdToName.put(ontologyVersionId, versionName);
+			
+			this.versionNameToName.put(versionName, this.buildName(node));
+			
+			String version;
+			
+			if (this.hasUniqueVersions(TransformUtils.getNamedChildText(node, ONTOLOGY_ID))) {
+			    version = TransformUtils.getNamedChildText(node, VERSION);
+			} else {
+				version = ontologyVersionId;
+			}
+			codeSystemVersionNameToVersion.put(versionName, version);
+			this.codeSystemNameAndVersionIdToCodeSystemVersionName.put(
+					this.createNameVersionIdKey(
+							TransformUtils.getNamedChildText(node, ABBREVIATION), version),
+					versionName);
 
 		} catch (Exception e) {
 			throw new Cts2RuntimeException(e);

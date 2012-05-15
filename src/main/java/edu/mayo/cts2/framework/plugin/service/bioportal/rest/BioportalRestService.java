@@ -151,12 +151,16 @@ public class BioportalRestService extends BaseCacheObservable
 		 return new HashMap<String,String>();
 	}
 
-	public String getLatestViews(){
+	public String getLatestViews(boolean forceRefresh){
 		String url = buildGetLatestViewsUrl();
 
-		String xml = this.doCallBioportal(url);
+		String xml = this.doCallBioportal(url, forceRefresh);
 
 		return xml;
+	}
+	
+	public String getLatestViews(){
+		return this.getLatestViews(false);
 	}
 	
 	/**
@@ -176,9 +180,13 @@ public class BioportalRestService extends BaseCacheObservable
 	 * @return the latest ontology versions
 	 */
 	public String getLatestOntologyVersions(){
+		return this.getLatestOntologyVersions(false);
+	}
+	
+	public String getLatestOntologyVersions(boolean forceRefresh){
 		String url = buildGetLatestOntologyVersionsUrl();
 
-		String xml = this.doCallBioportal(url);
+		String xml = this.doCallBioportal(url, forceRefresh);
 
 		return xml;
 	}
@@ -210,15 +218,7 @@ public class BioportalRestService extends BaseCacheObservable
 	 * @param entityId the entity id
 	 * @return the entity by ontology version id and entity id
 	 */
-	public String getEntityByOntologyVersionIdAndEntityId(String ontologyVersionId, String entityId){
-		/*
-		try {
-			entityId = URLEncoder.encode(entityId, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
-		*/
-		
+	public String getEntityByOntologyVersionIdAndEntityId(String ontologyVersionId, String entityId){		
 		String url = "http://rest.bioontology.org/bioportal/concepts/" + ontologyVersionId + "?" 
 				+ "conceptid=" + entityId;
 
@@ -342,18 +342,16 @@ public class BioportalRestService extends BaseCacheObservable
 		return xml;
 	}
 
-	/**
-	 * Gets the ontology versions by ontology id.
-	 *
-	 * @param ontologyId the ontology id
-	 * @return the ontology versions by ontology id
-	 */
-	public String getOntologyVersionsByOntologyId(String ontologyId){
+	public String getOntologyVersionsByOntologyId(String ontologyId, boolean forceRefresh){
 		String url = buildGetOntologyVersionsByOntologyIdUrl(ontologyId);
 
-		String xml = this.doCallBioportal(url);
+		String xml = this.doCallBioportal(url, forceRefresh);
 
 		return xml;
+	}
+	
+	public String getOntologyVersionsByOntologyId(String ontologyId){
+		return this.getOntologyVersionsByOntologyId(ontologyId, false);
 	}
 	
 	/**
@@ -540,24 +538,39 @@ public class BioportalRestService extends BaseCacheObservable
 		return fullUrl;
 	}
 	
+	protected String doCallBioportal(String url){
+		return this.doCallBioportal(url, false);
+	}
 	/**
 	 * Do call bioportal.
 	 *
 	 * @param url the url
 	 * @return the string
 	 */
-	protected String doCallBioportal(String url){
+	protected String doCallBioportal(String url, boolean forceRefresh){
 		String fullUrl = this.appendApiKey(url);
 		
-		if(!this.cache.containsKey(fullUrl)){
-	
+		if(forceRefresh){
 			String xml = this.callBioportal(fullUrl);
 			
 			this.cache.put(fullUrl, xml);
-
+			
+			this.writeCache();
+			
 			return xml;
 		} else {
-			return new String(this.cache.get(fullUrl));
+			if(!this.cache.containsKey(fullUrl)){
+		
+				String xml = this.callBioportal(fullUrl);
+				
+				this.cache.put(fullUrl, xml);
+	
+				this.writeCache();
+				
+				return xml;
+			} else {
+				return new String(this.cache.get(fullUrl));
+			}
 		}
 	}
 	
