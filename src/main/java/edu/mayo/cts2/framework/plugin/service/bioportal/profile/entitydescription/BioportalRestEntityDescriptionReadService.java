@@ -93,6 +93,11 @@ public class BioportalRestEntityDescriptionReadService
 		String codeSystemName = this.identityConverter.
 				codeSystemVersionNameCodeSystemName(codeSystemVersionName);
 		
+		//invalid codeSystemVersion name
+		if(codeSystemName == null){
+			return null;
+		}
+		
 		ScopedEntityName entityName = id.getEntityName();
 		
 		String ontologyVersionId = this.identityConverter.

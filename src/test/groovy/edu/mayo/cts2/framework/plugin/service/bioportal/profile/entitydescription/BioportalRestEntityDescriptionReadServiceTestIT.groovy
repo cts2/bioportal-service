@@ -108,4 +108,15 @@ public class BioportalRestEntiyDescriptionReadServiceTestIT {
 		assertEquals "snap", ed.getChoiceValue().getEntityID().getNamespace()
 	}
 	
+	@Test
+	public void testGetEntityCallBioportalReadByNameWithBadCodeSystemVesionName(){
+		def name = new EntityDescriptionReadId(
+			new ScopedEntityName(name:"Disposition", namespace:"snap"),
+			ModelUtils.nameOrUriFromName("THIS_IS_INVALID"))
+		
+		def ed = service.read(name, null)
+		
+		assertNull ed
+	}
+	
 }

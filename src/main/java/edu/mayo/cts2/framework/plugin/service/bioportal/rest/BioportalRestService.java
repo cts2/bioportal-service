@@ -34,6 +34,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -846,7 +847,7 @@ public class BioportalRestService extends BaseCacheObservable
 							file);
 					oos = new ObjectOutputStream(
 							fos);
-					oos.writeObject((Serializable) cache);
+					oos.writeObject((Serializable) Collections.synchronizedMap(cache));
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				} finally {

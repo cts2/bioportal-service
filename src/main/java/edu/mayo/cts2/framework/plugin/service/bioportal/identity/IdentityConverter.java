@@ -420,9 +420,6 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 
 		if(! this.nameToOntologyVersionId.containsKey(codeSystemVersionName)){	
 			this.updateStaleCache();
-			if(! this.nameToOntologyVersionId.containsKey(codeSystemVersionName)){	
-				throw new RuntimeException("OntologyVersionId should be cached.");
-			}
 		}
 		
 		return this.versionNameToName.get(codeSystemVersionName);
