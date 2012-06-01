@@ -117,10 +117,12 @@ public class ValueSetDirectoryBuilder extends AbstractRemovingDirectoryBuilder<V
 	 * @return the value set directory builder
 	 */
 	public ValueSetDirectoryBuilder restrict(ValueSetQueryServiceRestrictions restrictions){
-		List<String> codeSystems = restrictions.getCodesystem();
-		
-		if(CollectionUtils.isNotEmpty(codeSystems)){
-			this.addRestriction(new CodeSystemRestriction(codeSystems));
+		if(restrictions != null){
+			List<String> codeSystems = restrictions.getCodesystem();
+			
+			if(CollectionUtils.isNotEmpty(codeSystems)){
+				this.addRestriction(new CodeSystemRestriction(codeSystems));
+			}
 		}
 		return this;
 	}

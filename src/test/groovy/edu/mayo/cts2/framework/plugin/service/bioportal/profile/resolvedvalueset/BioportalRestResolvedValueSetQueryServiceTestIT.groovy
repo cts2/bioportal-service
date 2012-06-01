@@ -31,6 +31,7 @@ public class BioportalRestResolvedValueSetQueryServiceTestIT {
 			getFilterComponent : { },
 			getReadContext : { },
 			getQuery : { },
+			getResolvedValueSetQueryServiceRestrictions : { },
 			getRestrictions : { }
 		] as ResolvedValueSetQuery
 	
@@ -45,6 +46,7 @@ public class BioportalRestResolvedValueSetQueryServiceTestIT {
 		def q = [
 			getFilterComponent : { },
 			getReadContext : { },
+			getResolvedValueSetQueryServiceRestrictions : { },
 			getQuery : { },
 			getRestrictions : { }
 		] as ResolvedValueSetQuery
@@ -65,6 +67,7 @@ public class BioportalRestResolvedValueSetQueryServiceTestIT {
 		def q = [
 			getFilterComponent : { },
 			getReadContext : { },
+			getResolvedValueSetQueryServiceRestrictions : { },
 			getQuery : { },
 			getRestrictions : { }
 		] as ResolvedValueSetQuery

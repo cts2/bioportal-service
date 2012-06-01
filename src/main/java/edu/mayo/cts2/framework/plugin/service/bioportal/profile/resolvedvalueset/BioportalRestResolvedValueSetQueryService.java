@@ -135,7 +135,8 @@ public class BioportalRestResolvedValueSetQueryService
 				this.getSupportedMatchAlgorithms(),
 				this.getSupportedSearchReferences());
 		
-		return builder.
+		return builder.restrict(
+				query.getResolvedValueSetQueryServiceRestrictions()).
 				restrict(query.getFilterComponent()).
 				addMaxToReturn(page.getMaxToReturn()).
 				addStart(page.getStart()).
@@ -155,6 +156,8 @@ public class BioportalRestResolvedValueSetQueryService
 					this.getSupportedMatchAlgorithms(),
 					this.getSupportedSearchReferences());
 	
-		return builder.restrict(query.getFilterComponent()).count();
+		return builder.restrict(
+				query.getResolvedValueSetQueryServiceRestrictions()).
+				restrict(query.getFilterComponent()).count();
 	}
 }

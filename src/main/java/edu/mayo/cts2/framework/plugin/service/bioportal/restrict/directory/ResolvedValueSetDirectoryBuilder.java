@@ -23,13 +23,18 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import org.apache.commons.collections.CollectionUtils;
 
 import edu.mayo.cts2.framework.filter.directory.AbstractRemovingDirectoryBuilder;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
 import edu.mayo.cts2.framework.filter.match.ResolvablePropertyReference;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
+import edu.mayo.cts2.framework.service.command.restriction.ResolvedValueSetQueryServiceRestrictions;
 
 /**
  * The Class CodeSystemVersionDirectoryBuilder.
@@ -65,7 +70,47 @@ public class ResolvedValueSetDirectoryBuilder
 				matchAlgorithmReferences,
 				resolvablePropertyReference);
 	}
+	
+	public ResolvedValueSetDirectoryBuilder restrict(ResolvedValueSetQueryServiceRestrictions restrictions){
+		if(restrictions != null){
+			Set<NameOrURI> valueSets = restrictions.getValueSets();
+			
+			if(CollectionUtils.isNotEmpty(valueSets)){
+				this.addRestriction(new ValueSetRestriction(valueSets));
+			}
+		}
+		
+		return this;
+	}
 
+	private class ValueSetRestriction implements Restriction<ResolvedValueSetDirectoryEntry> {
+
+		private Set<String> valueSets;
+		
+		/**
+		 * Instantiates a new code system restriction.
+		 *
+		 * @param codeSystems the code systems
+		 */
+		public ValueSetRestriction(Set<NameOrURI> valueSets){
+			this.valueSets = new HashSet<String>();
+			
+			//TODO: Doesn't deal with URIs - only names
+			for(NameOrURI nameOrURI : valueSets){
+				this.valueSets.add(nameOrURI.getName());
+			}
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mayo.cts2.framework.filter.directory.AbstractDirectoryBuilder.Restriction#passRestriction(java.lang.Object)
+		 */
+		public boolean passRestriction(ResolvedValueSetDirectoryEntry candidate) {
+			String valueSetName = candidate.getResolvedHeader().getResolutionOf().getValueSet().getContent();
+			
+			return this.valueSets.contains(valueSetName);
+		}
+	}
+	
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.filter.directory.AbstractRemovingDirectoryBuilder#transformResults(java.util.List)
 	 */
