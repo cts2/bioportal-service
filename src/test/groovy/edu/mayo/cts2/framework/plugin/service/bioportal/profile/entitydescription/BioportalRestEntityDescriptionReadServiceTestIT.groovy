@@ -3,12 +3,14 @@ package edu.mayo.cts2.framework.plugin.service.bioportal.profile.entitydescripti
 import static org.junit.Assert.*
 
 import javax.annotation.Resource
+import javax.xml.transform.stream.StreamResult
 
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 
+import edu.mayo.cts2.framework.core.xml.Cts2Marshaller;
 import edu.mayo.cts2.framework.model.core.ScopedEntityName
 import edu.mayo.cts2.framework.model.util.ModelUtils
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId
@@ -19,6 +21,9 @@ public class BioportalRestEntiyDescriptionReadServiceTestIT {
 	
 	@Resource
 	private BioportalRestEntityDescriptionReadService service
+	
+	@Resource
+	Cts2Marshaller marshaller
 
 	@Test
 	public void testGetEntityCallBioportal(){
@@ -30,6 +35,17 @@ public class BioportalRestEntiyDescriptionReadServiceTestIT {
 		
 		assertEquals "29506000", ed.getChoiceValue().getEntityID().getName()
 		
+	}
+	
+	@Test
+	public void testGetEntityValidXml(){
+		def name = new EntityDescriptionReadId(
+			new ScopedEntityName(name:"29506000", namespace:"SNOMEDCT"),
+			ModelUtils.nameOrUriFromName("SNOMEDCT_2011_01_31_UMLS-RELA"))
+		
+		def ed = service.read(name, null)
+		
+		marshaller.marshal(ed, new StreamResult(new StringWriter()))		
 	}
 	
 	@Test

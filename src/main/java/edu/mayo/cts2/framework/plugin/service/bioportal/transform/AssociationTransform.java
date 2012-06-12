@@ -53,7 +53,7 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
 public class AssociationTransform extends AbstractTransform{
 	
 	private static final String NODE = "success.data.classBean";
-
+	
 	/**
 	 * Transform entities for relationship.
 	 *
@@ -299,6 +299,7 @@ public class AssociationTransform extends AbstractTransform{
 
 		PredicateReference predicateRef = new PredicateReference();
 		predicateRef.setName(predicateName);
+		predicateRef.setUri(PREDICATE_URI_PREFIX + predicateName);
 		predicateRef.setNamespace(codeSystemName);
 		entry.setPredicate(predicateRef);
 		
