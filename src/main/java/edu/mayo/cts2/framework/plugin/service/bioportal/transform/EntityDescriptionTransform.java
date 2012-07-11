@@ -452,14 +452,25 @@ public class EntityDescriptionTransform extends AbstractTransform {
 			//if there is no codesystemname, it must be matching a view, so throw it out
 			if(StringUtils.isBlank(codeSystemName)){
 				log.warn("Result matched ontologyVersionId: " + ontologyVersionId + ", which is a view.");
-				codeSystemName = 
-					this.getIdentityConverter().ontologyIdToValueSetName(ontologyId);
+				try {
+					codeSystemName = 
+							this.getIdentityConverter().ontologyIdToValueSetName(ontologyId);
 				
-				codeSystemVersionName = this.getIdentityConverter().ontologyVersionIdToValueSetDefinitionName(ontologyId, ontologyVersionId);
-
+					codeSystemVersionName = this.getIdentityConverter().ontologyVersionIdToValueSetDefinitionName(ontologyId, ontologyVersionId);
+				} catch (Exception e) {
+					//search results may be outdated in Bioportal
+					log.warn(e);
+					continue;
+				}
 			} else {
-				codeSystemVersionName = this.getIdentityConverter().ontologyVersionIdToCodeSystemVersionName(ontologyId, ontologyVersionId);
-				version= this.getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
+				try {
+					codeSystemVersionName = this.getIdentityConverter().ontologyVersionIdToCodeSystemVersionName(ontologyId, ontologyVersionId);
+					version= this.getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
+				} catch (Exception e) {
+					//search results may be outdated in Bioportal
+					log.warn(e);
+					continue;
+				}
 				entry.addKnownEntityDescription(this.createKnownEntityDescription(
 						codeSystemName, 
 						codeSystemVersionName, 

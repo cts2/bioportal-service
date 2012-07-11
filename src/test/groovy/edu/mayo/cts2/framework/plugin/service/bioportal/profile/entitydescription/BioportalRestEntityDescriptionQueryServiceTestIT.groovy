@@ -85,6 +85,32 @@ public class BioportalRestEntityDescriptionQueryServiceTestIT {
 	}
 	
 	@Test
+	public void testSearchForEntitiesResourceSynopsis(){
+		
+		MatchAlgorithmReference matchAlgorithm = new MatchAlgorithmReference(content:"contains")
+		
+		def filter = new ResolvedFilter(
+				matchAlgorithmReference:StandardMatchAlgorithmReference.CONTAINS.getMatchAlgorithmReference(),
+				matchValue:"Vertebro",
+				propertyReference: StandardModelAttributeReference.RESOURCE_SYNOPSIS.propertyReference)
+		
+		def q = [
+			getFilterComponent : { [filter] as Set },
+			getReadContext : { },
+			getQuery : { },
+			getRestrictions : { }
+		] as EntityDescriptionQuery
+
+		def result =
+			service.getResourceSummaries(q, null, new Page())
+			
+		result.entries.each {
+			marshaller.marshal(it, new StreamResult(new StringWriter()))
+		}
+		
+	}
+	
+	@Test
 	public void testGetChildren(){
 		
 		def sen = new ScopedEntityName(name:"G40-G47.9", namespace:"ICD10")
