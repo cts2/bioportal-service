@@ -5,14 +5,18 @@ import static org.junit.Assert.*
 import javax.annotation.Resource
 import javax.xml.transform.stream.StreamResult
 
+
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 
-import edu.mayo.cts2.framework.core.xml.Cts2Marshaller;
+import edu.mayo.cts2.framework.core.xml.Cts2Marshaller
 import edu.mayo.cts2.framework.model.command.Page
+import edu.mayo.cts2.framework.model.util.ModelUtils
+import edu.mayo.cts2.framework.service.command.restriction.ResolvedValueSetQueryServiceRestrictions
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetQuery
+
 
 @RunWith(SpringJUnit4ClassRunner)
 @ContextConfiguration(locations="/bioportal-test-context.xml")
@@ -79,5 +83,22 @@ public class BioportalRestResolvedValueSetQueryServiceTestIT {
 		}
 	}
 	
+	@Test
+	void TestGetResourceSummariesWithValueSetRestriction(){
+		def q = [
+			getFilterComponent : { },
+			getReadContext : { },
+			getResolvedValueSetQueryServiceRestrictions : {
+				new ResolvedValueSetQueryServiceRestrictions(
+					valueSets: [ModelUtils.nameOrUriFromName("SNOMEDCT-CORE")] as Set)
+			},
+			getQuery : { },
+			getRestrictions : { }
+		] as ResolvedValueSetQuery
+	
+		def dir = service.getResourceSummaries(q,null,new Page())
+		
+		assertTrue dir.entries.size > 0
+	}
 
 }

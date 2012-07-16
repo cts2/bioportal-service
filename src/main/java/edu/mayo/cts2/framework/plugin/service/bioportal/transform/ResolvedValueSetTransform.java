@@ -57,7 +57,13 @@ public class ResolvedValueSetTransform extends AbstractOntologyTransform {
 
 			String ontologyVersionId = TransformUtils.getNamedChildText(node, ONTOLOGY_VERSION_ID);
 			
-			ResolvedValueSetHeader header = this.getHeader(node);
+			ResolvedValueSetHeader header;
+			try {
+				header = this.getHeader(node);
+			} catch (Exception e) {
+				//sometimes these ontologies may be removed from Bioportal.. if so, skip.
+				continue;
+			}
 		
 			entry.setResolvedHeader(header);
 			
