@@ -3,3 +3,4 @@
 .cache
 .project
 .classpath
+.DS_Store
