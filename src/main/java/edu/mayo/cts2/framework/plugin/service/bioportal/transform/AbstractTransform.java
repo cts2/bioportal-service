@@ -118,7 +118,11 @@ public class AbstractTransform {
 
 		codeSystemReference.setContent(codeSystemName);
 		codeSystemReference.setHref(codeSystemPath);
+		try{
 		codeSystemReference.setUri(this.getIdentityConverter().getCodeSystemAbout(codeSystemName, BioportalConstants.DEFAULT_ONTOLOGY_ABOUT));
+		} catch (Exception e){
+			log.warn("Exception Getting CodeSystem URI: " + e.getMessage());
+		}
 		
 		return codeSystemReference;
 	}

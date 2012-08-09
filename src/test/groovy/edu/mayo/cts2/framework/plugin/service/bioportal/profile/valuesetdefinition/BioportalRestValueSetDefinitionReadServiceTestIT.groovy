@@ -35,5 +35,17 @@ public class BioportalRestValueSetDefinitionReadServiceTestIT {
 	
 		assertNotNull vsd	
 	}
+	
+	@Test
+	public void "TestReadByTagNCIt-Activity"(){
+	
+		def vsd =
+			service.readByTag(ModelUtils.
+				nameOrUriFromName("NCIt-Activity"),
+				new VersionTagReference("CURRENT"),
+				null)
+	
+		assertNotNull vsd
+	}
 
 }

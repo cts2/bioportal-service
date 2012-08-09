@@ -35,5 +35,18 @@ class BioportalRestValueSetDefinitionResolutionServiceTestIT {
 		assertNotNull result
 	}
 	
+	@Test
+	public void "TestResolveNCIt-Activity"(){
+		
+		def id = new ValueSetDefinitionReadId("Activity-View_09-0_OWL",ModelUtils.nameOrUriFromName("NCIt-Activity"))
+
+		def result =
+			service.resolveDefinition(id,null,null,null,null,null,new Page())
+			
+		assertNotNull result
+	}
+	
+	
+	
 	
 }
