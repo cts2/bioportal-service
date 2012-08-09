@@ -213,7 +213,9 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 					case VALUESET :{
 						this.valueSetNameToOntologyId.put(name, ontologyId);
 						this.ontologyIdToValueSetName.put(ontologyId, name);
-						//break;
+						
+						this.cacheVersionNameAndOntologyVersionId(ontologyId);
+						break;
 					} case CODESYSTEM :{
 						this.codeSystemNameToOntologyId.put(name, ontologyId);
 						this.ontologyIdToCodeSystemName.put(ontologyId, name);
