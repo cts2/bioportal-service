@@ -536,6 +536,7 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 			// We check to see if all the versions of an ontologyId has unique names. If they do, we
 			// use the version as the cts2 version, else we use the ontology version id as the version.
 			Set<String> version_set= new HashSet<String> ();
+			Set<String> non_unique_version_set= new HashSet<String> ();
 			boolean unique_versions= true;
             for(Node node : nodeList){				
 				String version = TransformUtils.getNamedChildText(node, VERSION);
@@ -543,33 +544,49 @@ public class IdentityConverter implements InitializingBean, CacheObserver {
 					version_set.add(version);
 				} else {
 					unique_versions= false;
+					non_unique_version_set.add(version);
 				}				
 			}
 
 			for(Node node : nodeList){
-				
-				String ontologyVersionId = TransformUtils.getNamedChildText(node, ONTOLOGY_VERSION_ID);
-				String versionName = this.buildVersionName(node, unique_versions);
+				this.doCacheVersionNode(node, unique_versions);
+			}
 
-				this.nameToOntologyVersionId.put(versionName, ontologyVersionId);
-				this.ontologyVersionIdToName.put(ontologyVersionId, versionName);
-				this.versionNameToName.put(versionName, this.buildName(node));
-				String version;
-				if (unique_versions) {
-				    version = TransformUtils.getNamedChildText(node, VERSION);
-				} else {
-					version= ontologyVersionId;
+			if(!unique_versions){
+				Node node = nodeList.get(nodeList.size() - 1);
+				for(String nonUniqueVersion : non_unique_version_set){
+					String versionName = this.buildVersionName(node, unique_versions);
+					
+					this.codeSystemNameAndVersionIdToCodeSystemVersionName.put(
+							this.createNameVersionIdKey(
+									TransformUtils.getNamedChildText(node, ABBREVIATION), nonUniqueVersion),
+							versionName);
 				}
-				codeSystemVersionNameToVersion.put(versionName, version);
-				this.codeSystemNameAndVersionIdToCodeSystemVersionName.put(
-						this.createNameVersionIdKey(
-								TransformUtils.getNamedChildText(node, ABBREVIATION), version),
-						versionName);
 			}
 			
 		} catch (Exception e) {
 			throw new Cts2RuntimeException(e);
 		}
+	}
+	
+	private void doCacheVersionNode(Node node, boolean unique_versions){
+		String ontologyVersionId = TransformUtils.getNamedChildText(node, ONTOLOGY_VERSION_ID);
+		String versionName = this.buildVersionName(node, unique_versions);
+
+		this.nameToOntologyVersionId.put(versionName, ontologyVersionId);
+		this.ontologyVersionIdToName.put(ontologyVersionId, versionName);
+		this.versionNameToName.put(versionName, this.buildName(node));
+		String version;
+		if (unique_versions) {
+		    version = TransformUtils.getNamedChildText(node, VERSION);
+		} else {
+			version= ontologyVersionId;
+		}
+		codeSystemVersionNameToVersion.put(versionName, version);
+		this.codeSystemNameAndVersionIdToCodeSystemVersionName.put(
+				this.createNameVersionIdKey(
+						TransformUtils.getNamedChildText(node, ABBREVIATION), version),
+				versionName);
 	}
 	
 	private String createNameVersionIdKey(String name, String versionId){
