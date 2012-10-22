@@ -59,6 +59,18 @@ public class BioportalRestEntiyDescriptionReadServiceTestIT {
 		assertEquals "D45", ed.getChoiceValue().getEntityID().getName()
 		
 	}
+
+	@Test
+	public void testGetEntityCallBioportalReadByUriGO(){
+		def name = new EntityDescriptionReadId(
+			"http://purl.obolibrary.org/obo/GO_0000003",
+			ModelUtils.nameOrUriFromName("NIGO_44724_OBO"))
+		
+		def ed = service.read(name, null)
+		
+		assertEquals "0000003", ed.getChoiceValue().getEntityID().getName()
+		
+	}
 	
 	@Test
 	public void testGetEntityCallBioportalReadByUriNotFound(){
