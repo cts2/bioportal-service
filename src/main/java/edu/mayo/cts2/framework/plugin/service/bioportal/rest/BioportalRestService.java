@@ -761,26 +761,30 @@ public class BioportalRestService extends BaseCacheObservable
      * @param feed the feed
      */
     protected void checkForUpdates(SyndFeed feed){
-    	Date lastUpdate = this.getLastUpdate();
-    	
-    	Date lastUpdateFromFeed = this.getLastUpdateFromFeed(feed);
-    	
-    	//account for a null feed coming back from bioportal
-    	if(lastUpdateFromFeed != null &&
-    			(lastUpdate == null || lastUpdateFromFeed.after(lastUpdate)) ){
-    		List<String> ontologyIds = 
-    			this.getUpdatedOntologies(feed, lastUpdateFromFeed);
-    		
-    		for(String ontologyId : ontologyIds) {
-    			this.purgeGetLatestOntologyVersions();
-    			this.purgeGetLatestOntologyVersionByOntologyId(ontologyId);
-				this.purgeGetOntologyVersionsByOntologyId(ontologyId);
-			}
-    		
-    		this.writeUpdateLog(lastUpdateFromFeed);
-    		
-    		this.fireOnCodeSystemsChangeEvent(ontologyIds);
-    	}	
+        try {
+            Date lastUpdate = this.getLastUpdate();
+
+            Date lastUpdateFromFeed = this.getLastUpdateFromFeed(feed);
+
+            //account for a null feed coming back from bioportal
+            if(lastUpdateFromFeed != null &&
+                    (lastUpdate == null || lastUpdateFromFeed.after(lastUpdate)) ){
+                List<String> ontologyIds =
+                    this.getUpdatedOntologies(feed, lastUpdateFromFeed);
+
+                for(String ontologyId : ontologyIds) {
+                    this.purgeGetLatestOntologyVersions();
+                    this.purgeGetLatestOntologyVersionByOntologyId(ontologyId);
+                    this.purgeGetOntologyVersionsByOntologyId(ontologyId);
+                }
+
+                this.writeUpdateLog(lastUpdateFromFeed);
+
+                this.fireOnCodeSystemsChangeEvent(ontologyIds);
+            }
+        } catch(Exception e){
+            log.warn("Error reading RSS feed.", e);
+        }
     }
     
     /**
