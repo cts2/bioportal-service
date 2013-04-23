@@ -13,7 +13,7 @@ class ResolvedValueSetQueryTestIT extends BaseServiceTestITBase {
 		
 		ResolvedValueSetDirectory result = 
 			client.getCts2Resource(server + "resolvedvaluesets?valueset={valueSet}", 
-				ResolvedValueSetDirectory.class, "SNOMEDCT-MAS");
+				null, null, ResolvedValueSetDirectory.class, "SNOMEDCT-MAS");
 			
 		assertNotNull result
 		
