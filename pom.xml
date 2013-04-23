@@ -9,7 +9,7 @@
 	</parent>
 
 	<artifactId>bioportal-service</artifactId>
-	<version>0.7.3</version>
+	<version>0.7.4-SNAPSHOT</version>
 	<packaging>bundle</packaging>
 
 	<description>A NCBO Bioportal CTS2 Service Implementation</description>
