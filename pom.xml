@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>edu.mayo.cts2.framework</groupId>
 		<artifactId>base-service-plugin</artifactId>
-		<version>0.7.2</version>
+		<version>0.8.1</version>
 	</parent>
 
 	<artifactId>bioportal-service</artifactId>
 	<version>0.7.3-SNAPSHOT</version>
 	<packaging>bundle</packaging>
-	
+
 	<description>A NCBO Bioportal CTS2 Service Implementation</description>
 	<name>Bioportal Service</name>
 
@@ -92,10 +92,10 @@
 							edu.mayo.cts2.framework.model.service.valueset,
 							edu.mayo.cts2.framework.model.service.valuesetdefinition,
 							edu.mayo.cts2.framework.service.provider,
-							*
+							*;resolution:=optional
 						</Import-Package>
 						<Embed-Transitive>true</Embed-Transitive>
-						<Embed-Dependency>commons-httpclient,rome,spring-web</Embed-Dependency>
+						<Embed-Dependency>commons-httpclient,rome,spring-web,mapdb,xercesImpl</Embed-Dependency>
 						<Spring-Context>*;timeout:=60</Spring-Context>
 						<_exportcontents>*</_exportcontents>
 						<_nouses>true</_nouses>
@@ -190,6 +190,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.mapdb</groupId>
+			<artifactId>mapdb</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+
+		<dependency>
 			<groupId>edu.mayo.cts2.framework</groupId>
 			<artifactId>service</artifactId>
 			<version>${develpment.framework.version}</version>
@@ -210,7 +216,7 @@
 		</dependency>
 
 	</dependencies>
-	
+
 	<repositories>
 		<repository>
 			<id>edu.informatics.maven.snapshot</id>
@@ -236,5 +242,5 @@
 			</snapshots>
 		</repository>
 	</repositories>
-	
+
 </project>
