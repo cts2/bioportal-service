@@ -149,6 +149,7 @@ public class BioportalRestService extends BaseCacheObservable
 
 	protected Map<String, String> createCache(File file) {
 		this.db = DBMaker.newFileDB(file).
+				randomAccessFileEnable().
 				closeOnJvmShutdown().
 				make();
 		
@@ -230,31 +231,6 @@ public class BioportalRestService extends BaseCacheObservable
 
 		return xml;
 	}
-	
-	/**
-	 * Gets the entity by ontology id and entity id.
-	 *
-	 * @param ontologyId the ontology id
-	 * @param entityId the entity id
-	 * @return the entity by ontology id and entity id
-	 */
-	
-	/*
-	public String getEntityByOntologyIdAndEntityId(String ontologyId, String entityId){
-		try {
-			entityId = URLEncoder.encode(entityId, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
-		
-		String url = "http://rest.bioontology.org/bioportal/virtual/ontology/" + ontologyId + "?" 
-				+ "conceptid=" + entityId;
-
-		String xml = this.doCallBioportalMemCache(url);
-
-		return xml;
-	}
-	*/
 	
 	/**
 	 * Gets the hierarchy roots by ontoloty version id.

@@ -135,4 +135,43 @@ public class BioportalRestEntityDescriptionQueryServiceTestIT {
 		assertTrue ed.entries.size > 0
 
 	}
+	
+	@Test
+	public void testEntityPagination(){
+		
+		def restrictions = new EntityDescriptionQueryServiceRestrictions()
+		restrictions.codeSystemVersion = ModelUtils.nameOrUriFromName("ICD10_1998_RRF")
+				
+		def q = [
+			getFilterComponent : {  },
+			getReadContext : { },
+			getQuery : { },
+			getRestrictions : { restrictions }
+		] as EntityDescriptionQuery
+
+		def ed = service.getResourceSummaries(q, null, new Page(page:10))
+		
+		assertTrue ed.entries.size > 0
+
+	}
+	
+	@Test
+	public void testEntityPaginationSnomedCT(){
+		
+		def restrictions = new EntityDescriptionQueryServiceRestrictions()
+		restrictions.codeSystemVersion = ModelUtils.nameOrUriFromName("SNOMEDCT_2011_07_31_UMLS-RELA")
+
+		def q = [
+			getFilterComponent : {  },
+			getReadContext : { },
+			getQuery : { },
+			getRestrictions : { restrictions }
+		] as EntityDescriptionQuery
+
+		def ed = service.getResourceSummaries(q, null, new Page(page:6000))
+		
+		assertTrue ed.entries.size > 0
+		println(ed.entries.size)
+	}
+
 }
