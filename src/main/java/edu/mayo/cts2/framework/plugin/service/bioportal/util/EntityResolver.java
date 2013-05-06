@@ -12,7 +12,6 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import edu.mayo.cts2.framework.model.core.ScopedEntityName;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
-import edu.mayo.cts2.framework.plugin.service.bioportal.transform.EntityDescriptionTransform;
 
 @Component
 public class EntityResolver {
