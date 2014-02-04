@@ -86,10 +86,7 @@ public class BioportalRestService extends BaseCacheObservable
 	private static final String API_KEY_PROP = "apiKey";
 	
 	private static Log log = LogFactory.getLog(BioportalRestService.class);
-	
-	@Resource
-	private BioportalRssFeedClient bioportalRssFeedClient;
-	
+
 	@Resource
 	private PluginConfigManager pluginConfigManager;
 	
@@ -149,49 +146,16 @@ public class BioportalRestService extends BaseCacheObservable
 
 	protected Map<String, String> createCache(File file) {
 		this.db = DBMaker.newFileDB(file).
-				randomAccessFileEnable().
 				closeOnJvmShutdown().
 				make();
 		
 		return db.getHashMap(BIOPORTAL_CACHE_NAME);
 	}
 
-	public String getLatestViews(boolean forceRefresh){
-		String url = buildGetLatestViewsUrl();
+	public String getLatestOntologySubmissions(boolean includeViews){
+		String url = buildGetLatestOntologySubmissionsUrl(includeViews);
 
-		String xml = this.doCallBioportal(url, forceRefresh);
-
-		return xml;
-	}
-	
-	public String getLatestViews(){
-		return this.getLatestViews(false);
-	}
-	
-	/**
-	 * Builds the get latest views url.
-	 *
-	 * @return the string
-	 */
-	private String buildGetLatestViewsUrl(){
-		String url = "http://rest.bioontology.org/bioportal/views?";
-		
-		return url;
-	}
-
-	/**
-	 * Gets the latest ontology versions.
-	 *
-	 * @return the latest ontology versions
-	 */
-	public String getLatestOntologyVersions(){
-		return this.getLatestOntologyVersions(false);
-	}
-	
-	public String getLatestOntologyVersions(boolean forceRefresh){
-		String url = buildGetLatestOntologyVersionsUrl();
-
-		String xml = this.doCallBioportal(url, forceRefresh);
+		String xml = this.doCallBioportal(url);
 
 		return xml;
 	}
@@ -201,19 +165,10 @@ public class BioportalRestService extends BaseCacheObservable
 	 *
 	 * @return the string
 	 */
-	private String buildGetLatestOntologyVersionsUrl(){
-		String url = "http://rest.bioontology.org/bioportal/ontologies?";
+	private String buildGetLatestOntologySubmissionsUrl(boolean includeViews){
+		String url = "http://data.bioontology.org/submissions?include_views=" + (includeViews ? "true" : "false");
 		
 		return url;
-	}
-	
-	/**
-	 * Purge get latest ontology versions.
-	 */
-	private void purgeGetLatestOntologyVersions(){
-		String url = buildGetLatestOntologyVersionsUrl();
-		
-		this.purgeCache(url);
 	}
 	
 	/**
@@ -223,29 +178,13 @@ public class BioportalRestService extends BaseCacheObservable
 	 * @param entityId the entity id
 	 * @return the entity by ontology version id and entity id
 	 */
-	public String getEntityByOntologyVersionIdAndEntityId(String ontologyVersionId, String entityId){		
-		String url = "http://rest.bioontology.org/bioportal/concepts/" + ontologyVersionId + "?" 
-				+ "conceptid=" + entityId;
+	public String getEntityByAcronymAndEntityId(String acronym, String entityId){
+		String url = "http://data.bioontology.org/ontologies/" + acronym + "/classes/" + entityId;
 
 		String xml = this.doCallBioportalMemCache(url);
 
 		return xml;
 	}
-	
-	/**
-	 * Gets the hierarchy roots by ontoloty version id.
-	 *
-	 * @param ontologyVersionId the ontology version id
-	 * @return the hierarchy roots by ontoloty version id
-	 */
-	public String getHierarchyRootsByOntolotyVersionId(String ontologyVersionId){
-		String url = "http://rest.bioontology.org/bioportal/concepts/" + ontologyVersionId + "/root";
-
-		String xml = this.doCallBioportalMemCache(url);
-
-		return xml;
-	}
-	
 
 	/**
 	 * Gets the entity by uri.
@@ -260,11 +199,11 @@ public class BioportalRestService extends BaseCacheObservable
 	/**
 	 * Gets the latest ontology version by ontology id.
 	 *
-	 * @param ontologyId the ontology id
+	 * @param acronym the ontology id
 	 * @return the latest ontology version by ontology id
 	 */
-	public String getLatestOntologyVersionByOntologyId(String ontologyId){
-		String url = this.buildGetLatestOntologyVersionByOntologyIdUrl(ontologyId);
+	public String getLatestOntologySubmissionByAcronym(String acronym){
+		String url = this.buildGetLatestOntologySubmissionByAcronymUrl(acronym);
 
 		String xml = this.doCallBioportal(url);
 
@@ -274,74 +213,46 @@ public class BioportalRestService extends BaseCacheObservable
 	/**
 	 * Builds the get latest ontology version by ontology id url.
 	 *
-	 * @param ontologyId the ontology id
+	 * @param acronym the ontology id
 	 * @return the string
 	 */
-	private String buildGetLatestOntologyVersionByOntologyIdUrl(String ontologyId){
-		String url = "http://rest.bioontology.org/bioportal/virtual/ontology/" + ontologyId;
+	private String buildGetLatestOntologySubmissionByAcronymUrl(String acronym){
+		String url = "http://data.bioontology.org/ontologies/" + acronym + "/latest_submission";
 		
 		return url;
 	}
-	
-	/**
-	 * Purge get latest ontology version by ontology id.
-	 *
-	 * @param ontologyId the ontology id
-	 */
-	private void purgeGetLatestOntologyVersionByOntologyId(String ontologyId){
-		String url = buildGetLatestOntologyVersionByOntologyIdUrl(ontologyId);
-		
-		this.purgeCache(url);
-	}
-	
+
 	/**
 	 * Gets the ontology by ontology version id.
 	 *
 	 * @param ontologyVersionId the ontology version id
 	 * @return the ontology by ontology version id
 	 */
-	public String getOntologyByOntologyVersionId(String ontologyVersionId){
-		String url = "http://rest.bioontology.org/bioportal/ontologies/" + ontologyVersionId;
-
-		String xml = this.doCallBioportal(url);
-
-		return xml;
-	}
-	
-	/**
-	 * Gets the latest ontology version by virtual id.
-	 *
-	 * @param virtualId the virtual id
-	 * @return the latest ontology version by virtual id
-	 */
-	public String getLatestOntologyVersionByVirtualId(String virtualId){
-		String url = "http://rest.bioontology.org/bioportal/virtual/ontology/" + virtualId;
+	public String getOntologyByAcronymAndSubmissionId(String acronym, String submissionId){
+		String url = "http://data.bioontology.org/ontologies/" + acronym + "/submissions/" + submissionId;
 
 		String xml = this.doCallBioportal(url);
 
 		return xml;
 	}
 
-	public String getOntologyVersionsByOntologyId(String ontologyId, boolean forceRefresh){
-		String url = buildGetOntologyVersionsByOntologyIdUrl(ontologyId);
 
-		String xml = this.doCallBioportal(url, forceRefresh);
+	public String getOntologySubmissionsByAcronym(String acronym){
+		String url = buildGetOntologySubmissionsByAcronymUrl(acronym);
+
+		String xml = this.doCallBioportal(url);
 
 		return xml;
 	}
-	
-	public String getOntologyVersionsByOntologyId(String ontologyId){
-		return this.getOntologyVersionsByOntologyId(ontologyId, false);
-	}
-	
+
 	/**
 	 * Gets the view versions by ontology id.
 	 *
-	 * @param ontologyId the ontology id
+	 * @param acronym the ontology id
 	 * @return the view versions by ontology id
 	 */
-	public String getViewVersionsByOntologyId(String ontologyId){
-		String url = buildGetViewVersionsByOntologyIdUrl(ontologyId);
+	public String getViewVersionsByAcronym(String acronym){
+		String url = buildGetViewVersionsByAcronymUrl(acronym);
 
 		String xml = this.doCallBioportal(url);
 
@@ -351,11 +262,11 @@ public class BioportalRestService extends BaseCacheObservable
 	/**
 	 * Builds the get ontology versions by ontology id url.
 	 *
-	 * @param ontologyId the ontology id
+	 * @param acronym the ontology id
 	 * @return the string
 	 */
-	private String buildGetOntologyVersionsByOntologyIdUrl(String ontologyId){
-		String url = "http://rest.bioontology.org/bioportal/ontologies/versions/" + ontologyId;
+	private String buildGetOntologySubmissionsByAcronymUrl(String acronym){
+		String url = "http://data.bioontology.org/ontologies/" + acronym + "/submissions";
 		
 		return url;
 	}
@@ -363,24 +274,13 @@ public class BioportalRestService extends BaseCacheObservable
 	/**
 	 * Builds the get view versions by ontology id url.
 	 *
-	 * @param ontologyId the ontology id
+	 * @param acronym the ontology id
 	 * @return the string
 	 */
-	private String buildGetViewVersionsByOntologyIdUrl(String ontologyId){
-		String url = "http://rest.bioontology.org/bioportal/views/versions/" + ontologyId;
+	private String buildGetViewVersionsByAcronymUrl(String acronym){
+		String url = "http://rest.bioontology.org/bioportal/views/versions/" + acronym;
 		
 		return url;
-	}
-	
-	/**
-	 * Purge get ontology versions by ontology id.
-	 *
-	 * @param ontologyId the ontology id
-	 */
-	private void purgeGetOntologyVersionsByOntologyId(String ontologyId){
-		String url = buildGetOntologyVersionsByOntologyIdUrl(ontologyId);
-		
-		this.purgeCache(url);
 	}
 
 	/**
@@ -390,11 +290,11 @@ public class BioportalRestService extends BaseCacheObservable
 	 * @param page the page
 	 * @return the all entities by ontology version id
 	 */
-	public String getAllEntitiesByOntologyVersionId(String ontologyVersionId, Page page){
+	public String getAllEntitiesByAcronym(String acronym, Page page){
 		String 
-			url = "http://rest.bioontology.org/bioportal/concepts/" + ontologyVersionId + "/all" +
-			"?pagenum=" + page.getPage() +
-			"&pagesize=" + page.getMaxToReturn();
+			url = "http://data.bioontology.org/ontologies/" + acronym + "/classes" +
+			"?page=" + Integer.toString(page.getPage() + 1) +
+			"&pagesize=" + Integer.toString(page.getMaxToReturn());
 
 		String xml = this.doCallBioportal(url);
 
@@ -404,25 +304,25 @@ public class BioportalRestService extends BaseCacheObservable
 	/**
 	 * Search entities by ontology id.
 	 *
-	 * @param ontologyId the ontology id
+	 * @param acronym the ontology id
 	 * @param filter the filter
 	 * @param page the page
 	 * @return the string
 	 */
-	public String searchEntitiesByOntologyId(String ontologyId, ResolvedFilter filter, Page page){
-		return this.doSearchEntities(Arrays.asList(ontologyId), filter, page);
+	public String searchEntitiesByAcronym(String acronym, ResolvedFilter filter, Page page){
+		return this.doSearchEntities(Arrays.asList(acronym), filter, page);
 	}
 	
 	/**
 	 * Search entities by ontology ids.
 	 *
-	 * @param ontologyIds the ontology ids
+	 * @param acronyms the ontology ids
 	 * @param filter the filter
 	 * @param page the page
 	 * @return the string
 	 */
-	public String searchEntitiesByOntologyIds(Collection<String> ontologyIds, ResolvedFilter filter, Page page){
-		return this.doSearchEntities(ontologyIds, filter, page);
+	public String searchEntitiesByAcronyms(Collection<String> acronyms, ResolvedFilter filter, Page page){
+		return this.doSearchEntities(acronyms, filter, page);
 	}
 	
 	/**
@@ -432,38 +332,29 @@ public class BioportalRestService extends BaseCacheObservable
 	 * @param page the page
 	 * @return the string
 	 */
-	public String searchEntitiesOfLatestOntologyVersions(ResolvedFilter filter, Page page){
+	public String searchEntitiesOfLatestOntologySubmissions(ResolvedFilter filter, Page page){
 		return this.doSearchEntities(null, filter, page);
-	}
-	
-	/**
-	 * Gets the updates.
-	 *
-	 * @return the updates
-	 */
-	public String getUpdates(){
-		return this.callBioportal("http://bioportal.bioontology.org/syndication/rss");
 	}
 
 	/**
 	 * Do search entities.
 	 *
-	 * @param ontologyIds the ontology ids
+	 * @param acronyms the ontology ids
 	 * @param filter the filter
 	 * @param page the page
 	 * @return the string
 	 */
-	protected String doSearchEntities(Collection<String> ontologyIds, ResolvedFilter filter, Page page){
-		String url = "http://rest.bioontology.org/bioportal/search/" + filter.getMatchValue() +
-			"?pagenum=" + (page.getPage() + 1) +
-			"&pagesize=" + page.getMaxToReturn();
+	protected String doSearchEntities(Collection<String> acronyms, ResolvedFilter filter, Page page){
+		String url = "http://data.bioontology.org/search?q=" + filter.getMatchValue() +
+			"&page=" + Integer.toString(page.getPage() + 1) +
+			"&pagesize=" + Integer.toString(page.getMaxToReturn());
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append(url);
 	
-		if(CollectionUtils.isNotEmpty(ontologyIds)){
-			Iterator<String> itr = ontologyIds.iterator();
-			sb.append("&ontologyids=" + itr.next());
+		if(CollectionUtils.isNotEmpty(acronyms)){
+			Iterator<String> itr = acronyms.iterator();
+			sb.append("&ontologies=" + itr.next());
 			
 			while(itr.hasNext()){
 				sb.append("," + itr.next());
@@ -474,7 +365,7 @@ public class BioportalRestService extends BaseCacheObservable
 		
 		if(algorithm.equals(StandardMatchAlgorithmReference.EXACT_MATCH.
 			getMatchAlgorithmReference().getContent())){
-			sb.append("&isexactmatch=1");
+			sb.append("&exact_match=true");
 		}
 
 		sb.append(
@@ -498,9 +389,9 @@ public class BioportalRestService extends BaseCacheObservable
 		URIAndEntityName target = filter.getPropertyReference().getReferenceTarget();
 		
 		if(StringUtils.equals(target.getName(),DEFINITIONS_NAME)){
-			sb.append("&includedefinitions=true");
+			sb.append("&require_definition=true");
 		} else if(StringUtils.equals(target.getName(),PROPERTIES_NAME)){
-			sb.append("&includeproperties=true");
+			sb.append("&include_properties=true");
 		}
 			
 		return sb.toString();
@@ -517,41 +408,28 @@ public class BioportalRestService extends BaseCacheObservable
 		
 		return fullUrl;
 	}
-	
-	protected String doCallBioportal(String url){
-		return this.doCallBioportal(url, false);
-	}
+
 	/**
 	 * Do call bioportal.
 	 *
 	 * @param url the url
 	 * @return the string
 	 */
-	protected String doCallBioportal(String url, boolean forceRefresh){
+	protected String doCallBioportal(String url){
 		String fullUrl = this.appendApiKey(url);
-		
-		if(forceRefresh){
-			String xml = this.callBioportal(fullUrl);
-			
-			this.cache.put(fullUrl, xml);
-			
-			this.writeCache();
-			
-			return xml;
-		} else {
-			if(!this.cache.containsKey(fullUrl)){
-		
-				String xml = this.callBioportal(fullUrl);
-				
-				this.cache.put(fullUrl, xml);
-	
-				this.writeCache();
-				
-				return xml;
-			} else {
-				return new String(this.cache.get(fullUrl));
-			}
-		}
+
+        if(!this.cache.containsKey(fullUrl)){
+
+            String xml = this.callBioportal(fullUrl);
+
+            this.cache.put(fullUrl, xml);
+
+            this.writeCache();
+
+            return xml;
+        } else {
+            return new String(this.cache.get(fullUrl));
+        }
 	}
 	
 	/**
@@ -667,9 +545,6 @@ public class BioportalRestService extends BaseCacheObservable
 		}
 			
 		this.cache = this.createCache(file);
-		
-		//not sure this is helping the cause.
-		//this.startRssChangeTimer();
 	}
     
     private File getCacheFile(){
@@ -678,160 +553,14 @@ public class BioportalRestService extends BaseCacheObservable
     	
     	return new File(cacheFilePath);
     }
-    
-    private File getUpdateLogFile(){
-	    String updateLogPath = 
-	    		this.cachePath + "/updateLog.out";
-	    
-	    return new File(updateLogPath);
-    }
-    
-    /**
-     * Start rss change timer.
-     */
-    public void startRssChangeTimer(){
-    	Timer timer = new Timer(true);
-    	timer.scheduleAtFixedRate(new TimerTask(){
 
-			@Override
-			public void run() {
-				checkForUpdates(
-						bioportalRssFeedClient.getBioportalRssFeed());
-			}
-    		
-    	}, 0, ONE_MINUTE * this.cacheUpdatePeriod);
-    }
-    
-    /**
-     * Check for updates.
-     *
-     * @param feed the feed
-     */
-    protected void checkForUpdates(SyndFeed feed){
-        try {
-            Date lastUpdate = this.getLastUpdate();
-
-            Date lastUpdateFromFeed = this.getLastUpdateFromFeed(feed);
-
-            //account for a null feed coming back from bioportal
-            if(lastUpdateFromFeed != null &&
-                    (lastUpdate == null || lastUpdateFromFeed.after(lastUpdate)) ){
-                List<String> ontologyIds =
-                    this.getUpdatedOntologies(feed, lastUpdateFromFeed);
-
-                for(String ontologyId : ontologyIds) {
-                    this.purgeGetLatestOntologyVersions();
-                    this.purgeGetLatestOntologyVersionByOntologyId(ontologyId);
-                    this.purgeGetOntologyVersionsByOntologyId(ontologyId);
-                }
-
-                this.writeUpdateLog(lastUpdateFromFeed);
-
-                this.fireOnCodeSystemsChangeEvent(ontologyIds);
-            }
-        } catch(Exception e){
-            log.warn("Error reading RSS feed.", e);
-        }
-    }
-    
-    /**
-     * Gets the last update from feed.
-     *
-     * @param feed the feed
-     * @return the last update from feed
-     */
-    protected Date getLastUpdateFromFeed(SyndFeed feed){
-    	Date latestDate = null;
-    	
-    	for(Object entry : feed.getEntries()){
-			SyndEntry  syndEntry = (SyndEntry)entry;
-			DateModule date = (DateModule) syndEntry.getModule(DateModule.URI);
-			Date foundDate = date.getDate();
-			if(latestDate == null || foundDate.after(latestDate)){
-				latestDate = foundDate;
-			}
-		}
-    	
-    	return latestDate;
-    }
-    
-    /**
-     * Gets the updated ontologies.
-     *
-     * @param feed the feed
-     * @param fromDate the from date
-     * @return the updated ontologies
-     */
-    protected List<String> getUpdatedOntologies(SyndFeed feed, Date fromDate){
-  
-    	List<String> ontologyIdList = new ArrayList<String>();
-    	
-    	for(Object entry : feed.getEntries()){
-			SyndEntry  syndEntry = (SyndEntry)entry;
-			DateModule date = (DateModule) syndEntry.getModule(DateModule.URI);
-			Date foundDate = date.getDate();
-			if(foundDate.after(foundDate)){
-				ontologyIdList.add(
-						StringUtils.substringAfterLast(syndEntry.getLink(), "/"));
-			}
-		}
-    	
-    	return ontologyIdList;
-    }
-
-	/**
+   /**
 	 * Write cache.
 	 *
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private void writeCache() {
 		this.db.commit();
-	}
-	
-	/**
-	 * Gets the last update.
-	 *
-	 * @return the last update
-	 */
-	protected Date getLastUpdate(){
-		File file = this.getUpdateLogFile();
-		if(! file.exists()){
-			return null;
-		} else {
-			byte[] data;
-			try {
-				data = FileUtils.readFileToByteArray(file);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-			Date date = (Date)SerializationUtils.deserialize(data);
-			
-			return date;
-		}
-	}
-	
-	/**
-	 * Write update log.
-	 *
-	 * @param lastUpdate the last update
-	 */
-	private void writeUpdateLog(Date lastUpdate) {
-		log.info("Writing update log");
-		
-		File file = this.getUpdateLogFile();
-		
-		try {
-			if(! file.exists()){
-				log.info("Creating new update log file at: " + file.getPath());
-				file.getParentFile().mkdirs();
-				file.createNewFile();
-			}
-
-			byte[] data = SerializationUtils.serialize(lastUpdate);
-			FileUtils.writeByteArrayToFile(file, data);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	/**
