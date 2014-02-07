@@ -23,20 +23,9 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.valuesetdefinition;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Component;
-
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.core.EntitySynopsis;
-import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.PredicateReference;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
-import edu.mayo.cts2.framework.model.core.SortCriteria;
+import edu.mayo.cts2.framework.model.core.*;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSet;
@@ -50,6 +39,11 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueS
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResult;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionResolutionService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The Class BioportalRdfResolvedValueSetResolutionService.
@@ -107,11 +101,11 @@ public class BioportalRestValueSetDefinitionResolutionService extends AbstractBi
 
 		String valueSetDefinitionName = definition.getName();
 		
-		String localId = 
-			this.identityConverter.valueSetDefinitionNameToOntologyVersionId(valueSetDefinitionName);
+		IdentityConverter.AcronymAndSubmissionId localId =
+			this.identityConverter.versionNameToAcronymAndSubmissionId(valueSetDefinitionName);
 		
 		ResolvedValueSetReadId id = new ResolvedValueSetReadId(
-				localId, 
+				localId.getSubmissionId(),
 				definition.getValueSet(), 
 				definition);
 		

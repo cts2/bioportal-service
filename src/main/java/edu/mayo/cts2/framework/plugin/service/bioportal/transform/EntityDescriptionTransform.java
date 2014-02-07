@@ -23,16 +23,14 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.transform;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Resource;
-
+import com.google.common.collect.Iterables;
+import edu.mayo.cts2.framework.model.core.*;
+import edu.mayo.cts2.framework.model.directory.DirectoryResult;
+import edu.mayo.cts2.framework.model.entity.*;
+import edu.mayo.cts2.framework.model.entity.types.DesignationRole;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
+import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
+import edu.mayo.cts2.framework.plugin.service.bioportal.util.UriUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,24 +39,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.google.common.collect.Iterables;
-
-import edu.mayo.cts2.framework.model.core.Definition;
-import edu.mayo.cts2.framework.model.core.PredicateReference;
-import edu.mayo.cts2.framework.model.core.Property;
-import edu.mayo.cts2.framework.model.core.ScopedEntityName;
-import edu.mayo.cts2.framework.model.core.StatementTarget;
-import edu.mayo.cts2.framework.model.core.URIAndEntityName;
-import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.entity.Designation;
-import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
-import edu.mayo.cts2.framework.model.entity.NamedEntityDescription;
-import edu.mayo.cts2.framework.model.entity.NamedIndividualDescription;
-import edu.mayo.cts2.framework.model.entity.PredicateDescription;
-import edu.mayo.cts2.framework.model.entity.types.DesignationRole;
-import edu.mayo.cts2.framework.model.util.ModelUtils;
-import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
-import edu.mayo.cts2.framework.plugin.service.bioportal.util.UriUtils;
+import javax.annotation.Resource;
+import java.util.*;
 
 /**
  * The Class EntityDescriptionTransform.
@@ -120,12 +102,11 @@ public class EntityDescriptionTransform extends AbstractTransform {
 		
 		entity.setEntityID(
 				buildScopedEntityName(name, codeSystemName));
-		String version= this.getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
+		String version = this.getIdentityConverter().versionNameToVersion(codeSystemVersionName);
 		
 		Designation designation = new Designation();
 		designation.setValue(ModelUtils.toTsAnyType(label));
 		designation.setDesignationRole(DesignationRole.PREFERRED);
-		//designation.setAssertedInCodeSystemVersion(this.buildCodeSystemVersionReference(codeSystemName, codeSystemVersionName));
 		
 		entity.addDesignation(designation);
 	
@@ -345,7 +326,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 			entry.setName(scopedEntityName);
 			
 			entry.setResourceName(this.buildResourceName(scopedEntityName));
-			String version= this.getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
+			String version = this.getIdentityConverter().versionNameToVersion(codeSystemVersionName);
 			entry.setHref(this.getUrlConstructor().createEntityUrl(codeSystemName, version, name));
 
 			entry.addKnownEntityDescription(this.createKnownEntityDescription(
@@ -414,79 +395,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 
 		for(int i = start; i<nodeList.size() && i <= end; i++){
 
-			EntityDirectoryEntry entry = new EntityDirectoryEntry();
-
-			Node node = nodeList.get(i);
-
-			String conceptIdKey = "conceptId";
-			String conceptIdShortKey = "conceptIdShort";
-			String preferredNameKey = "preferredName";
-			String ontologyIdKey = "ontologyId";
-			String ontologyVersionIdKey = "ontologyVersionId";
-
-			Map<String, String> resultMap = this
-					.getChildrenTextMap(node, conceptIdKey, conceptIdShortKey,
-							preferredNameKey, ontologyIdKey, ontologyVersionIdKey);
-
-			String about = resultMap.get(conceptIdKey);
-			String name = UriUtils.getLocalName( resultMap.get(conceptIdShortKey) );
-
-			String label = resultMap.get(preferredNameKey);
-			String ontologyId = resultMap.get(ontologyIdKey);
-			String ontologyVersionId = resultMap.get(ontologyVersionIdKey);
-
-			String codeSystemName;
-			try {
-				codeSystemName = this.getIdentityConverter()
-						.ontologyIdToCodeSystemName(ontologyId);
-			} catch (Exception e) {
-				//it seems there are invalid ontologyIds from time to time 
-				//1634 for example. Warn and continue.
-				log.warn(e);
-				continue;
-			}
-			
-			String codeSystemVersionName;
-			String version="";
-			
-			//if there is no codesystemname, it must be matching a view, so throw it out
-			if(StringUtils.isBlank(codeSystemName)){
-				log.warn("Result matched ontologyVersionId: " + ontologyVersionId + ", which is a view.");
-				try {
-					codeSystemName = 
-							this.getIdentityConverter().ontologyIdToValueSetName(ontologyId);
-				
-					codeSystemVersionName = this.getIdentityConverter().ontologyVersionIdToValueSetDefinitionName(ontologyId, ontologyVersionId);
-				} catch (Exception e) {
-					//search results may be outdated in Bioportal
-					log.warn(e);
-					continue;
-				}
-			} else {
-				try {
-					codeSystemVersionName = this.getIdentityConverter().ontologyVersionIdToCodeSystemVersionName(ontologyId, ontologyVersionId);
-					version= this.getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
-				} catch (Exception e) {
-					//search results may be outdated in Bioportal
-					log.warn(e);
-					continue;
-				}
-				entry.addKnownEntityDescription(this.createKnownEntityDescription(
-						codeSystemName, 
-						codeSystemVersionName, 
-						label));
-			}
-		
-			entry.setAbout(about);
-			
-			entry.setName(this.buildScopedEntityName(name, codeSystemName));
-			
-			entry.setHref(this.getUrlConstructor().createEntityUrl(
-					codeSystemName, 
-					version, 
-					name));
-			
-			entryList.add(entry);
+		//
 		}
 		
 		log.debug("transformEntityDirectoryFromSearch" + (System.currentTimeMillis() - time) + " ms outer");

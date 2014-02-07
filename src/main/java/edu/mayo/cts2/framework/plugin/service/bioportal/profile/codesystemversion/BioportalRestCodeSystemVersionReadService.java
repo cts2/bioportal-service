@@ -23,14 +23,6 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.codesystemversion;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClientException;
-
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.VersionTagReference;
@@ -41,6 +33,11 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioporta
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.CodeSystemVersionTransform;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionReadService;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * The Class BioportalRestCodeSystemVersionReadService.
@@ -67,11 +64,8 @@ public class BioportalRestCodeSystemVersionReadService
 	 */
 	@Override
 	public CodeSystemVersionCatalogEntry read(NameOrURI codeSystemVersionName, ResolvedReadContext readContext) {
-		String ontologyVersionId = 
-			this.identityConverter.codeSystemVersionNameToOntologyVersionId(
-					codeSystemVersionName.getName());
-		
-		String xml = this.bioportalRestService.getOntologyByOntologyVersionId(ontologyVersionId);
+        IdentityConverter.AcronymAndSubmissionId id = this.identityConverter.versionNameToAcronymAndSubmissionId(codeSystemVersionName.getName());
+		String xml = this.bioportalRestService.getOntologySubmissionByAcronymAndSubmissionId(id.getAcronym(), id.getSubmissionId());
 
 		return this.codeSystemVersionTransform.transformResourceVersion(xml);
 	}
@@ -81,17 +75,7 @@ public class BioportalRestCodeSystemVersionReadService
 	 */
 	@Override
 	public boolean exists(NameOrURI codeSystemVersion, ResolvedReadContext readContext) {
-		String ontologyVersionId = this.identityConverter
-				.codeSystemVersionNameToOntologyVersionId(codeSystemVersion.getName());
-
-		try {
-			this.bioportalRestService
-					.getOntologyByOntologyVersionId(ontologyVersionId);
-		} catch (RestClientException ex) {
-			return false;
-		}
-
-		return true;
+		return this.read(codeSystemVersion, readContext) != null;
 	}
 
 	@Override
@@ -122,16 +106,10 @@ public class BioportalRestCodeSystemVersionReadService
 			NameOrURI codeSystemName, 
 			String officialResourceVersionId,
 			ResolvedReadContext readContext) {
-		String codeSystemVersionName;
-		if (this.identityConverter.isCachedCodeSystemVersionName(officialResourceVersionId)) {
-			 codeSystemVersionName= officialResourceVersionId;
-		} else {
-		    codeSystemVersionName = 
-				this.identityConverter.codeSystemNameAndVersionIdToCodeSystemVersionName(
-						codeSystemName.getName(), officialResourceVersionId);
-		}
+		String codeSystemVersionName =
+                this.identityConverter.acronymAndVersionToVersionName(codeSystemName.getName(), officialResourceVersionId);
 		
-		return this.read(ModelUtils.nameOrUriFromName(codeSystemVersionName), null);
+		return this.read(ModelUtils.nameOrUriFromName(codeSystemVersionName), readContext);
 	}
 
 }

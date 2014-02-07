@@ -23,12 +23,9 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.transform;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
-
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.exception.Cts2RuntimeException;
+import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
 import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -36,9 +33,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.exception.Cts2RuntimeException;
-import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Class TransformUtils.
@@ -192,7 +191,7 @@ public class TransformUtils {
 	 * @param childNodes the child nodes
 	 * @return the named child with path
 	 */
-	public static Node getNamedChildWithPath(Node node, String[] childNodes) {
+	public static Node getNamedChildWithPath(Node node, String... childNodes) {
 		if (childNodes.length == 1) {
 			return getNamedChild(node, childNodes[0]);
 		}
@@ -249,7 +248,7 @@ public class TransformUtils {
 	 * @param childNodes the child nodes
 	 * @return the node list with path
 	 */
-	public static List<Node> getNodeListWithPath(Node node, String[] childNodes) {
+	public static List<Node> getNodeListWithPath(Node node, String... childNodes) {
 		if (childNodes.length == 1) {
 			return getNodeList(node, childNodes[0]);
 		}

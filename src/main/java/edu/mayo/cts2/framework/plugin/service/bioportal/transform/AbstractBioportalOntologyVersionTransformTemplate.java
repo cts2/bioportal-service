@@ -23,6 +23,18 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.transform;
 
+import com.google.common.collect.Iterables;
+import edu.mayo.cts2.framework.model.core.*;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
+import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
+import edu.mayo.cts2.framework.plugin.service.bioportal.util.BioportalConstants;
+import org.apache.commons.collections.map.LRUMap;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
 import java.lang.ref.SoftReference;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -31,25 +43,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.collections.map.LRUMap;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
-import com.google.common.collect.Iterables;
-
-import edu.mayo.cts2.framework.model.core.EntryDescription;
-import edu.mayo.cts2.framework.model.core.OntologySyntaxReference;
-import edu.mayo.cts2.framework.model.core.Property;
-import edu.mayo.cts2.framework.model.core.ResourceVersionDescription;
-import edu.mayo.cts2.framework.model.core.ResourceVersionDescriptionDirectoryEntry;
-import edu.mayo.cts2.framework.model.core.SourceAndNotation;
-import edu.mayo.cts2.framework.model.util.ModelUtils;
-import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
-import edu.mayo.cts2.framework.plugin.service.bioportal.util.BioportalConstants;
 
 /**
  * The Class AbstractBioportalOntologyVersionTransformTemplate.
@@ -105,23 +98,17 @@ public abstract class AbstractBioportalOntologyVersionTransformTemplate<R extend
 	 * @return the name
 	 */
 	protected abstract String getName(R resource);
-	
-	/**
-	 * Gets the resource name.
-	 *
-	 * @param ontologyId the ontology id
-	 * @return the resource name
-	 */
-	protected abstract String getResourceName(String ontologyId);
-	
+
 	/**
 	 * Gets the resource version name.
 	 *
-	 * @param ontologyId the ontology id
-	 * @param ontologyVersionId the ontology version id
-	 * @return the resource version name
+	 *
+     *
+     * @param acronym the ontology id
+     * @param submissionId the ontology version id
+     * @return the resource version name
 	 */
-	protected abstract String getResourceVersionName(String ontologyId, String ontologyVersionId);
+	protected abstract String getResourceVersionName(String acronym, String submissionId);
 	
 	/**
 	 * Sets the name.
@@ -135,11 +122,9 @@ public abstract class AbstractBioportalOntologyVersionTransformTemplate<R extend
 	/**
 	 * Gets the about.
 	 *
-	 * @param ontologyVersionId the ontology version id
-	 * @param name the name
 	 * @return the about
 	 */
-	protected abstract String getAbout(String ontologyVersionId, String name);
+	protected abstract String getAbout(String resourceVersionName);
 	
 	/**
 	 * Gets the href.
@@ -148,7 +133,7 @@ public abstract class AbstractBioportalOntologyVersionTransformTemplate<R extend
 	 * @param resourceVersionName the resource version name
 	 * @return the href
 	 */
-	protected abstract String getHref(String resourceName, String resourceVersionName);
+	protected abstract String getHref(String resourceVersionName);
 	
 	/**
 	 * Decorate resource version summary.
@@ -194,25 +179,21 @@ public abstract class AbstractBioportalOntologyVersionTransformTemplate<R extend
 	 */
 	public R transformResourceVersion(String xml) {
 
-		Node node = TransformUtils.getNamedChildWithPath(BioportalRestUtils.getDocument(xml), ONTOLOGY_BEAN);
+		Node node = TransformUtils.getNamedChildWithPath(BioportalRestUtils.getDocument(xml), ONTOLOGY_SUBMISSION);
 
-		String abbreviation = TransformUtils.getNamedChildText(node, ABBREVIATION);
-		String ontologyVersionId = TransformUtils.getNamedChildText(node, ONTOLOGY_VERSION_ID);
-		String ontologyId = TransformUtils.getNamedChildText(node, ONTOLOGY_ID);
-		String displayLabel = TransformUtils.getNamedChildText(node, DISPLAY_LABEL);
+		String abbreviation = TransformUtils.getNamedChildTextWithPath(node, ONTOLOGY +"."+ ACRONYM);
+		String submissionId = TransformUtils.getNamedChildText(node, SUBMISSION_ID);
+		String displayLabel = TransformUtils.getNamedChildText(node, NAME);
 		String description = TransformUtils.getNamedChildText(node, DESCRIPTION);
 		String format = TransformUtils.getNamedChildText(node, FORMAT);
 		String downloadLocation = TransformUtils.getNamedChildText(node, DOWNLOAD_LOCATION);
 		
-		String resourceName = 
-			this.getResourceName(ontologyId);
-		
 		String resourceVersionName = 
 			this.getResourceVersionName(
-					ontologyId,
-					ontologyVersionId);
+                    abbreviation,
+                    submissionId);
 		
-		String about = this.getAbout(ontologyVersionId, resourceName);
+		String about = this.getAbout(resourceVersionName);
 		
 		R resourceVersion = this.createNewResourceVersion();
 		resourceVersion.setAbout(about);
@@ -222,8 +203,6 @@ public abstract class AbstractBioportalOntologyVersionTransformTemplate<R extend
 		resourceVersion.getResourceSynopsis().setValue(ModelUtils.toTsAnyType(description));
 		resourceVersion.setOfficialResourceVersionId(this.getOfficialResourceVersionId(node));
 		resourceVersion.addKeyword(abbreviation);
-		resourceVersion.addKeyword(ontologyId);
-		resourceVersion.addKeyword(ontologyVersionId);
 		resourceVersion.setSourceAndNotation(new SourceAndNotation());
 		resourceVersion.getSourceAndNotation().setSourceDocumentSyntax(new OntologySyntaxReference());
 		resourceVersion.getSourceAndNotation().getSourceDocumentSyntax().setContent(format);
@@ -233,16 +212,11 @@ public abstract class AbstractBioportalOntologyVersionTransformTemplate<R extend
 		resourceVersion.setOfficialReleaseDate(this.getDateReleased(node));
 		
 		resourceVersion.setProperty(Iterables.toArray(
-				this.getProperties(node, resourceName), Property.class));
+				this.getProperties(node, abbreviation), Property.class));
 		
 		resourceVersion.addSourceAndRole(this.getSourceAndRoleReference(node));
-		
-		resourceVersion.setDocumentURI(this.getIdentityConverter().getDocumentUri(ontologyVersionId));
-		
-		resourceVersion = this.decorateResourceVersion(node, resourceName, resourceVersion);
-		
-		resourceVersion.addProperty(this.createOntologyIdProperty(ontologyId));
-		resourceVersion.addProperty(this.createOntologyVersionIdProperty(ontologyVersionId));
+
+		resourceVersion = this.decorateResourceVersion(node, abbreviation, resourceVersion);
 	
 		return resourceVersion;
 	}
@@ -260,13 +234,13 @@ public abstract class AbstractBioportalOntologyVersionTransformTemplate<R extend
 	 
 		Document doc = BioportalRestUtils.getDocument(xml);
 
-		List<Node> nodeList = TransformUtils.getNodeListWithPath(doc, "success.data.list.ontologyBean");
+		List<Node> nodeList = TransformUtils.getNodeListWithPath(doc, ONTOLOGY_SUBMISSION_LIST, ONTOLOGY_SUBMISSION);
 		
 		for(Node node : nodeList){
 			S entry = null;
 			try {
 				entry = transformVersionSummary(node);
-			} catch (HttpClientErrorException e) {
+			} catch (Exception e) {
 				log.warn("An HTTP Error Occured connecting to Bioportal.", e);
 				continue;
 			}
@@ -283,18 +257,8 @@ public abstract class AbstractBioportalOntologyVersionTransformTemplate<R extend
 	 * @param xml the xml
 	 * @return the list
 	 */
-	public List<S> transformResourceVersions(
-			String xml){
-
-		if(! this.cachedVersionSummaries.containsKey(xml.hashCode())){
-			this.cachedVersionSummaries.clear();
-			
-			this.cachedVersionSummaries.put(xml.hashCode(),
-				this.doTransformResourceVersions(xml));
-		}
-		
-		return new ArrayList<S>(
-				this.cachedVersionSummaries.get(xml.hashCode()));
+	public List<S> transformResourceVersions(String xml){
+        return this.doTransformResourceVersions(xml);
 	}
 	
 	/**
@@ -310,26 +274,15 @@ public abstract class AbstractBioportalOntologyVersionTransformTemplate<R extend
 	 
 		Document doc = BioportalRestUtils.getDocument(xml);
 
-	
-		List<Node> nodeList = TransformUtils.getNodeListWithPath(doc, "success.data.list.ontologyBean");
+		List<Node> nodeList = TransformUtils.getNodeListWithPath(doc, ONTOLOGY_SUBMISSION_LIST);
 
 		for(Node node : nodeList){
 			
-			String ontologyId = TransformUtils.getNamedChildText(node, ONTOLOGY_ID);
-			
-			String versionsXml = 
-				this.getBioportalRestService().getOntologyVersionsByOntologyId(ontologyId);
-			
-			Document versionsDoc = BioportalRestUtils.getDocument(versionsXml);
-			
-			List<Node> versionsNodeList = TransformUtils.getNodeListWithPath(versionsDoc, "success.data.list.ontologyBean");
-			
-			for(Node version : versionsNodeList) {
-					
-				S entry = transformVersionSummary(version);
-	
-				entryList.add(entry);
-			}
+			Node version = TransformUtils.getNamedChild(node, ONTOLOGY_SUBMISSION);
+
+            S entry = transformVersionSummary(version);
+
+            entryList.add(entry);
 		}
 	
 		return entryList;
@@ -344,37 +297,35 @@ public abstract class AbstractBioportalOntologyVersionTransformTemplate<R extend
 	 */
 	protected S transformVersionSummary(
 			Node node) {
-		String ontologyId = TransformUtils.getNamedChildText(node, ONTOLOGY_ID);
-		String ontologyVersionId = TransformUtils.getNamedChildText(node, ONTOLOGY_VERSION_ID);
-		String displayLabel = TransformUtils.getNamedChildText(node, DISPLAY_LABEL);
+		String acronym = TransformUtils.getNamedChildTextWithPath(node, ONTOLOGY+"."+ACRONYM);
+		String submissionId = TransformUtils.getNamedChildText(node, SUBMISSION_ID);
+		String displayLabel = TransformUtils.getNamedChildText(node, NAME);
 		String description = TransformUtils.getNamedChildText(node, DESCRIPTION);
 		
 		S entry = this.createNewResourceVersionSummary();
-		
-		String resourceName = this.getResourceName(ontologyId);
-		String resourceVersionName = this.getResourceVersionName(ontologyId, ontologyVersionId);
 
-		entry.setAbout(this.getAbout(ontologyVersionId, resourceName));
+		String resourceVersionName = this.getResourceVersionName(acronym, submissionId);
+
+		entry.setAbout(this.getAbout(resourceVersionName));
 		entry.setFormalName(displayLabel);
 		entry = this.setName(entry, resourceVersionName);
-		entry.setResourceName(resourceName);
+		entry.setResourceName(acronym);
 		entry.setResourceSynopsis(new EntryDescription());
 		entry.getResourceSynopsis().setValue(ModelUtils.toTsAnyType(description));
 
-		entry.setDocumentURI(this.getIdentityConverter().getDocumentUri(ontologyVersionId));
-		String version= this.getIdentityConverter().codeSystemVersionNameToVersion(resourceVersionName);
-//		entry.setHref(this.getHref(resourceName, version));
-		entry.setHref(getHref(resourceName, resourceVersionName, ontologyId, ontologyVersionId ));
+		String version = this.getIdentityConverter().versionNameToVersion(resourceVersionName);
+
+		entry.setHref(getHref(resourceVersionName));
 		entry.setOfficialResourceVersionId(version);
 		
-		entry = this.decorateResourceVersionSummary(node, resourceName, entry);
+		entry = this.decorateResourceVersionSummary(node, acronym, entry);
 		
 		return entry;
 	}
 	
 	
-	protected String getHref(String resourceName, String resourceVersionName, String ontologyId, String ontologyVersionId) {
-		String version= this.getIdentityConverter().codeSystemVersionNameToVersion(resourceVersionName);
+	protected String getHref(String resourceName, String resourceVersionName) {
+		String version = this.getIdentityConverter().versionNameToVersion(resourceVersionName);
 		return this.getHref(resourceName, version);
 	}
 	/**
@@ -395,6 +346,10 @@ public abstract class AbstractBioportalOntologyVersionTransformTemplate<R extend
 	 * @return the date
 	 */
 	private Date doParseDate(String date){
+        if(date == null){
+            return null;
+        }
+
 		try {
 			return getDateFormat().parse(date);
 		} catch (ParseException e) {

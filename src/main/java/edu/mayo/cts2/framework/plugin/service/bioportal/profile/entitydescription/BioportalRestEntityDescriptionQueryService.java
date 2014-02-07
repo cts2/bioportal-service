@@ -180,8 +180,7 @@ public class BioportalRestEntityDescriptionQueryService
 		if(filterComponent != null){
 			return this.getEntityDescriptionsByCodeSystemVersionNameWithFilter(
 					filterComponent, 
-					page, 
-					codeSystemName, 
+					page,
 					codeSystemVersionName);
 		} else {
 			return this.getEntityDescriptionsByCodeSystemVersionNameWithoutFilter(
@@ -203,11 +202,9 @@ public class BioportalRestEntityDescriptionQueryService
 			Page page, 
 			String codeSystemName, 
 			String codeSystemVersionName) {
-		final String ontologyVersionId = identityConverter.codeSystemVersionNameToOntologyVersionId(codeSystemVersionName);
-		
-		String xml = bioportalRestService.getAllEntitiesByOntologyVersionId(
-				ontologyVersionId, 
-				page);
+		String xml = bioportalRestService.getAllEntitiesByAcronym(
+                codeSystemName,
+                page);
 		
 		return this.entityDescriptionTransform.transformEntityDirectory(
 				xml, 
@@ -230,17 +227,14 @@ public class BioportalRestEntityDescriptionQueryService
 	 */
 	private DirectoryResult<EntityDirectoryEntry> getEntityDescriptionsByCodeSystemVersionNameWithFilter(
 			Set<ResolvedFilter> filterComponent,
-			Page page, 
-			final String codeSystemName, 
+			Page page,
 			final String codeSystemVersionName) {
-		final String ontologyId = identityConverter.codeSystemNameToOntologyId(codeSystemName);
-		final String ontologyVersionId = identityConverter.codeSystemVersionNameToOntologyVersionId(codeSystemVersionName);
-		
+
+        IdentityConverter.AcronymAndSubmissionId id =
+                this.identityConverter.versionNameToAcronymAndSubmissionId(codeSystemVersionName);
+
 		EntityDirectoryBuilder builder = this.getEntitiesOfCodeSystemVersionDirectoryBuilder(
-				ontologyId, 
-				ontologyVersionId,
-				codeSystemName, 
-				codeSystemVersionName);
+				id);
 		
 		return builder.restrict(filterComponent).
 			addMaxToReturn(page.getMaxToReturn()).
@@ -360,14 +354,7 @@ public class BioportalRestEntityDescriptionQueryService
 			Set<ResolvedFilter> filterComponent, 
 			String codeSystemName,
 			String codeSystemVersionName) {
-		String ontologyId = identityConverter.codeSystemNameToOntologyId(codeSystemName);
-		String ontologyVersionId = identityConverter.codeSystemVersionNameToOntologyVersionId(codeSystemVersionName);
-		
-		return this.getEntitiesOfCodeSystemVersionDirectoryBuilder(
-						ontologyId, 
-						ontologyVersionId, 
-						codeSystemName,
-						codeSystemVersionName).restrict(filterComponent).count();
+		throw new UnsupportedOperationException();
 	}
 	
 	/**
@@ -380,10 +367,7 @@ public class BioportalRestEntityDescriptionQueryService
 	 * @return the entities of code system version directory builder
 	 */
 	private EntityDirectoryBuilder getEntitiesOfCodeSystemVersionDirectoryBuilder(
-			final String ontologyId, 
-			final String ontologyVersionId,
-			final String codeSystemName,
-			final String codeSystemVersionName){
+			final IdentityConverter.AcronymAndSubmissionId id){
 		return new EntityDirectoryBuilder(new Callback<EntityDirectoryEntry>(){
 
 			public DirectoryResult<EntityDirectoryEntry> execute(
@@ -394,10 +378,10 @@ public class BioportalRestEntityDescriptionQueryService
 				
 				Page bioportalPage = getPageForStartAndMax(start, maxResults);
 			
-				String xml = bioportalRestService.searchEntitiesByOntologyId(
-						ontologyId, 
-						filterComponent,
-						bioportalPage);
+				String xml = bioportalRestService.searchEntitiesByAcronym(
+                        id.getAcronym(),
+                        filterComponent,
+                        bioportalPage);
 				
 				DirectoryResult<EntityDirectoryEntry> directoryResult = 
 						entityDescriptionTransform.transformEntityDirectoryFromSearch(
@@ -415,10 +399,10 @@ public class BioportalRestEntityDescriptionQueryService
 				bioportalPage.setPage(0);
 				bioportalPage.setMaxToReturn(1);
 				
-				String xml = bioportalRestService.searchEntitiesByOntologyId(
-						ontologyId,
-						filterComponent,
-						bioportalPage);
+				String xml = bioportalRestService.searchEntitiesByAcronym(
+                        id.getAcronym(),
+                        filterComponent,
+                        bioportalPage);
 				
 				return getCount(xml);
 			}
@@ -429,15 +413,15 @@ public class BioportalRestEntityDescriptionQueryService
 				
 				Page bioportalPage = getPageForStartAndMax(start, maxResults);
 				
-				String xml = bioportalRestService.getAllEntitiesByOntologyVersionId(
-						ontologyVersionId, 
-						bioportalPage);
+				String xml = bioportalRestService.getAllEntitiesByAcronym(
+                        id.getAcronym(),
+                        bioportalPage);
 				
 				DirectoryResult<EntityDirectoryEntry> directoryResult = 
 						entityDescriptionTransform.transformEntityDirectory(
 								xml,
-								codeSystemName,
-								codeSystemVersionName);
+                                id.getAcronym(),
+								identityConverter.acronymAndSubmissionIdToVersionName(id));
 					
 				return directoryResult;
 			}
@@ -448,7 +432,7 @@ public class BioportalRestEntityDescriptionQueryService
 				bioportalPage.setMaxToReturn(1);
 				
 				String xml = bioportalRestService.
-					getAllEntitiesByOntologyVersionId(ontologyVersionId, bioportalPage);
+                        getAllEntitiesByAcronym(id.getAcronym(), bioportalPage);
 				
 				return getCount(xml);
 			}
@@ -469,7 +453,7 @@ public class BioportalRestEntityDescriptionQueryService
 				
 					Page bioportalPage = getPageForStartAndMax(start, maxResults);
 					
-					String xml = bioportalRestService.searchEntitiesOfLatestOntologyVersions(
+					String xml = bioportalRestService.searchEntitiesOfLatestOntologySubmissions(
 							filterComponent,
 							bioportalPage);
 		
@@ -489,7 +473,7 @@ public class BioportalRestEntityDescriptionQueryService
 					bioportalPage.setPage(0);
 					bioportalPage.setMaxToReturn(1);
 					
-					String xml = bioportalRestService.searchEntitiesOfLatestOntologyVersions(
+					String xml = bioportalRestService.searchEntitiesOfLatestOntologySubmissions(
 							filterComponent,
 							bioportalPage);
 					
@@ -543,7 +527,7 @@ public class BioportalRestEntityDescriptionQueryService
 			
 			String codeSystemVersionName = restrictions.getCodeSystemVersion().getName();
 			
-			String codeSystemName = this.identityConverter.codeSystemVersionNameCodeSystemName(codeSystemVersionName);
+			String codeSystemName = this.identityConverter.versionNameToAcronymAndSubmissionId(codeSystemVersionName).getAcronym();
 			
 			return this.bioportalRestAssociationQueryService.doGetAssociationsOfEntity(
 					codeSystemName, 
@@ -556,8 +540,8 @@ public class BioportalRestEntityDescriptionQueryService
 		} else if(restrictions != null && restrictions.getCodeSystemVersion() != null){
 			
 			String codeSystemVersionName = restrictions.getCodeSystemVersion().getName();
-			
-			String codeSystemName = this.identityConverter.codeSystemVersionNameCodeSystemName(codeSystemVersionName);
+
+            String codeSystemName = this.identityConverter.versionNameToAcronymAndSubmissionId(codeSystemVersionName).getAcronym();
 			
 			return this.getEntityDescriptionsOfCodeSystemVersion(
 					query.getQuery(), 

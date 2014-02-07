@@ -23,20 +23,7 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.resolvedvalueset;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-
-import edu.mayo.cts2.framework.filter.match.AttributeResolver;
-import edu.mayo.cts2.framework.filter.match.ContainsMatcher;
-import edu.mayo.cts2.framework.filter.match.ExactMatcher;
-import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
-import edu.mayo.cts2.framework.filter.match.ResolvablePropertyReference;
+import edu.mayo.cts2.framework.filter.match.*;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
@@ -52,6 +39,13 @@ import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetQuery;
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSetQueryService;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The Class BioportalRestCodeSystemVersionQueryService.
@@ -128,7 +122,7 @@ public class BioportalRestResolvedValueSetQueryService
 			SortCriteria sortCriteria, 
 			Page page) {
 		
-		String xml = this.bioportalRestService.getLatestViews();
+		String xml = this.bioportalRestService.getLatestOntologySubmissions(true);
 	
 		ResolvedValueSetDirectoryBuilder builder = new ResolvedValueSetDirectoryBuilder(
 				this.resolvedValueSetTransform.transfrom(xml),
@@ -149,7 +143,7 @@ public class BioportalRestResolvedValueSetQueryService
 	 */
 	@Override
 	public int count(ResolvedValueSetQuery query) {
-		String xml = this.bioportalRestService.getLatestViews();
+		String xml = this.bioportalRestService.getLatestOntologySubmissions(true);
 		
 		ResolvedValueSetDirectoryBuilder builder = new ResolvedValueSetDirectoryBuilder(
 					this.resolvedValueSetTransform.transfrom(xml),

@@ -23,11 +23,6 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.valueset;
 
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
@@ -36,6 +31,10 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioporta
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.ValueSetTransform;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetReadService;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * The Class BioportalRestValueSetReadService.
@@ -62,9 +61,9 @@ public class BioportalRestValueSetReadService
 	 */
 	@Override
 	public ValueSetCatalogEntry read(NameOrURI valueSetName, ResolvedReadContext readContext) {
-		String ontologyId = this.identityConverter.valueSetNameToOntologyId(valueSetName.getName());
+		String acronym = valueSetName.getName();
 		
-		String xml = this.bioportalRestService.getLatestOntologyVersionByOntologyId(ontologyId);
+		String xml = this.bioportalRestService.getLatestOntologySubmissionByAcronym(acronym);
 
 		return this.valueSetTransform.transformResource(xml);
 	}

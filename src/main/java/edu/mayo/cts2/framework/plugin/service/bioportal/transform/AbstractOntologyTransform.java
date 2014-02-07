@@ -23,26 +23,16 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.transform;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import edu.mayo.cts2.framework.model.core.*;
+import edu.mayo.cts2.framework.model.util.ModelUtils;
+import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
+import edu.mayo.cts2.framework.plugin.service.bioportal.util.BioportalConstants;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Node;
 
-import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
-import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
-import edu.mayo.cts2.framework.model.core.PredicateReference;
-import edu.mayo.cts2.framework.model.core.Property;
-import edu.mayo.cts2.framework.model.core.RoleReference;
-import edu.mayo.cts2.framework.model.core.SourceAndRoleReference;
-import edu.mayo.cts2.framework.model.core.SourceReference;
-import edu.mayo.cts2.framework.model.core.StatementTarget;
-import edu.mayo.cts2.framework.model.core.ValueSetDefinitionReference;
-import edu.mayo.cts2.framework.model.core.ValueSetReference;
-import edu.mayo.cts2.framework.model.util.ModelUtils;
-import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
-import edu.mayo.cts2.framework.plugin.service.bioportal.util.BioportalConstants;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Class AbstractOntologyTransform.
@@ -55,16 +45,16 @@ public abstract class AbstractOntologyTransform extends AbstractTransform {
 	private static final String MAILTO = "mailto:";
 	private static final String CONTACT_ROLE = "contact";
 
-	protected static final String ONTOLOGY_BEAN = "success.data.ontologyBean";
-	protected static final String ONTOLOGY_BEAN_LIST = "success.data.list.ontologyBean";
-	protected static final String ABBREVIATION = "abbreviation";
-	protected static final String ONTOLOGY_VERSION_ID = "id";
-	protected static final String ONTOLOGY_ID = "ontologyId";
-	protected static final String DISPLAY_LABEL = "displayLabel";
-	protected static final String FORMAT = "format";
-	protected static final String VERSION = "versionNumber";
+    protected static final String ONTOLOGY = "ontology";
+	protected static final String ONTOLOGY_SUBMISSION = "ontologySubmission";
+	protected static final String ONTOLOGY_SUBMISSION_LIST = "ontologySubmissionCollection";
+	protected static final String ACRONYM = "acronym";
+	protected static final String NAME = "name";
+	protected static final String VERSION = "version";
 	protected static final String DESCRIPTION = "description";
 	protected static final String TAG = "versionStatus";
+    public static final String SUBMISSION_ID = "submissionId";
+    public static final String FORMAT = "hasOntologyLanguage";
 
 	protected static final String IS_FLAT = "isFlat";
 	protected static final String IS_FOUNDRY = "isFoundry";
@@ -75,10 +65,6 @@ public abstract class AbstractOntologyTransform extends AbstractTransform {
 	protected static final String DATE_RELEASED = "dateReleased";
 	protected static final String CONTACT_NAME = "contactName";
 	protected static final String CONTACT_EMAIL = "contactEmail";
-	
-	protected static final String URN = "urn";
-	protected static final String FILENAMES = "filenames";
-	protected static final String STRING = "string";
 	
 	/**
 	 * Builds the definition of value set reference.
@@ -92,7 +78,7 @@ public abstract class AbstractOntologyTransform extends AbstractTransform {
 
 		valueSetReference.setContent(valueSetName);
 		valueSetReference.setHref(valueSetPath);
-		valueSetReference.setUri(this.getIdentityConverter().getValueSetAbout(valueSetName, BioportalConstants.DEFAULT_VIEW_ABOUT));
+		valueSetReference.setUri(this.getIdentityConverter().getAbout(valueSetName));
 		
 		return valueSetReference;
 	}
@@ -177,18 +163,16 @@ public abstract class AbstractOntologyTransform extends AbstractTransform {
 	 */
 	protected CodeSystemVersionReference getCodeSystemCurrentVersionReference(
 			String codeSystemName){
-		String ontologyId = 
-			this.getIdentityConverter().codeSystemNameToOntologyId(codeSystemName);
-		String xml = this.getBioportalRestService().getLatestOntologyVersionByOntologyId(ontologyId);
-		
-		Node node = TransformUtils.getNamedChildWithPath(BioportalRestUtils.getDocument(xml), ONTOLOGY_BEAN);
 
-		String ontologyVersionId = TransformUtils.getNamedChildText(node, ONTOLOGY_VERSION_ID);
+		String xml = this.getBioportalRestService().getLatestOntologySubmissionByAcronym(codeSystemName);
 		
-		String codeSystemVersionName = this.getIdentityConverter().
-			ontologyVersionIdToCodeSystemVersionName(ontologyId, ontologyVersionId);
-		String version = this.getIdentityConverter().
-				codeSystemVersionNameToVersion(codeSystemVersionName);
+		Node node = TransformUtils.getNamedChildWithPath(BioportalRestUtils.getDocument(xml), ONTOLOGY_SUBMISSION);
+
+		String submissionId = TransformUtils.getNamedChildText(node, SUBMISSION_ID);
+		
+		String codeSystemVersionName = this.getIdentityConverter().acronymAndSubmissionIdToVersionName(codeSystemName, submissionId);
+
+		String version = this.getIdentityConverter().versionNameToVersion(codeSystemVersionName);
 		
 		CodeSystemVersionReference ref = new CodeSystemVersionReference();
 		ref.setCodeSystem(this.buildCodeSystemReference(codeSystemName));
@@ -208,17 +192,13 @@ public abstract class AbstractOntologyTransform extends AbstractTransform {
 	 */
 	protected ValueSetDefinitionReference getValueSetCurrentVersionReference(
 			String valueSetName){
-		String ontologyId = 
-			this.getIdentityConverter().valueSetNameToOntologyId(valueSetName);
+		String xml = this.getBioportalRestService().getLatestOntologySubmissionByAcronym(valueSetName);
 		
-		String xml = this.getBioportalRestService().getLatestOntologyVersionByOntologyId(ontologyId);
-		
-		Node node = TransformUtils.getNamedChildWithPath(BioportalRestUtils.getDocument(xml), ONTOLOGY_BEAN);
+		Node node = TransformUtils.getNamedChildWithPath(BioportalRestUtils.getDocument(xml), ONTOLOGY_SUBMISSION);
 
-		String ontologyVersionId = TransformUtils.getNamedChildText(node, ONTOLOGY_VERSION_ID);
+		String submissionId = TransformUtils.getNamedChildText(node, SUBMISSION_ID);
 		
-		String valueSetDefinitionName = this.getIdentityConverter().
-			ontologyVersionIdToValueSetDefinitionName(ontologyId, ontologyVersionId);
+		String valueSetDefinitionName = this.getIdentityConverter().acronymAndSubmissionIdToVersionName(valueSetName, submissionId);
 		
 		ValueSetDefinitionReference ref = new ValueSetDefinitionReference();
 		ref.setValueSet(this.buildDefinitionOfValueSetReference(valueSetName));
@@ -229,24 +209,6 @@ public abstract class AbstractOntologyTransform extends AbstractTransform {
 		
 		return ref;
 	}
-	
-	protected ValueSetDefinitionReference getValueSetDefinitionReference(
-			String ontologyId, String ontologyVersionId){
-		String valueSetName = this.getIdentityConverter().ontologyIdToValueSetName(ontologyId);
-
-		String valueSetDefinitionName = this.getIdentityConverter().
-			ontologyVersionIdToValueSetDefinitionName(ontologyId, ontologyVersionId);
-		
-		ValueSetDefinitionReference ref = new ValueSetDefinitionReference();
-		ref.setValueSet(this.buildDefinitionOfValueSetReference(valueSetName));
-		NameAndMeaningReference def = new NameAndMeaningReference();
-		def.setContent(valueSetDefinitionName);
-
-		ref.setValueSetDefinition(def);
-		
-		return ref;
-	}
-	
 
 	/**
 	 * Creates the ontology id property.
@@ -296,4 +258,9 @@ public abstract class AbstractOntologyTransform extends AbstractTransform {
 		
 		return prop;
 	}
+
+    //TODO
+    public ValueSetDefinitionReference getValueSetDefinitionReference(){
+        return null;
+    }
 }

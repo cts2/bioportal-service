@@ -23,14 +23,13 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.transform;
 
-import org.springframework.stereotype.Component;
-import org.w3c.dom.Node;
-
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.core.CodeSystemReference;
 import edu.mayo.cts2.framework.model.core.VersionTagReference;
-import edu.mayo.cts2.framework.plugin.service.bioportal.util.BioportalConstants;
+import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
+import org.springframework.stereotype.Component;
+import org.w3c.dom.Node;
 
 /**
  * The Class CodeSystemVersionTransform.
@@ -65,22 +64,14 @@ public class CodeSystemVersionTransform extends AbstractBioportalOntologyVersion
 	protected String getName(CodeSystemVersionCatalogEntry resource) {
 		return resource.getCodeSystemVersionName();
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#getResourceName(java.lang.String)
-	 */
-	@Override
-	protected String getResourceName(String ontologyId) {
-		return this.getIdentityConverter().ontologyIdToCodeSystemName(ontologyId);
-	}
 	
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#getResourceVersionName(java.lang.String, java.lang.String)
 	 */
 	@Override
-	protected String getResourceVersionName(String ontologyId,
-			String ontologyVersionId) {
-		return this.getIdentityConverter().ontologyVersionIdToCodeSystemVersionName(ontologyId, ontologyVersionId);
+	protected String getResourceVersionName(String acronym,
+			String submissionId) {
+		return this.getIdentityConverter().acronymAndSubmissionIdToVersionName(acronym, submissionId);
 	}
 
 	/* (non-Javadoc)
@@ -97,16 +88,17 @@ public class CodeSystemVersionTransform extends AbstractBioportalOntologyVersion
 	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#getAbout(java.lang.String, java.lang.String)
 	 */
 	@Override
-	protected String getAbout(String ontologyVersionId, String name) {
-		return this.getCodeSystemVersionAbout(ontologyVersionId, name);
+	protected String getAbout(String resourceVersionName) {
+		return this.getCodeSystemVersionAbout(resourceVersionName);
 	}
 
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyVersionTransformTemplate#getHref(java.lang.String, java.lang.String)
 	 */
 	@Override
-	protected String getHref(String resourceName, String resourceVersionName) {
-		return this.getUrlConstructor().createCodeSystemVersionUrl(resourceName, resourceVersionName);
+	protected String getHref(String resourceVersionName) {
+        IdentityConverter.AcronymAndSubmissionId id = this.getIdentityConverter().versionNameToAcronymAndSubmissionId(resourceVersionName);
+		return this.getUrlConstructor().createCodeSystemVersionUrl(id.getAcronym(), resourceVersionName);
 	}
 
 	/* (non-Javadoc)
@@ -150,7 +142,7 @@ public class CodeSystemVersionTransform extends AbstractBioportalOntologyVersion
 		String resourceVersionName = resourceVersion.getCodeSystemVersionName();
 
 		resourceVersion.setVersionOf(this.buildCodeSystemReference(resourceName));
-		String version= this.getIdentityConverter().codeSystemVersionNameToVersion(resourceVersionName);
+		String version = this.getIdentityConverter().versionNameToVersion(resourceVersionName);
 		resourceVersion.setEntityDescriptions(this.getUrlConstructor().createEntitiesOfCodeSystemVersionUrl(resourceName, version));
 		resourceVersion.setAssociations(this.getUrlConstructor().createAssociationsOfCodeSystemVersionUrl(resourceName, version));
 		
@@ -173,7 +165,7 @@ public class CodeSystemVersionTransform extends AbstractBioportalOntologyVersion
 	 * @param codeSystemName the code system name
 	 * @return the code system version about
 	 */
-	private String getCodeSystemVersionAbout(String ontologyVersionId, String codeSystemName){	
-		return this.getIdentityConverter().getCodeSystemAbout(codeSystemName, BioportalConstants.DEFAULT_ONTOLOGY_ABOUT);
+	private String getCodeSystemVersionAbout(String codeSystemVersionName){
+		return this.getIdentityConverter().getVersionAbout(codeSystemVersionName);
 	}
 }

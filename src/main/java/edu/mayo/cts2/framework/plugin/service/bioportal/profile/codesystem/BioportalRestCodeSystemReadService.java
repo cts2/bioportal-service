@@ -23,13 +23,6 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.codesystem;
 
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClientException;
-
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
@@ -38,6 +31,11 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioporta
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.CodeSystemTransform;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemReadService;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * The Class BioportalRestCodeSystemReadService.
@@ -63,17 +61,7 @@ public class BioportalRestCodeSystemReadService
 	 * @see edu.mayo.cts2.framework.plugin.service.CodeSystemService#doesCodeSystemExist(java.lang.String)
 	 */
 	public boolean exists(NameOrURI codeSystemName, ResolvedReadContext readContext) {
-		String ontologyId = this.identityConverter
-				.codeSystemNameToOntologyId(codeSystemName.getName());
-
-		try {
-			this.bioportalRestService
-					.getLatestOntologyVersionByOntologyId(ontologyId);
-		} catch (RestClientException ex) {
-			return false;
-		}
-
-		return true;
+		throw new UnsupportedOperationException();
 	}
 
 	/* (non-Javadoc)
@@ -83,14 +71,12 @@ public class BioportalRestCodeSystemReadService
 	public CodeSystemCatalogEntry read(NameOrURI codeSystem, ResolvedReadContext readContext) {
 		String codeSystemName;
 		if(StringUtils.isNotBlank(codeSystem.getUri())){
-			codeSystemName = this.identityConverter.codeSystemAboutToName(codeSystem.getUri());
-		} else {
+            throw new UnsupportedOperationException();
+        } else {
 			codeSystemName = codeSystem.getName();
 		}
 		
-		String ontologyId = this.identityConverter.codeSystemNameToOntologyId(codeSystemName);
-		
-		String xml = this.bioportalRestService.getLatestOntologyVersionByOntologyId(ontologyId);
+		String xml = this.bioportalRestService.getOntologyByAcronym(codeSystemName);
 
 		return this.codeSystemTransform.transformResource(xml);
 	}

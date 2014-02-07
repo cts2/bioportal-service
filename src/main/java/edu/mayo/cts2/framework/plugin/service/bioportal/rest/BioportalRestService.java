@@ -228,7 +228,7 @@ public class BioportalRestService extends BaseCacheObservable
 	 * @param ontologyVersionId the ontology version id
 	 * @return the ontology by ontology version id
 	 */
-	public String getOntologyByAcronymAndSubmissionId(String acronym, String submissionId){
+	public String getOntologySubmissionByAcronymAndSubmissionId(String acronym, String submissionId){
 		String url = "http://data.bioontology.org/ontologies/" + acronym + "/submissions/" + submissionId;
 
 		String xml = this.doCallBioportal(url);
@@ -236,6 +236,13 @@ public class BioportalRestService extends BaseCacheObservable
 		return xml;
 	}
 
+    public String getOntologyByAcronym(String acronym){
+        String url = "http://data.bioontology.org/ontologies/" + acronym;
+
+        String xml = this.doCallBioportal(url);
+
+        return xml;
+    }
 
 	public String getOntologySubmissionsByAcronym(String acronym){
 		String url = buildGetOntologySubmissionsByAcronymUrl(acronym);
@@ -422,6 +429,10 @@ public class BioportalRestService extends BaseCacheObservable
 
             String xml = this.callBioportal(fullUrl);
 
+            if(StringUtils.isBlank(xml)){
+                return null;
+            }
+
             this.cache.put(fullUrl, xml);
 
             this.writeCache();
@@ -491,7 +502,9 @@ public class BioportalRestService extends BaseCacheObservable
 					new HttpEntity<Void>(headers), 
 					String.class);
 		} catch (HttpStatusCodeException e) {
-			if(e.getStatusCode().equals(HttpStatus.NOT_FOUND)){
+            if(e.getStatusCode().equals(HttpStatus.FORBIDDEN)){
+                throw new PrivateOntologyException();
+            } else if(e.getStatusCode().equals(HttpStatus.NOT_FOUND)){
 				throw e;
 			} else {
 				log.error("Error calling BioPortal REST Service", e);

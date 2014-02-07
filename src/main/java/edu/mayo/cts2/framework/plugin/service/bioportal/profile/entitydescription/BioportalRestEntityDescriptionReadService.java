@@ -23,21 +23,9 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.entitydescription;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Component;
-
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.core.CodeSystemReference;
-import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
-import edu.mayo.cts2.framework.model.core.EntityReference;
-import edu.mayo.cts2.framework.model.core.ScopedEntityName;
-import edu.mayo.cts2.framework.model.core.SortCriteria;
-import edu.mayo.cts2.framework.model.core.VersionTagReference;
+import edu.mayo.cts2.framework.model.core.*;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityList;
@@ -51,6 +39,11 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.transform.EntityDescript
 import edu.mayo.cts2.framework.plugin.service.bioportal.util.EntityResolver;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * The Class BioportalRestEntityDescriptionReadService.
@@ -90,37 +83,29 @@ public class BioportalRestEntityDescriptionReadService
 	@Override
 	public EntityDescription read(EntityDescriptionReadId id, ResolvedReadContext readContext) {
 		String codeSystemVersionName = id.getCodeSystemVersion().getName();
-		String codeSystemName = this.identityConverter.
-				codeSystemVersionNameCodeSystemName(codeSystemVersionName);
-		
-		//invalid codeSystemVersion name
-		if(codeSystemName == null){
-			return null;
-		}
+		IdentityConverter.AcronymAndSubmissionId versionId =
+                this.identityConverter.versionNameToAcronymAndSubmissionId(codeSystemVersionName);
 		
 		ScopedEntityName entityName = id.getEntityName();
-		
-		String ontologyVersionId = this.identityConverter.
-				codeSystemVersionNameToOntologyVersionId(codeSystemVersionName);
 		
 		String xml;
 		
 		if(entityName != null){
 			xml = this.entityResolver.getEntityXml(
-					entityName, 
-					ontologyVersionId);		
+					entityName,
+                    versionId.getAcronym());
 		} else {
 			xml = this.entityResolver.getEntityXml(
-					id.getUri(), 
-					ontologyVersionId);
-		}
+					id.getUri(),
+                    versionId.getAcronym());
+        }
 
 		if(StringUtils.isBlank(xml)){
 			return null;
 		} else  {
 			return ModelUtils.toEntityDescription(
 				entityDescriptionTransform.transformEntityDescription(xml,
-					codeSystemName, codeSystemVersionName));
+                        versionId.getAcronym(), codeSystemVersionName));
 		}
 	}
 	

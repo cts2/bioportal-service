@@ -1,17 +1,15 @@
 package edu.mayo.cts2.framework.plugin.service.bioportal.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-
+import edu.mayo.cts2.framework.model.core.ScopedEntityName;
+import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
-import edu.mayo.cts2.framework.model.core.ScopedEntityName;
-import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class EntityResolver {
@@ -19,22 +17,22 @@ public class EntityResolver {
 	@Resource
 	private BioportalRestService bioportalRestService;
 
-	public String getEntityXml(ScopedEntityName name, String ontologyVersionId){
+	public String getEntityXml(ScopedEntityName name, String acronym){
 		return this.getXmlForEntityName(
-					name, 
-					ontologyVersionId);	
+					name,
+                acronym);
 	}
 	
-	public String getEntityXml(String uri, String ontologyVersionId){
-		return this.doGetEntityXml(ontologyVersionId, uri);
+	public String getEntityXml(String uri, String acronym){
+		return this.doGetEntityXml(acronym, uri);
 	}
 	
-	private String doGetEntityXml(String ontologyVersionId, String entityId){
+	private String doGetEntityXml(String acronym, String entityId){
 		String xml = null;
 		try {
 			xml = this.bioportalRestService
-					.getEntityByOntologyVersionIdAndEntityId(
-							ontologyVersionId,
+					.getEntityByAcronymAndEntityId(
+                            acronym,
 							entityId);
 		} catch (HttpClientErrorException e) {
 			if(e.getStatusCode().equals(HttpStatus.NOT_FOUND)){

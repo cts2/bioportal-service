@@ -23,14 +23,6 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.valuesetdefinition;
 
-import java.util.Arrays;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Component;
-import org.w3c.dom.Document;
-
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.extension.LocalIdValueSetDefinition;
@@ -42,6 +34,12 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.TransformUtils;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionReadService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
+import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+
+import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * The Class BioportalRestValueSetReadService.
@@ -83,22 +81,18 @@ public class BioportalRestValueSetDefinitionReadService extends
 		}
 		
 		String valueSetName = valueSet.getName();
-		
-		String ontologyId = 
-			this.identityConverter.valueSetNameToOntologyId(valueSetName);
-		
+
 		String ontologyVersion = 
-			this.bioportalRestService.getLatestOntologyVersionByOntologyId(ontologyId);
+			this.bioportalRestService.getLatestOntologySubmissionByAcronym(valueSetName);
 		
 		Document doc = BioportalRestUtils.getDocument(ontologyVersion);
 
-		String ontologyVersionId = TransformUtils.getNamedChildTextWithPath(
+		String submissionId = TransformUtils.getNamedChildTextWithPath(
 				doc, 
 				"success.data.ontologyBean.id");
 		
 		return new LocalIdValueSetDefinition(
-				this.identityConverter.
-					ontologyVersionIdToValueSetDefinitionName(ontologyId, ontologyVersionId),
+                submissionId,
 				null);
 	}
 

@@ -23,15 +23,13 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.transform;
 
+import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
+import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntrySummary;
+import edu.mayo.cts2.framework.plugin.service.bioportal.transform.TransformUtils.NodeFilter;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Node;
-
-import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
-import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntrySummary;
-import edu.mayo.cts2.framework.plugin.service.bioportal.transform.TransformUtils.NodeFilter;
-import edu.mayo.cts2.framework.plugin.service.bioportal.util.BioportalConstants;
 
 /**
  * The Class ValueSetTransform.
@@ -78,14 +76,6 @@ public class ValueSetTransform extends AbstractBioportalOntologyTransformTemplat
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getName(java.lang.String)
-	 */
-	@Override
-	protected String getName(String ontologyId) {
-		return this.getIdentityConverter().ontologyIdToValueSetName(ontologyId);
-	}
-
-	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#setName(org.cts2.core.AbstractResourceDescriptionDirectoryEntry, java.lang.String)
 	 */
 	@Override
@@ -110,7 +100,7 @@ public class ValueSetTransform extends AbstractBioportalOntologyTransformTemplat
 	 */
 	@Override
 	protected String getAbout(String name) {		
-		return this.getIdentityConverter().getValueSetAbout(name, BioportalConstants.DEFAULT_VIEW_ABOUT);
+		return this.getIdentityConverter().getAbout(name);
 	}
 
 	/* (non-Javadoc)

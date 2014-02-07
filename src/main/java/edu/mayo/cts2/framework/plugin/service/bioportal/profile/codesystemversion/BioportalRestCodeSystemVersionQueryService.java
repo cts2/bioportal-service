@@ -23,32 +23,11 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.codesystemversion;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-
-import edu.mayo.cts2.framework.filter.match.AttributeResolver;
-import edu.mayo.cts2.framework.filter.match.ContainsMatcher;
-import edu.mayo.cts2.framework.filter.match.ExactMatcher;
-import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
-import edu.mayo.cts2.framework.filter.match.ResolvablePropertyReference;
+import edu.mayo.cts2.framework.filter.match.*;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.PredicateReference;
-import edu.mayo.cts2.framework.model.core.Property;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
-import edu.mayo.cts2.framework.model.core.SortCriteria;
-import edu.mayo.cts2.framework.model.core.StatementTarget;
-import edu.mayo.cts2.framework.model.core.URIAndEntityName;
+import edu.mayo.cts2.framework.model.core.*;
 import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
@@ -63,6 +42,11 @@ import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionQuery;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionQueryService;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.*;
 
 /**
  * The Class BioportalRestCodeSystemVersionQueryService.
@@ -215,12 +199,10 @@ public class BioportalRestCodeSystemVersionQueryService
 		
 		if(restrictions != null && restrictions.getCodeSystem() != null){
 			//TODO: This does not resolve the URI if the restriction is a CodeSystemURI
-			String ontologyId = 
-					this.identityConverter.codeSystemNameToOntologyId(
-							restrictions.getCodeSystem().getName());
-			xml = this.bioportalRestService.getOntologyVersionsByOntologyId(ontologyId);
+			xml = this.bioportalRestService.getOntologySubmissionsByAcronym(
+                restrictions.getCodeSystem().getName());
 		} else {
-			xml = this.bioportalRestService.getLatestOntologyVersions();
+			xml = this.bioportalRestService.getLatestOntologySubmissions(false);
 		}
 	
 		CodeSystemVersionDirectoryBuilder builder = new CodeSystemVersionDirectoryBuilder(
@@ -251,7 +233,7 @@ public class BioportalRestCodeSystemVersionQueryService
 	 */
 	@Override
 	public int count(CodeSystemVersionQuery query) {
-	String xml = this.bioportalRestService.getLatestOntologyVersions();
+	String xml = this.bioportalRestService.getLatestOntologySubmissions(false);
 		
 		CodeSystemVersionDirectoryBuilder builder = new CodeSystemVersionDirectoryBuilder(
 					this.codeSystemVersionTransform.transformResourceVersions(xml),

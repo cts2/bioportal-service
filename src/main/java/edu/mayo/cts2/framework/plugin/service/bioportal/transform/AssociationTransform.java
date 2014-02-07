@@ -150,7 +150,7 @@ public class AssociationTransform extends AbstractTransform{
 				String label = getLabel(entryNode);
 				
 				entry.setAbout(about);
-				String version = getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
+				String version = getIdentityConverter().versionNameToVersion(codeSystemVersionName);
 				entry.addKnownEntityDescription(createKnownEntityDescription(
 						codeSystemName, 
 						codeSystemVersionName, 
@@ -201,7 +201,7 @@ public class AssociationTransform extends AbstractTransform{
 			
 				entityName.setName(name);
 				entityName.setNamespace(codeSystemName);
-				String version = getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
+				String version = getIdentityConverter().versionNameToVersion(codeSystemVersionName);
 				entityName.setHref(getUrlConstructor().createEntityUrl(
 						codeSystemName, 
 						version, 
@@ -253,7 +253,7 @@ public class AssociationTransform extends AbstractTransform{
 
 		String targetAbout = TransformUtils.getNamedChildText(
 				targetNode, "fullId");
-		String version=  this.getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
+		String version=  this.getIdentityConverter().versionNameToVersion(codeSystemVersionName);
 
 		T entry;
 		try {

@@ -23,15 +23,7 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.transform;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.stereotype.Component;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
 import com.google.common.collect.Iterables;
-
 import edu.mayo.cts2.framework.model.core.AbstractResourceDescription;
 import edu.mayo.cts2.framework.model.core.AbstractResourceDescriptionDirectoryEntry;
 import edu.mayo.cts2.framework.model.core.EntryDescription;
@@ -39,6 +31,12 @@ import edu.mayo.cts2.framework.model.core.Property;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.TransformUtils.NodeFilter;
+import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Class AbstractBioportalOntologyTransformTemplate.
@@ -93,29 +91,23 @@ public abstract class AbstractBioportalOntologyTransformTemplate<R extends Abstr
 	 */
 	public R transformResource(Node node) {
 		
-		String abbreviation = TransformUtils.getNamedChildText(node, ABBREVIATION);
-		String ontologyId = TransformUtils.getNamedChildText(node, ONTOLOGY_ID);
-		String displayLabel = TransformUtils.getNamedChildText(node, DISPLAY_LABEL);
+		String acronym = TransformUtils.getNamedChildText(node, ACRONYM);
+		String displayLabel = TransformUtils.getNamedChildText(node, NAME);
 		String description = TransformUtils.getNamedChildText(node, DESCRIPTION);
-
-		String name = this.getName(ontologyId);
 		
-		String about = this.getAbout(name);
+		String about = this.getAbout(acronym);
 		
 		R resource = this.createNewResource();
 		resource.setAbout(about);
-		resource = this.setName(resource, name);
+		resource = this.setName(resource, acronym);
 		resource.setFormalName(displayLabel);
 		resource.setResourceSynopsis(new EntryDescription());
 		resource.getResourceSynopsis().setValue(ModelUtils.toTsAnyType(description));
-		resource.addKeyword(abbreviation);
-		resource.addKeyword(ontologyId);
+		resource.addKeyword(acronym);
 		resource.addSourceAndRole(this.getSourceAndRoleReference(node));
 
 		resource.setProperty(Iterables.toArray(
-				this.getProperties(node, name), Property.class));
-		
-		resource.addProperty(this.createOntologyIdProperty(ontologyId));
+				this.getProperties(node, acronym), Property.class));
 		
 		resource = this.decorateResource(node, resource);
 
@@ -145,14 +137,7 @@ public abstract class AbstractBioportalOntologyTransformTemplate<R extends Abstr
 	 * @return the name
 	 */
 	protected abstract String getName(R resource);
-	
-	/**
-	 * Gets the name.
-	 *
-	 * @param ontologyId the ontology id
-	 * @return the name
-	 */
-	protected abstract String getName(String ontologyId);
+
 	
 	/**
 	 * Sets the name.
@@ -228,14 +213,11 @@ public abstract class AbstractBioportalOntologyTransformTemplate<R extends Abstr
 	 * @return the s
 	 */
 	public S transformResourceSummary(Node node){
-		
-		String ontologyId = TransformUtils.getNamedChildText(node, ONTOLOGY_ID);
-		String displayLabel = TransformUtils.getNamedChildText(node, DISPLAY_LABEL);
+		String name = TransformUtils.getNamedChildText(node, ACRONYM);
+		String displayLabel = TransformUtils.getNamedChildText(node, NAME);
 		String description = TransformUtils.getNamedChildText(node, DESCRIPTION);
 		
 		S entry = this.createNewResourceSummary();
-		
-		String name = this.getName(ontologyId);
 
 		entry.setAbout(this.getAbout(name));
 		entry.setFormalName(displayLabel);

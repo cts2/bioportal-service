@@ -23,25 +23,10 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.resolvedvalueset;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Component;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.core.EntitySynopsis;
-import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.PredicateReference;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
-import edu.mayo.cts2.framework.model.core.SortCriteria;
+import edu.mayo.cts2.framework.model.core.*;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
@@ -53,9 +38,7 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConvert
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.entitydescription.BioportalRestEntityDescriptionQueryService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
-import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.ResolvedValueSetTransform;
-import edu.mayo.cts2.framework.plugin.service.bioportal.transform.TransformUtils;
 import edu.mayo.cts2.framework.service.command.restriction.EntityDescriptionQueryServiceRestrictions;
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
@@ -65,6 +48,13 @@ import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSet
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedValueSetReadId;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResolutionEntityQuery;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResult;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The Class BioportalRdfResolvedValueSetResolutionService.
@@ -101,15 +91,9 @@ public class BioportalRestResolvedValueSetResolutionService extends AbstractBiop
 			ResolvedValueSetReadId identifier,
 			final Set<ResolvedFilter> filterComponent, 
 			Page page) {
-		String ontologyId = this.identityConverter.valueSetNameToOntologyId(
-				identifier.getValueSet().getName());
-		
-		String ontologyVersionId = identifier.getLocalName();
 		
 		final String valueSetDefinitionName = 
-				this.identityConverter.ontologyVersionIdToValueSetDefinitionName(
-					ontologyId, 
-					ontologyVersionId);
+				this.identityConverter.acronymAndSubmissionIdToVersionName(identifier.getValueSet().getName(), identifier.getLocalName());
 		
 		
 		EntityDescriptionQuery query = new EntityDescriptionQuery(){
@@ -152,9 +136,7 @@ public class BioportalRestResolvedValueSetResolutionService extends AbstractBiop
 					null, 
 					page);
 
-		ResolvedValueSetHeader header = this.getResolvedValueSetHeader(ontologyVersionId);
-		
-		return new Result(entities, header);
+		return new Result(entities, null);
 	}
 	
 	private class Result {
@@ -176,17 +158,7 @@ public class BioportalRestResolvedValueSetResolutionService extends AbstractBiop
 			return header;
 		}	
 	}
-	
-	private ResolvedValueSetHeader getResolvedValueSetHeader(String ontologyVersionId){
-		String xml = this.bioportalRestService.getOntologyByOntologyVersionId(ontologyVersionId);
-		
-		Document doc = BioportalRestUtils.getDocument(xml);
-		
-		Node node = TransformUtils.getNamedChildWithPath(doc, "success.data.ontologyBean");
-		
-		return this.resolvedValueSetTransform.getHeader(node);
-	}
-	
+
 	protected ResolvedValueSetResult<EntitySynopsis> toResolvedValueSetResult(DirectoryResult<EntityDirectoryEntry> entities, ResolvedValueSetHeader header){
 		List<EntitySynopsis> list = new ArrayList<EntitySynopsis>();
 		for(EntityDirectoryEntry entry : entities.getEntries()){

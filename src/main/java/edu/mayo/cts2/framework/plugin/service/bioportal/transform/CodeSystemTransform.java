@@ -23,14 +23,12 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.transform;
 
-import org.apache.commons.lang.BooleanUtils;
-import org.springframework.stereotype.Component;
-import org.w3c.dom.Node;
-
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntrySummary;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.TransformUtils.NodeFilter;
-import edu.mayo.cts2.framework.plugin.service.bioportal.util.BioportalConstants;
+import org.apache.commons.lang.BooleanUtils;
+import org.springframework.stereotype.Component;
+import org.w3c.dom.Node;
 
 /**
  * The Class CodeSystemTransform.
@@ -77,14 +75,6 @@ public class CodeSystemTransform extends AbstractBioportalOntologyTransformTempl
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getName(java.lang.String)
-	 */
-	@Override
-	protected String getName(String ontologyId) {
-		return this.getIdentityConverter().ontologyIdToCodeSystemName(ontologyId);
-	}
-
-	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#setName(org.cts2.core.AbstractResourceDescriptionDirectoryEntry, java.lang.String)
 	 */
 	@Override
@@ -99,7 +89,7 @@ public class CodeSystemTransform extends AbstractBioportalOntologyTransformTempl
 	 * @see edu.mayo.cts2.framework.plugin.service.bioportal.transform.AbstractBioportalOntologyTransformTemplate#getAbout(java.lang.String)
 	 */
 	protected String getAbout(String codeSystemName){	
-		return this.getIdentityConverter().getCodeSystemAbout(codeSystemName, BioportalConstants.DEFAULT_ONTOLOGY_ABOUT);
+		return this.getIdentityConverter().getAbout(codeSystemName);
 	}
 
 	/* (non-Javadoc)

@@ -23,20 +23,7 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.association;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Component;
-
-import edu.mayo.cts2.framework.filter.match.AttributeResolver;
-import edu.mayo.cts2.framework.filter.match.ContainsMatcher;
-import edu.mayo.cts2.framework.filter.match.ExactMatcher;
-import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
-import edu.mayo.cts2.framework.filter.match.ResolvablePropertyReference;
+import edu.mayo.cts2.framework.filter.match.*;
 import edu.mayo.cts2.framework.model.association.Association;
 import edu.mayo.cts2.framework.model.association.AssociationDirectoryEntry;
 import edu.mayo.cts2.framework.model.association.GraphNode;
@@ -44,12 +31,7 @@ import edu.mayo.cts2.framework.model.association.types.GraphDirection;
 import edu.mayo.cts2.framework.model.association.types.GraphFocus;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.PredicateReference;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
-import edu.mayo.cts2.framework.model.core.ScopedEntityName;
-import edu.mayo.cts2.framework.model.core.SortCriteria;
-import edu.mayo.cts2.framework.model.core.types.AssociationDirection;
+import edu.mayo.cts2.framework.model.core.*;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
@@ -64,6 +46,12 @@ import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
 import edu.mayo.cts2.framework.service.profile.association.AssociationQuery;
 import edu.mayo.cts2.framework.service.profile.association.AssociationQueryService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The Class BioportalRestAssociationQueryService.
@@ -147,15 +135,9 @@ public class BioportalRestAssociationQueryService
 			Set<ResolvedFilter> filterComponent,
 			Page page) {
 
-		String ontologyVersionId = 
-			this.identityConverter.codeSystemVersionNameToOntologyVersionId(
-					codeSystemVersionName);
-
 		final String xml = 
-			this.entityResolver.getEntityXml(entity, ontologyVersionId);
-				//this.bioportalRestService.
-			//getEntityByOntologyVersionIdAndEntityId(ontologyVersionId, entity);
-		
+			this.entityResolver.getEntityXml(entity, codeSystemName);
+
 		ParentOrChildOfEntityDirectoryBuilder builder;
 		try {
 			builder = new ParentOrChildOfEntityDirectoryBuilder(
@@ -223,30 +205,6 @@ public class BioportalRestAssociationQueryService
 		throw new UnsupportedOperationException();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.association.AssociationQueryService#getChildrenAssociationsOfEntity(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, edu.mayo.cts2.framework.service.command.Page, edu.mayo.cts2.framework.service.profile.entitydescription.id.EntityDescriptionId)
-	 */
-	/*
-	@Override
-	public DirectoryResult<EntityDirectoryEntry> getChildrenAssociationsOfEntity(
-			EntityDescriptionReadId id,
-			EntityDescriptionQuery query,		
-			ResolvedReadContext readContext,
-			Page page) {
-
-		String codeSystemName = this.identityConverter.
-				codeSystemVersionNameCodeSystemName(id.getCodeSystemVersion().getName());
-		
-		return this.doGetAssociationsOfEntity(
-				codeSystemName,
-				id.getCodeSystemVersion().getName(),
-				id.getEntityName().getName(),
-				CHILDREN_PREDICATE,
-				query != null ? query.getFilterComponent() : null,
-				page);
-	}
-	*/
-
 	@Override
 	public Set<? extends PropertyReference> getSupportedSortReferences() {
 		return null;
@@ -264,68 +222,26 @@ public class BioportalRestAssociationQueryService
 			GraphFocus focusType,
 			EntityDescriptionReadId id, 
 			GraphDirection direction,
-			long depth) {	
-		
-		String codeSystemVersionName = id.getCodeSystemVersion().getName();
-		String codeSystemName = this.identityConverter.
-				codeSystemVersionNameCodeSystemName(codeSystemVersionName);
-		
-		ScopedEntityName focusEntityName = id.getEntityName();
-		
-		if(depth != 1){
-			throw new UnsupportedOperationException("Only depth of '1' is allowed.");
-		}
-		if(direction != GraphDirection.FORWARD){
-			throw new UnsupportedOperationException("Only GraphDirection of 'FORWARD' is allowed.");
-		}
-
-		String ontologyVersionId = this.identityConverter.
-			codeSystemVersionNameToOntologyVersionId(codeSystemVersionName);
-		
-		String xml;
-		
-		if(focusEntityName.getName().equals("TOP_NODE")){
-			xml = bioportalRestService.getHierarchyRootsByOntolotyVersionId(ontologyVersionId);
-		} else {
-			xml = 
-				this.entityResolver.getEntityXml(
-						focusEntityName, 
-						ontologyVersionId);
-		}
-		
-	
-		List<GraphNode> associations = 
-			this.associationTransform.transformAssociationForGraph(xml, codeSystemName, codeSystemVersionName);
-		
-		for(long i=0;i<associations.size();i++){
-			GraphNode entry = associations.get((int)i);
-			entry.setNodeNumber(i);
-			entry.setNextNodeNumber(i+1);
-			
-			entry.setDirection(AssociationDirection.SOURCE_TO_TARGET);
-			
-		}
-		
-		return new DirectoryResult<GraphNode>(associations,true);
+			long depth) {
+	    throw new UnsupportedOperationException();
 	}
 
-	
+
 	private DirectoryResult<AssociationDirectoryEntry> getDirectoryResult(EntityDescriptionReadId id) {
-		String ontologyVersionId = 
-				this.identityConverter.codeSystemVersionNameToOntologyVersionId(
-						id.getCodeSystemVersion().getName());
-			
-			String codeSystemName = this.identityConverter.
-					codeSystemVersionNameCodeSystemName(id.getCodeSystemVersion().getName());
+		IdentityConverter.AcronymAndSubmissionId versionId =
+				this.identityConverter.versionNameToAcronymAndSubmissionId(
+                        id.getCodeSystemVersion().getName());
+
+			String codeSystemName = versionId.getAcronym();
 
 			final String xml = this.entityResolver.getEntityXml(
-						id.getEntityName(), 
-						ontologyVersionId);
-		
+						id.getEntityName(),
+                        codeSystemName);
+
 			return this.associationTransform.transformSubjectOfAssociationsForEntity(
-					xml, 
-					codeSystemName, 
+					xml,
+					codeSystemName,
 					id.getCodeSystemVersion().getName());
-			
+
 	}
 }

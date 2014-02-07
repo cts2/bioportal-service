@@ -23,23 +23,7 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.valueset;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-import org.w3c.dom.Node;
-
-import edu.mayo.cts2.framework.filter.match.AttributeResolver;
-import edu.mayo.cts2.framework.filter.match.ContainsMatcher;
-import edu.mayo.cts2.framework.filter.match.ExactMatcher;
-import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
-import edu.mayo.cts2.framework.filter.match.ResolvablePropertyReference;
+import edu.mayo.cts2.framework.filter.match.*;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
@@ -52,15 +36,21 @@ import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntrySummary;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
 import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
-import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory.ValueSetDirectoryBuilder;
 import edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory.ValueSetDirectoryBuilder.ValueSetCodeSystemExtractor;
-import edu.mayo.cts2.framework.plugin.service.bioportal.transform.TransformUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.transform.ValueSetTransform;
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetQuery;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetQueryService;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The Class BioportalRestValueSetService.
@@ -92,7 +82,7 @@ public class BioportalRestValueSetQueryService
 
 	private List<ValueSetCatalogEntry> getAllValueSetCatalogEntries() {
 		
-		String xml = this.bioportalRestService.getLatestViews();
+		String xml = this.bioportalRestService.getLatestOntologySubmissions(true);
 
 		return this.valueSetTransform.transformResources(xml);
 	}
@@ -104,9 +94,7 @@ public class BioportalRestValueSetQueryService
 	 * @return the value set by name
 	 */
 	public ValueSetCatalogEntry getValueSetByName(String valueSetName) {
-		String ontologyId = this.identityConverter.valueSetNameToOntologyId(valueSetName);
-		
-		String xml = this.bioportalRestService.getLatestOntologyVersionByOntologyId(ontologyId);
+		String xml = this.bioportalRestService.getOntologyByAcronym(valueSetName);
 
 		return this.valueSetTransform.transformResource(xml);
 	}
@@ -203,31 +191,7 @@ public class BioportalRestValueSetQueryService
 		 */
 		public Set<String> getCodeSystemsOfValueSet(String valueSetName) {
 			Set<String> returnSet = new HashSet<String>();
-			
-			String ontologyId = identityConverter.valueSetNameToOntologyId(valueSetName);
 
-			
-			String xml = bioportalRestService.getLatestOntologyVersionByOntologyId(ontologyId);
-		
-			Node versionIds = TransformUtils.getNamedChildWithPath(
-					BioportalRestUtils.getDocument(xml), "success.data.ontologyBean.viewOnOntologyVersionId");
-			
-			for(Node id : TransformUtils.getNodeList(versionIds, "int")){
-				String ontologyVersionId = TransformUtils.getNodeText(id);
-			
-				
-				if(StringUtils.isNotBlank(ontologyVersionId)){
-					String versionXml = bioportalRestService.getOntologyByOntologyVersionId(ontologyVersionId);
-					
-					String name = 
-						identityConverter.buildName(
-								TransformUtils.getNamedChildWithPath(BioportalRestUtils.getDocument(versionXml), 
-										"success.data.ontologyBean"));
-				
-					returnSet.add(name);
-				}
-			}	
-			
 			return returnSet;
 		}
 	}

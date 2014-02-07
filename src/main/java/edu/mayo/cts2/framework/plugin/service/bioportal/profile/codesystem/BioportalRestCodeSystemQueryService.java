@@ -23,32 +23,11 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.codesystem;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Resource;
-
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-
-import edu.mayo.cts2.framework.filter.match.AttributeResolver;
-import edu.mayo.cts2.framework.filter.match.ContainsMatcher;
-import edu.mayo.cts2.framework.filter.match.ExactMatcher;
-import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
-import edu.mayo.cts2.framework.filter.match.ResolvablePropertyReference;
+import edu.mayo.cts2.framework.filter.match.*;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntry;
 import edu.mayo.cts2.framework.model.codesystem.CodeSystemCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.PredicateReference;
-import edu.mayo.cts2.framework.model.core.Property;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
-import edu.mayo.cts2.framework.model.core.SortCriteria;
-import edu.mayo.cts2.framework.model.core.StatementTarget;
-import edu.mayo.cts2.framework.model.core.URIAndEntityName;
+import edu.mayo.cts2.framework.model.core.*;
 import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
@@ -61,6 +40,11 @@ import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
 import edu.mayo.cts2.framework.service.profile.ResourceQuery;
 import edu.mayo.cts2.framework.service.profile.codesystem.CodeSystemQueryService;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.*;
 
 /**
  * The Class BioportalRestCodeSystemQueryService.
@@ -84,7 +68,7 @@ public class BioportalRestCodeSystemQueryService
 	 */
 	private List<CodeSystemCatalogEntry> getAllCodeSystemCatalogEntries() {
 			
-		String xml = this.bioportalRestService.getLatestOntologyVersions();
+		String xml = this.bioportalRestService.getLatestOntologySubmissions(false);
 
 		return this.codeSystemTransform.transformResources(xml);
 	}

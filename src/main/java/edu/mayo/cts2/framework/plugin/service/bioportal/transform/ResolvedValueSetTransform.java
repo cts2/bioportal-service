@@ -23,16 +23,15 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.transform;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
+import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetHeader;
+import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
-import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetHeader;
-import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Class CodeSystemVersionTransform.
@@ -55,8 +54,8 @@ public class ResolvedValueSetTransform extends AbstractOntologyTransform {
 		for(Node node : nodeList){
 			ResolvedValueSetDirectoryEntry entry = new ResolvedValueSetDirectoryEntry();
 
-			String ontologyVersionId = TransformUtils.getNamedChildText(node, ONTOLOGY_VERSION_ID);
-			
+			String submissionId = TransformUtils.getNamedChildText(node, SUBMISSION_ID);
+
 			ResolvedValueSetHeader header;
 			try {
 				header = this.getHeader(node);
@@ -69,10 +68,10 @@ public class ResolvedValueSetTransform extends AbstractOntologyTransform {
 			
 			entry.setHref(this.getUrlConstructor().createResolvedValueSetUrl(
 					header.getResolutionOf().getValueSet().getContent(), 
-					header.getResolutionOf().getValueSetDefinition().getContent(), 
-					ontologyVersionId));
+					header.getResolutionOf().getValueSetDefinition().getContent(),
+                    submissionId));
 			
-			entry.setResolvedValueSetURI(header.getResolutionOf().getValueSet().getUri() + "/resolution/" + ontologyVersionId);
+			entry.setResolvedValueSetURI(header.getResolutionOf().getValueSet().getUri() + "/resolution/" + submissionId);
 			
 			returnList.add(entry);
 		}
@@ -81,30 +80,8 @@ public class ResolvedValueSetTransform extends AbstractOntologyTransform {
 	}
 	
 	public ResolvedValueSetHeader getHeader(Node node){
-		String ontologyId = TransformUtils.getNamedChildText(node, ONTOLOGY_ID);
-		String ontologyVersionId = TransformUtils.getNamedChildText(node, ONTOLOGY_VERSION_ID);
-		
-		ResolvedValueSetHeader header = new ResolvedValueSetHeader();
-		header.setResolutionOf(this.getValueSetDefinitionReference(ontologyId, ontologyVersionId));
-		
-		List<Node> resolvedCodeSystemVersions = TransformUtils.getNodeListWithPath(node, "viewOnOntologyVersionId.int");
-		for(Node resolvedCodeSystemVersion : resolvedCodeSystemVersions){
-			String codeSystemVersionOntologyVersionId = 
-					TransformUtils.getNodeText(resolvedCodeSystemVersion);
-				
-			String codeSystemVersionName = 
-					this.getIdentityConverter().ontologyVersionIdToCodeSystemVersionName(codeSystemVersionOntologyVersionId);
-			
-			String codeSystemName = 
-					this.getIdentityConverter().codeSystemVersionNameCodeSystemName(codeSystemVersionName);
-			
-			header.addResolvedUsingCodeSystem(
-					this.buildCodeSystemVersionReference(
-							codeSystemName, 
-							codeSystemVersionName));	
-		}
-
-		return header;
+		//TODO
+        return null;
 	}
 
 }

@@ -23,22 +23,16 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.transform;
 
-import javax.annotation.Resource;
-
+import edu.mayo.cts2.framework.core.url.UrlConstructor;
+import edu.mayo.cts2.framework.model.core.*;
+import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
+import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xerces.util.XMLChar;
 
-import edu.mayo.cts2.framework.core.url.UrlConstructor;
-import edu.mayo.cts2.framework.model.core.CodeSystemReference;
-import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
-import edu.mayo.cts2.framework.model.core.DescriptionInCodeSystem;
-import edu.mayo.cts2.framework.model.core.NameAndMeaningReference;
-import edu.mayo.cts2.framework.model.core.ScopedEntityName;
-import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
-import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestService;
-import edu.mayo.cts2.framework.plugin.service.bioportal.util.BioportalConstants;
+import javax.annotation.Resource;
 
 /**
  * The Class AbstractTransform.
@@ -118,8 +112,9 @@ public class AbstractTransform {
 
 		codeSystemReference.setContent(codeSystemName);
 		codeSystemReference.setHref(codeSystemPath);
-		try{
-		codeSystemReference.setUri(this.getIdentityConverter().getCodeSystemAbout(codeSystemName, BioportalConstants.DEFAULT_ONTOLOGY_ABOUT));
+
+        try{
+		    codeSystemReference.setUri(this.getIdentityConverter().getAbout(codeSystemName));
 		} catch (Exception e){
 			log.warn("Exception Getting CodeSystem URI: " + e.getMessage());
 		}
@@ -141,7 +136,7 @@ public class AbstractTransform {
 		
 		NameAndMeaningReference version = new NameAndMeaningReference();
 		version.setContent(codeSystemVersionName);
-		String versionString= this.getIdentityConverter().codeSystemVersionNameToVersion(codeSystemVersionName);
+		String versionString = this.getIdentityConverter().versionNameToVersion(codeSystemVersionName);
 		version.setHref(this.getUrlConstructor().createCodeSystemVersionUrl(codeSystemName, versionString));
 			
 		ref.setVersion(version);
