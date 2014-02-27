@@ -285,7 +285,8 @@ public class BioportalRestService extends BaseCacheObservable
 	 * @return the string
 	 */
 	private String buildGetViewVersionsByAcronymUrl(String acronym){
-		String url = "http://rest.bioontology.org/bioportal/views/versions/" + acronym;
+		//TODO: How do we filter out views?
+		String url = "http://data.bioontology.org/ontologies/" + acronym;
 		
 		return url;
 	}
