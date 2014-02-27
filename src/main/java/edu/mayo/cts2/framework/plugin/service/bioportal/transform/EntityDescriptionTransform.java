@@ -56,13 +56,13 @@ public class EntityDescriptionTransform extends AbstractTransform {
 	private static String INDIVIDUAL = "individual";
 	private static String PREDICATE = "property";
 	
-	private final static String ABOUT = "fullId";
+	private final static String ABOUT = "id";
 	private final static String NAME = "id";
-	private final static String LABEL = "label";
+	private final static String LABEL = "prefLabel";
 	private final static String TYPE = "type";
 	private final static String NODE = "success.data.classBean";
 	private final static String NODELIST = "success.data.page.contents.classBeanResultList.classBean";
-	private final static String SEARCH_NODELIST = "success.data.page.contents.searchResultList.searchBean";
+	private final static String SEARCH_NODELIST = "class.collection.class";
 	
 	private final static String SKOS_CONCEPT_NAME = "Concept";
 	private final static String SKOS_URI = "http://www.w3.org/2004/02/skos/core#";
@@ -394,8 +394,14 @@ public class EntityDescriptionTransform extends AbstractTransform {
 		int skipped = 0;
 
 		for(int i = start; i<nodeList.size() && i <= end; i++){
+            EntityDirectoryEntry entry = new EntityDirectoryEntry();
 
-		//
+            Node node = nodeList.get(i);
+            String about = TransformUtils.getNamedChildText(node, ABOUT);
+            String name = UriUtils.getLocalName(TransformUtils.getNamedChildText(node, NAME));
+            String label = TransformUtils.getNamedChildText(node, LABEL);
+
+            entry.setAbout(about);
 		}
 		
 		log.debug("transformEntityDirectoryFromSearch" + (System.currentTimeMillis() - time) + " ms outer");

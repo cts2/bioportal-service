@@ -78,13 +78,7 @@ public class IdentityConverter {
     }
 
     public String versionNameToVersion(String versionName){
-        AcronymAndSubmissionId id = this.versionNameToAcronymAndSubmissionId(versionName);
-
-        String xml = this.bioportalRestService.getOntologySubmissionByAcronymAndSubmissionId(
-                id.getAcronym(),
-                id.getSubmissionId());
-
-        return TransformUtils.getNamedChildText(BioportalRestUtils.getDocument(xml), VERSION);
+        return this.versionNameToAcronymAndSubmissionId(versionName).getSubmissionId();
     }
 
     public String getVersionAbout(String versionName) {

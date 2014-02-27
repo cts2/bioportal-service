@@ -47,7 +47,7 @@ public class ResolvedValueSetTransform extends AbstractOntologyTransform {
 	public List<ResolvedValueSetDirectoryEntry> transfrom(String xml) {
 		Document doc = BioportalRestUtils.getDocument(xml);
 
-		List<Node> nodeList = TransformUtils.getNodeListWithPath(doc, "success.data.list.ontologyBean");
+		List<Node> nodeList = TransformUtils.getNodeListWithPath(doc, ONTOLOGY_SUBMISSION_LIST, ONTOLOGY_SUBMISSION);
 	
 		List<ResolvedValueSetDirectoryEntry> returnList = new ArrayList<ResolvedValueSetDirectoryEntry>();
 		
@@ -80,8 +80,16 @@ public class ResolvedValueSetTransform extends AbstractOntologyTransform {
 	}
 	
 	public ResolvedValueSetHeader getHeader(Node node){
-		//TODO
-        return null;
+        ResolvedValueSetHeader header = new ResolvedValueSetHeader();
+		Node ontologyNode = TransformUtils.getNamedChild(node, ONTOLOGY);
+
+        header.addResolvedUsingCodeSystem(
+                this.getCodeSystemCurrentVersionReference(TransformUtils.getNamedChildText(ontologyNode, ACRONYM)));
+
+        header.setResolutionOf(
+                this.getValueSetCurrentVersionReference()
+
+        return header;
 	}
 
 }
