@@ -23,42 +23,6 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.rest;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.map.LRUMap;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.SerializationUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.mapdb.DB;
-import org.mapdb.DBMaker;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestTemplate;
-
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndFeed;
-
 import edu.mayo.cts2.framework.core.plugin.PluginConfigManager;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
@@ -68,6 +32,28 @@ import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
 import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
 import edu.mayo.cts2.framework.service.constant.ExternalCts2Constants;
 import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.map.LRUMap;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.http.*;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestTemplate;
+
+import javax.annotation.Resource;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * The Class BioportalRestService.
@@ -151,6 +137,10 @@ public class BioportalRestService extends BaseCacheObservable
 		
 		return db.getHashMap(BIOPORTAL_CACHE_NAME);
 	}
+
+    public String callUrl(String url){
+        return this.doCallBioportal(url);
+    }
 
 	public String getLatestOntologySubmissions(boolean includeViews){
 		String url = buildGetLatestOntologySubmissionsUrl(includeViews);
@@ -494,10 +484,15 @@ public class BioportalRestService extends BaseCacheObservable
 		headers.set( "Accept", "application/xml" );
 		
 		ResponseEntity<String> response;
-		
-		try {
+        URI uri;
+        try {
+            uri = new URI(url);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        try {
 			response = this.restTemplate.exchange(
-					url, 
+                    uri,
 					HttpMethod.GET, 
 					new HttpEntity<Void>(headers), 
 					String.class);

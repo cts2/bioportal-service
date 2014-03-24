@@ -33,7 +33,7 @@ public class BioportalRestAssociationQueryServiceTestIT {
 		def dir = service.getResourceSummaries(
 			[
 				getRestrictions:{ new  AssociationQueryServiceRestrictions(
-					codeSystemVersion: ModelUtils.nameOrUriFromName("SNOMEDCT_2011_01_31_UMLS-RELA"),
+					codeSystemVersion: ModelUtils.nameOrUriFromName("SNOMEDCT-999999"),
 					sourceEntity: ModelUtils.entityNameOrUriFromName(new ScopedEntityName(name:"29506000", namespace:"SNOMEDCT") ))},
 				getFilterComponent:{[] as Set}
 			] as AssociationQuery,null,new Page())

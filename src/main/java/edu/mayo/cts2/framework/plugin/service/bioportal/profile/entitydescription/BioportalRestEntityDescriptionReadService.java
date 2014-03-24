@@ -43,6 +43,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -96,7 +97,7 @@ public class BioportalRestEntityDescriptionReadService
                     versionId.getAcronym());
 		} else {
 			xml = this.entityResolver.getEntityXml(
-					id.getUri(),
+                    URLEncoder.encode(id.getUri()),
                     versionId.getAcronym());
         }
 

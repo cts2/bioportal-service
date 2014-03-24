@@ -48,7 +48,7 @@ import java.util.*;
  * @author <a href="mailto:kevin.peterson@mayo.edu">Kevin Peterson</a>
  */
 @Component
-public class EntityDescriptionTransform extends AbstractTransform {
+public class EntityDescriptionTransform extends AbstractOntologyTransform {
 	
 	private static Log log = LogFactory.getLog(EntityDescriptionTransform.class);
 
@@ -60,9 +60,8 @@ public class EntityDescriptionTransform extends AbstractTransform {
 	private final static String NAME = "id";
 	private final static String LABEL = "prefLabel";
 	private final static String TYPE = "type";
-	private final static String NODE = "success.data.classBean";
-	private final static String NODELIST = "success.data.page.contents.classBeanResultList.classBean";
-	private final static String SEARCH_NODELIST = "class.collection.class";
+	private final static String NODE = "class";
+	private final static String NODELIST = "class.collection.class";
 	
 	private final static String SKOS_CONCEPT_NAME = "Concept";
 	private final static String SKOS_URI = "http://www.w3.org/2004/02/skos/core#";
@@ -120,8 +119,8 @@ public class EntityDescriptionTransform extends AbstractTransform {
 		
 		entity.setDescribingCodeSystemVersion(this.buildCodeSystemVersionReference(codeSystemName, codeSystemVersionName));
 		
-		int children = this.getChildCount(node);
-		if(children != 0){
+		boolean children = this.hasChildren(node);
+		if(children){
 			entity.setChildren(
 				this.getUrlConstructor().createChildrenUrl(codeSystemName, version, name));
 		} else {
@@ -131,8 +130,9 @@ public class EntityDescriptionTransform extends AbstractTransform {
 		entity.setSubjectOf(this.getUrlConstructor().createSubjectOfUrl(codeSystemName, version, name));
 		
 		entity.addEntityType(this.getEntityType(type));
-		
-		entity.setParent(associationTransform.transformURIAndEntityNameForRelationships(xml, codeSystemName, codeSystemVersionName, PARENT_PREDICATE));
+
+        //TODO:
+		//entity.setParent(associationTransform.transformURIAndEntityNameForRelationships(xml, codeSystemName, codeSystemVersionName, PARENT_PREDICATE));
 
 		return entity;
 	}
@@ -241,55 +241,16 @@ public class EntityDescriptionTransform extends AbstractTransform {
 	 */
 	private Property[] transformEntityProperties(String codeSystemName, Node node) {
 		List<Property> returnList = new ArrayList<Property>();
-
-		List<Node> propertyNodes = TransformUtils.getNodeListWithPath(node,
-		"relations.entry");
-	
-		for(Node property : propertyNodes){
-			List<Node> entryList = TransformUtils.getNodeList(
-					property, "list");
-			
-			String predicateName = 
-				TransformUtils.getNamedChildText(property, "string");
-			
-				for(Node entry : entryList){ 
-					
-					for(Node propertyValue : 
-						TransformUtils.getNodeList(entry, "string")){
-						Property prop = new Property();
-											
-						String value = 
-							TransformUtils.getNodeText(propertyValue);
-						
-						PredicateReference predicateRef = new PredicateReference();
-						predicateRef.setName(predicateName);
-						predicateRef.setNamespace(codeSystemName);
-						predicateRef.setUri(PREDICATE_URI_PREFIX + predicateName);
-						
-						prop.setPredicate(predicateRef);
-						
-						StatementTarget target = new StatementTarget();
-						target.setLiteral(ModelUtils.createOpaqueData(value));
-						
-						prop.addValue(target);
-						
-						returnList.add(prop);
-					}
-				}
-			}
+        //TODO:
 
 		return Iterables.toArray(returnList, Property.class);
 	}
 	
-	public int getChildCount(Node node){
-		for(Node entryNode : TransformUtils.getNodeListWithPath(node, "relations.entry")){
-			String string = TransformUtils.getNamedChildText(entryNode, "string");
-			if(string.equals(CHILD_COUNT)){
-				return Integer.parseInt(TransformUtils.getNamedChildText(entryNode, "int"));
-			}
-		}
-		
-		return 0;
+	public boolean hasChildren(Node node){
+        String xml = this.getBioportalRestService().callUrl(this.getLinkHref(node, "children"));
+        Document doc = BioportalRestUtils.getDocument(xml);
+
+        return TransformUtils.getNamedChild(doc, "nilClass") == null;
 	}
 
 	/**
@@ -300,7 +261,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 	 * @param codeSystemVersionName the code system version name
 	 * @return the directory result
 	 */
-	public DirectoryResult<EntityDirectoryEntry>  transformEntityDirectory(
+	public DirectoryResult<EntityDirectoryEntry> transformEntityDirectory(
 			String xml, 
 			String codeSystemName,
 			String codeSystemVersionName) {
@@ -337,13 +298,11 @@ public class EntityDescriptionTransform extends AbstractTransform {
 			entryList.add(entry);
 			
 		}
-		
-		int totalCount = TransformUtils.getTotalCount(xml);
-		int page = TransformUtils.getPageNumber(xml);
-		int pageSize = TransformUtils.getPageSize(xml);
-		int numOfResultsOnPage = TransformUtils.getNumberOfResultsOnPage(xml);
-	
-		boolean atEnd = totalCount <= ( ( (page - 1) * pageSize) + numOfResultsOnPage);
+
+        int pageCount = TransformUtils.getPageCount(xml);
+        int page = TransformUtils.getPageNumber(xml);
+
+        boolean atEnd = (pageCount == page);
 		
 		return new DirectoryResult<EntityDirectoryEntry>(entryList, atEnd);
 	}
@@ -362,7 +321,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 	public String getUriFromSearch(String xml) {
 		Document doc = BioportalRestUtils.getDocument(xml);
 		
-		List<Node> nodeList = TransformUtils.getNodeListWithPath(doc, SEARCH_NODELIST);
+		List<Node> nodeList = TransformUtils.getNodeListWithPath(doc, NODELIST);
 		
 		return TransformUtils.getNamedChildText(nodeList.get(0), "conceptId");
 	}
@@ -388,7 +347,7 @@ public class EntityDescriptionTransform extends AbstractTransform {
 		
 		Document doc = BioportalRestUtils.getDocument(xml);
 		
-		List<Node> nodeList = TransformUtils.getNodeListWithPath(doc, SEARCH_NODELIST);
+		List<Node> nodeList = TransformUtils.getNodeListWithPath(doc, NODELIST);
 		log.debug("transformEntityDirectoryFromSearch" + (System.currentTimeMillis() - time2) + " ms inner");
 
 		int skipped = 0;
@@ -402,16 +361,26 @@ public class EntityDescriptionTransform extends AbstractTransform {
             String label = TransformUtils.getNamedChildText(node, LABEL);
 
             entry.setAbout(about);
+            entry.setResourceName(name);
+
+            String acronym = StringUtils.substringAfterLast(this.getLinkHref(node, "ontology"), "/");
+
+            CodeSystemVersionReference ref = this.getCodeSystemCurrentVersionReference(acronym);
+            entry.addKnownEntityDescription(
+                    this.createKnownEntityDescription(
+                            ref.getCodeSystem().getContent(),
+                            ref.getVersion().getContent(),
+                            label));
+
+            entryList.add(entry);
 		}
 		
 		log.debug("transformEntityDirectoryFromSearch" + (System.currentTimeMillis() - time) + " ms outer");
 		
-		int totalCount = TransformUtils.getTotalCount(xml) - skipped;
+		int pageCount = TransformUtils.getPageCount(xml);
 		int page = TransformUtils.getPageNumber(xml);
-		int pageSize = TransformUtils.getPageSize(xml);
-		int numOfResultsOnPage = TransformUtils.getNumberOfResultsOnPage(xml);
-	
-		boolean atEnd = totalCount <= ( ( (page - 1) * pageSize) + numOfResultsOnPage);
+
+		boolean atEnd = (pageCount == page);
 	
 		return new DirectoryResult<EntityDirectoryEntry>(entryList, atEnd);
 	}
@@ -449,4 +418,18 @@ public class EntityDescriptionTransform extends AbstractTransform {
 	public void setAssociationTransform(AssociationTransform associationTransform) {
 		this.associationTransform = associationTransform;
 	}
+
+    private String getLinkHref(Node node, String linkName) {
+        List<Node> links = TransformUtils.getNodeListWithPath(node, "linksCollection.links");
+
+        for(Node link : links) {
+            Node ontologyLink = TransformUtils.getNamedChild(link, linkName);
+
+            if(ontologyLink != null) {
+                return ontologyLink.getAttributes().getNamedItem("href").getNodeValue();
+            }
+        }
+
+        return null;
+    }
 }

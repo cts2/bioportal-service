@@ -29,7 +29,7 @@ public class BioportalRestEntiyDescriptionReadServiceTestIT {
 	public void testGetEntityCallBioportal(){
 		def name = new EntityDescriptionReadId(
 			new ScopedEntityName(name:"29506000", namespace:"SNOMEDCT"), 
-			ModelUtils.nameOrUriFromName("SNOMEDCT_2011_01_31_UMLS-RELA"))
+			ModelUtils.nameOrUriFromName("SNOMEDCT-99999"))
 		
 		def ed = service.read(name, null)
 		
@@ -41,7 +41,7 @@ public class BioportalRestEntiyDescriptionReadServiceTestIT {
 	public void testGetEntityValidXml(){
 		def name = new EntityDescriptionReadId(
 			new ScopedEntityName(name:"29506000", namespace:"SNOMEDCT"),
-			ModelUtils.nameOrUriFromName("SNOMEDCT_2011_01_31_UMLS-RELA"))
+			ModelUtils.nameOrUriFromName("SNOMEDCT-99999"))
 		
 		def ed = service.read(name, null)
 		
@@ -52,7 +52,7 @@ public class BioportalRestEntiyDescriptionReadServiceTestIT {
 	public void testGetEntityCallBioportalReadByUri(){
 		def name = new EntityDescriptionReadId(
 			"http://purl.bioontology.org/ontology/ICD10/D45",
-			ModelUtils.nameOrUriFromName("ICD10_1998_RRF"))
+			ModelUtils.nameOrUriFromName("ICD10-99999"))
 		
 		def ed = service.read(name, null)
 		
@@ -64,11 +64,11 @@ public class BioportalRestEntiyDescriptionReadServiceTestIT {
 	public void testGetEntityCallBioportalReadByUriGO(){
 		def name = new EntityDescriptionReadId(
 			"http://purl.obolibrary.org/obo/GO_0000003",
-			ModelUtils.nameOrUriFromName("NIGO_44724_OBO"))
+			ModelUtils.nameOrUriFromName("NIGO-99999"))
 		
 		def ed = service.read(name, null)
 		
-		assertEquals "0000003", ed.getChoiceValue().getEntityID().getName()
+		assertEquals "GO_0000003", ed.getChoiceValue().getEntityID().getName()
 		
 	}
 	
@@ -76,7 +76,7 @@ public class BioportalRestEntiyDescriptionReadServiceTestIT {
 	public void testGetEntityCallBioportalReadByUriNotFound(){
 		def name = new EntityDescriptionReadId(
 			"http://__INVALIDpurl.bioontology.org/ontology/__INVALID___",
-			ModelUtils.nameOrUriFromName("ICD10_1998_RRF"))
+			ModelUtils.nameOrUriFromName("ICD10-99999"))
 		
 		def ed = service.read(name, null)
 		
@@ -88,7 +88,7 @@ public class BioportalRestEntiyDescriptionReadServiceTestIT {
 	public void testGetEntityCallBioportalReadByUriWithDot(){
 		def name = new EntityDescriptionReadId(
 			"http://purl.bioontology.org/ontology/ICD10/G45.0",
-			ModelUtils.nameOrUriFromName("ICD10_1998_RRF"))
+			ModelUtils.nameOrUriFromName("ICD10-99999"))
 		
 		def ed = service.read(name, null)
 		
@@ -99,12 +99,12 @@ public class BioportalRestEntiyDescriptionReadServiceTestIT {
 	@Test
 	public void testGetEntityCallBioportalReadByUriWithNoChildren(){
 		def name = new EntityDescriptionReadId(
-			"http://purl.bioontology.org/ontology/ICD10/G45.0",
-			ModelUtils.nameOrUriFromName("ICD10_1998_RRF"))
+			"http://purl.bioontology.org/ontology/SNOMEDCT/29506000",
+			ModelUtils.nameOrUriFromName("SNOMEDCT-99999"))
 		
 		def ed = service.read(name, null)
 		
-		assertEquals "G45.0", ed.getChoiceValue().getEntityID().getName()
+		assertEquals "29506000", ed.getChoiceValue().getEntityID().getName()
 		
 		assertEquals "", ed.getChoiceValue().children
 		
@@ -114,7 +114,7 @@ public class BioportalRestEntiyDescriptionReadServiceTestIT {
 	public void testGetEntityCallBioportalReadByUriWithChildren(){
 		def name = new EntityDescriptionReadId(
 			"http://purl.bioontology.org/ontology/ICD10/G40-G47.9",
-			ModelUtils.nameOrUriFromName("ICD10_1998_RRF"))
+			ModelUtils.nameOrUriFromName("ICD10-99999"))
 		
 		def ed = service.read(name, null)
 		
@@ -128,7 +128,7 @@ public class BioportalRestEntiyDescriptionReadServiceTestIT {
 	public void testGetEntityCallBioportalReadByName(){
 		def name = new EntityDescriptionReadId(
 			new ScopedEntityName(name:"Disposition", namespace:"snap"),
-			ModelUtils.nameOrUriFromName("BFO_1-1_OWL"))
+			ModelUtils.nameOrUriFromName("BFO-99999"))
 		
 		def ed = service.read(name, null)
 		

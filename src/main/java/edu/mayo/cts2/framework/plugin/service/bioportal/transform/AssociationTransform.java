@@ -51,9 +51,9 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.rest.BioportalRestUtils;
  */
 @Component
 public class AssociationTransform extends AbstractTransform{
-	
-	private static final String NODE = "success.data.classBean";
-	
+
+	private static final String NODE = "class";
+
 	/**
 	 * Transform entities for relationship.
 	 *
@@ -305,7 +305,7 @@ public class AssociationTransform extends AbstractTransform{
 		
 		return entry;
 	}
-	
+
 	/**
 	 * Transform association for relationships.
 	 *
@@ -318,34 +318,15 @@ public class AssociationTransform extends AbstractTransform{
 			String xml,
 			String codeSystemName,
 			String codeSystemVersionName) {
-		
+
 		return this.transformAssociationForRelationships(
-				xml, 
-				codeSystemName, 
-				codeSystemVersionName, 
+				xml,
+				codeSystemName,
+				codeSystemVersionName,
 				AssociationDirectoryEntry.class);
 	}
 
-	/**
-	 * Transform association for graph.
-	 *
-	 * @param xml the xml
-	 * @param codeSystemName the code system name
-	 * @param codeSystemVersionName the code system version name
-	 * @return the list
-	 */
-	public List<GraphNode> transformAssociationForGraph(
-			String xml,
-			String codeSystemName,
-			String codeSystemVersionName) {
-		
-		return this.transformAssociationForRelationships(
-				xml, 
-				codeSystemName, 
-				codeSystemVersionName, 
-				GraphNode.class);
-	}
-	
+
 	/**
 	 * Transform association for relationships.
 	 *
@@ -364,10 +345,9 @@ public class AssociationTransform extends AbstractTransform{
 		List<T> entryList = new ArrayList<T>();
 
 		Document doc = BioportalRestUtils.getDocument(xml);
-		
-		Node subjectNode = TransformUtils.getNamedChildWithPath(doc,
-			"success.data.classBean");
-		
+
+		Node subjectNode = TransformUtils.getNamedChildWithPath(doc, NODE);
+
 		Node relationsNode = TransformUtils.getNamedChild(subjectNode,
 				"relations");
 
@@ -385,10 +365,10 @@ public class AssociationTransform extends AbstractTransform{
 				for (Node objectNode : objects) {
 
 					T entry = this.transformAssociationNode(
-							codeSystemName, 
-							codeSystemVersionName, 
-							subjectNode, 
-							predicateNode, 
+							codeSystemName,
+							codeSystemVersionName,
+							subjectNode,
+							predicateNode,
 							objectNode,
 							clazz);
 					if (StringUtils.isNotBlank(entry.getPredicate().getName()) && ! entry.getPredicate().getName().startsWith("[R]")) {
@@ -400,7 +380,7 @@ public class AssociationTransform extends AbstractTransform{
 
 		return entryList;
 	}
-	
+
 	/**
 	 * Gets the label.
 	 *

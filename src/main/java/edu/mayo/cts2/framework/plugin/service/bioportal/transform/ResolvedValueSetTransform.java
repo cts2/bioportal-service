@@ -86,9 +86,6 @@ public class ResolvedValueSetTransform extends AbstractOntologyTransform {
         header.addResolvedUsingCodeSystem(
                 this.getCodeSystemCurrentVersionReference(TransformUtils.getNamedChildText(ontologyNode, ACRONYM)));
 
-        header.setResolutionOf(
-                this.getValueSetCurrentVersionReference()
-
         return header;
 	}
 

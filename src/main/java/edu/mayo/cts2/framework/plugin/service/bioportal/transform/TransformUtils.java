@@ -46,11 +46,9 @@ import java.util.List;
  */
 public class TransformUtils {
 
-	private static final String COUNT = "success.data.page.numResultsTotal";
-	private static final String PAGE_NUMBER = "success.data.page.pageNum";
+	private static final String PAGE_COUNT = "class.pageCount";
+	private static final String PAGE_NUMBER = "class.page";
 	private static final String PAGE_SIZE = "success.data.page.pageSize";
-	private static final String NUMBER_OF_PAGES = "success.data.page.numPages";
-	private static final String NUMBER_OF_RESULTS_ON_PAGE = "success.data.page.numResultsPage";
 
 	/**
 	 * Instantiates a new transform utils.
@@ -108,9 +106,9 @@ public class TransformUtils {
 	 * @param xml the xml
 	 * @return the total count
 	 */
-	public static int getTotalCount(String xml) {
+	public static int getPageCount(String xml) {
 		return Integer.valueOf(TransformUtils.getNamedChildTextWithPath(
-				BioportalRestUtils.getDocument(xml), COUNT));
+				BioportalRestUtils.getDocument(xml), PAGE_COUNT));
 	}
 	
 	/**
@@ -133,23 +131,6 @@ public class TransformUtils {
 	public static int getPageSize(String xml) {
 		return Integer.valueOf(TransformUtils.getNamedChildTextWithPath(
 				BioportalRestUtils.getDocument(xml), PAGE_SIZE));
-	}
-	
-
-	/**
-	 * Gets the number of pages.
-	 *
-	 * @param xml the xml
-	 * @return the number of pages
-	 */
-	public static int getNumberOfPages(String xml) {
-		return Integer.valueOf(TransformUtils.getNamedChildTextWithPath(
-				BioportalRestUtils.getDocument(xml), NUMBER_OF_PAGES));
-	}
-	
-	public static int getNumberOfResultsOnPage(String xml) {
-		return Integer.valueOf(TransformUtils.getNamedChildTextWithPath(
-				BioportalRestUtils.getDocument(xml), NUMBER_OF_RESULTS_ON_PAGE));
 	}
 
 	/**
