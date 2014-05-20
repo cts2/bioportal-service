@@ -35,7 +35,6 @@ import com.google.common.collect.Iterables;
 
 import edu.mayo.cts2.framework.model.association.AssociationDirectoryEntry;
 import edu.mayo.cts2.framework.model.association.GraphNode;
-import edu.mayo.cts2.framework.model.core.EntitySynopsis;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
 import edu.mayo.cts2.framework.model.core.StatementTarget;
 import edu.mayo.cts2.framework.model.core.URIAndEntityName;
@@ -286,7 +285,7 @@ public class AssociationTransform extends AbstractTransform{
 					targetNode, "label");
 			
 			GraphNode graphNode = (GraphNode)entry;
-			graphNode.setNodeEntity(new EntitySynopsis());
+			graphNode.setNodeEntity(new URIAndEntityName());
 			graphNode.getNodeEntity().setDesignation(targetLabel);
 			
 			graphNode.getNodeEntity().setName(targetName);

@@ -27,7 +27,7 @@ import edu.mayo.cts2.framework.filter.match.*;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
+import edu.mayo.cts2.framework.model.core.ComponentReference;
 import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
@@ -83,13 +83,13 @@ public class BioportalRestResolvedValueSetQueryService
 	}
 	
 	@Override
-	public Set<ResolvablePropertyReference<ResolvedValueSetDirectoryEntry>> getSupportedSearchReferences(){
-		Set<ResolvablePropertyReference<ResolvedValueSetDirectoryEntry>> returnSet =
-			new HashSet<ResolvablePropertyReference<ResolvedValueSetDirectoryEntry>>();
+	public Set<ResolvableComponentReference<ResolvedValueSetDirectoryEntry>> getSupportedSearchReferences(){
+		Set<ResolvableComponentReference<ResolvedValueSetDirectoryEntry>> returnSet =
+			new HashSet<ResolvableComponentReference<ResolvedValueSetDirectoryEntry>>();
 	
-		ResolvablePropertyReference<ResolvedValueSetDirectoryEntry> refAbout = 
-			ResolvablePropertyReference.toPropertyReference(
-					StandardModelAttributeReference.ABOUT.getPropertyReference(), 
+		ResolvableComponentReference<ResolvedValueSetDirectoryEntry> refAbout = 
+			ResolvableComponentReference.toComponentReference(
+					StandardModelAttributeReference.ABOUT.getComponentReference(), 
 					new AttributeResolver<ResolvedValueSetDirectoryEntry>(){
 
 						public Iterable<String> resolveAttribute(
@@ -104,7 +104,7 @@ public class BioportalRestResolvedValueSetQueryService
 	}
 
 	@Override
-	public Set<? extends PropertyReference> getSupportedSortReferences() {
+	public Set<? extends ComponentReference> getSupportedSortReferences() {
 		return null;
 	}
 

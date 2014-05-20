@@ -12,6 +12,7 @@ import javax.xml.transform.stream.*
 import org.junit.Test
 import org.w3c.dom.*
 
+@Ignore
 class IdentityConverterTest {
 	
 	@Test

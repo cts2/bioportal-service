@@ -28,7 +28,7 @@ import java.util.Set;
 
 import edu.mayo.cts2.framework.filter.directory.AbstractRemovingDirectoryBuilder;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
-import edu.mayo.cts2.framework.filter.match.ResolvablePropertyReference;
+import edu.mayo.cts2.framework.filter.match.ResolvableComponentReference;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntrySummary;
 
 /**
@@ -59,10 +59,10 @@ public class CodeSystemVersionDirectoryBuilder extends AbstractRemovingDirectory
 	public CodeSystemVersionDirectoryBuilder(
 			List<CodeSystemVersionCatalogEntrySummary> allPossibleResults,
 			Set<ResolvableMatchAlgorithmReference> matchAlgorithmReferences,
-			Set<ResolvablePropertyReference<CodeSystemVersionCatalogEntrySummary>> resolvablePropertyReference) {
+			Set<ResolvableComponentReference<CodeSystemVersionCatalogEntrySummary>> resolvableComponentReference) {
 		super(allPossibleResults, 
 				matchAlgorithmReferences,
-				resolvablePropertyReference);
+				resolvableComponentReference);
 	}
 
 	/* (non-Javadoc)

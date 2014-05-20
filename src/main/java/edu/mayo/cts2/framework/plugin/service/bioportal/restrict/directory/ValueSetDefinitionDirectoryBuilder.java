@@ -28,7 +28,7 @@ import java.util.Set;
 
 import edu.mayo.cts2.framework.filter.directory.AbstractRemovingDirectoryBuilder;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
-import edu.mayo.cts2.framework.filter.match.ResolvablePropertyReference;
+import edu.mayo.cts2.framework.filter.match.ResolvableComponentReference;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ValueSetDefinitionDirectoryEntry;
 
 /**
@@ -58,11 +58,11 @@ public class ValueSetDefinitionDirectoryBuilder extends AbstractRemovingDirector
 	public ValueSetDefinitionDirectoryBuilder(
 			List<ValueSetDefinitionDirectoryEntry> allPossibleResults,
 			Set<ResolvableMatchAlgorithmReference> matchAlgorithmReferences,
-			Set<ResolvablePropertyReference<ValueSetDefinitionDirectoryEntry>> 
-			resolvablePropertyReference) {
+			Set<ResolvableComponentReference<ValueSetDefinitionDirectoryEntry>> 
+			resolvableComponentReference) {
 		super(allPossibleResults, 
 				matchAlgorithmReferences,
-				resolvablePropertyReference);
+				resolvableComponentReference);
 	}
 
 	/* (non-Javadoc)

@@ -23,9 +23,22 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.entitydescription;
 
+import java.net.URLEncoder;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Component;
+
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.core.*;
+import edu.mayo.cts2.framework.model.core.CodeSystemReference;
+import edu.mayo.cts2.framework.model.core.CodeSystemVersionReference;
+import edu.mayo.cts2.framework.model.core.EntityReference;
+import edu.mayo.cts2.framework.model.core.ScopedEntityName;
+import edu.mayo.cts2.framework.model.core.SortCriteria;
+import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityList;
@@ -39,12 +52,6 @@ import edu.mayo.cts2.framework.plugin.service.bioportal.transform.EntityDescript
 import edu.mayo.cts2.framework.plugin.service.bioportal.util.EntityResolver;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionReadService;
 import edu.mayo.cts2.framework.service.profile.entitydescription.name.EntityDescriptionReadId;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
-import java.net.URLEncoder;
-import java.util.List;
 
 /**
  * The Class BioportalRestEntityDescriptionReadService.
@@ -119,7 +126,7 @@ public class BioportalRestEntityDescriptionReadService
 	}
 
 	@Override
-	public EntityList readEntityDescriptions(
+	public List<EntityListEntry> readEntityDescriptions(
 			EntityNameOrURI entityId,
 			ResolvedReadContext readContext) {
 		throw new UnsupportedOperationException("Lookup by URI is currently not supported without specifying a CodeSystemVersion.");

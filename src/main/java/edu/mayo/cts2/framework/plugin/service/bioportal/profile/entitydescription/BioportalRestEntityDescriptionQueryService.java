@@ -38,15 +38,17 @@ import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
 import edu.mayo.cts2.framework.model.core.EntityReferenceList;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
+import edu.mayo.cts2.framework.model.core.ComponentReference;
 import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.core.VersionTagReference;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
+import edu.mayo.cts2.framework.model.entity.EntityListEntry;
 import edu.mayo.cts2.framework.model.entity.NamedEntityDescription;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURI;
 import edu.mayo.cts2.framework.model.service.core.EntityNameOrURIList;
+import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.service.core.Query;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
@@ -319,12 +321,12 @@ public class BioportalRestEntityDescriptionQueryService
 	}
 
 	@Override
-	public Set<PropertyReference> getSupportedSearchReferences() {
-		Set<PropertyReference> returnSet =
-			new HashSet<PropertyReference>();
+	public Set<ComponentReference> getSupportedSearchReferences() {
+		Set<ComponentReference> returnSet =
+			new HashSet<ComponentReference>();
 		
 		returnSet.add(
-				StandardModelAttributeReference.RESOURCE_SYNOPSIS.getPropertyReference());
+				StandardModelAttributeReference.RESOURCE_SYNOPSIS.getComponentReference());
 
 		returnSet.add(BioportalRestService.DEFINITIONS);
 		returnSet.add(BioportalRestService.PROPERTIES);
@@ -525,7 +527,8 @@ public class BioportalRestEntityDescriptionQueryService
 				throw new UnsupportedOperationException("Only CHILDREN queries supported.");
 			}
 			
-			String codeSystemVersionName = restrictions.getCodeSystemVersion().getName();
+			// TODO: Check this - DEEPAK
+			String codeSystemVersionName = restrictions.getHierarchyRestriction().getEntity().getEntityName().getName();
 			
 			String codeSystemName = this.identityConverter.versionNameToAcronymAndSubmissionId(codeSystemVersionName).getAcronym();
 			
@@ -537,18 +540,35 @@ public class BioportalRestEntityDescriptionQueryService
 					query.getFilterComponent(), 
 					page);
 		
-		} else if(restrictions != null && restrictions.getCodeSystemVersion() != null){
+		} else if(restrictions != null && restrictions.getCodeSystemVersions() != null){
 			
-			String codeSystemVersionName = restrictions.getCodeSystemVersion().getName();
+			DirectoryResult<EntityDirectoryEntry> results = null;
+			
+			// TODO : Check for correctness - DEEPAK
+			for (NameOrURI codeSystemVersion : restrictions.getCodeSystemVersions())
+			{
+				String codeSystemVersionName = codeSystemVersion.getName();
 
-            String codeSystemName = this.identityConverter.versionNameToAcronymAndSubmissionId(codeSystemVersionName).getAcronym();
-			
-			return this.getEntityDescriptionsOfCodeSystemVersion(
+				String codeSystemName = this.identityConverter.versionNameToAcronymAndSubmissionId(codeSystemVersionName).getAcronym();
+            
+				DirectoryResult<EntityDirectoryEntry> temp =  this.getEntityDescriptionsOfCodeSystemVersion(
 					query.getQuery(), 
 					query.getFilterComponent(), 
 					page,
 					codeSystemName,
 					codeSystemVersionName);
+				
+				if (temp == null)
+					continue;
+				
+				if (results == null)
+					results = temp;
+				else
+					results.getEntries().addAll(temp.getEntries());
+			}
+			
+			return results;
+			
 		} else {
 			return this.getAllEntityDescriptions(
 					query.getQuery(), 
@@ -561,37 +581,13 @@ public class BioportalRestEntityDescriptionQueryService
 	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getResourceList(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object, edu.mayo.cts2.framework.service.command.Page)
 	 */
 	@Override
-	public DirectoryResult<EntityDescription> getResourceList(
+	public DirectoryResult<EntityListEntry> getResourceList(
 			EntityDescriptionQuery query, 
 			SortCriteria sort,
 			Page page) {
 		throw new UnsupportedOperationException();
 	}
 	
-	
-
-	@Override
-	public boolean isEntityInSet(EntityNameOrURI entity, Query query,
-			Set<ResolvedFilter> filterComponent,
-			EntityDescriptionQuery restrictions, ResolvedReadContext readContext) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public EntityReferenceList resolveAsEntityReferenceList(Query query,
-			Set<ResolvedFilter> filterComponent,
-			EntityDescriptionQuery restrictions, ResolvedReadContext readContext) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public EntityNameOrURIList intersectEntityList(
-			Set<EntityNameOrURI> entities, Query query,
-			Set<ResolvedFilter> filterComponent,
-			EntityDescriptionQuery restrictions, ResolvedReadContext readContext) {
-		throw new UnsupportedOperationException();
-	}
-
 	/* (non-Javadoc)
 	 * @see edu.mayo.cts2.framework.service.profile.QueryService#count(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object)
 	 */
@@ -607,7 +603,7 @@ public class BioportalRestEntityDescriptionQueryService
 	}
 
 	@Override
-	public Set<? extends PropertyReference> getSupportedSortReferences() {
+	public Set<? extends ComponentReference> getSupportedSortReferences() {
 		return null;
 	}
 
@@ -615,5 +611,26 @@ public class BioportalRestEntityDescriptionQueryService
 	public Set<PredicateReference> getKnownProperties() {
 		return null;
 	}
+
+	@Override
+	public boolean isEntityInSet(EntityNameOrURI entity,
+			EntityDescriptionQuery restrictions, ResolvedReadContext readContext) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public EntityReferenceList resolveAsEntityReferenceList(
+			EntityDescriptionQuery restrictions, ResolvedReadContext readContext) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public EntityNameOrURIList intersectEntityList(
+			Set<EntityNameOrURI> entities, EntityDescriptionQuery restrictions,
+			ResolvedReadContext readContext) {
+		throw new UnsupportedOperationException();
+	}
+	
+	/********************************************/
 	
 }

@@ -31,7 +31,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 import edu.mayo.cts2.framework.filter.directory.AbstractRemovingDirectoryBuilder;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
-import edu.mayo.cts2.framework.filter.match.ResolvablePropertyReference;
+import edu.mayo.cts2.framework.filter.match.ResolvableComponentReference;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntrySummary;
@@ -77,10 +77,10 @@ public class ValueSetDirectoryBuilder extends AbstractRemovingDirectoryBuilder<V
 			List<ValueSetCatalogEntry> allPossibleResults,
 			ValueSetCodeSystemExtractor valueSetCodeSystemExtractor,
 			Set<ResolvableMatchAlgorithmReference> matchAlgorithmReferences,
-			Set<ResolvablePropertyReference<ValueSetCatalogEntry>> resolvablePropertyReference) {
+			Set<ResolvableComponentReference<ValueSetCatalogEntry>> resolvableComponentReference) {
 		super(allPossibleResults, 
 				matchAlgorithmReferences,
-				resolvablePropertyReference);
+				resolvableComponentReference);
 		this.valueSetTransform = valueSetTransform;
 		this.valueSetCodeSystemExtractor = valueSetCodeSystemExtractor;
 	}

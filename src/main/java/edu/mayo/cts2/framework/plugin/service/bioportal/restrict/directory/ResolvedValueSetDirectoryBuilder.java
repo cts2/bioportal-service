@@ -31,7 +31,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 import edu.mayo.cts2.framework.filter.directory.AbstractRemovingDirectoryBuilder;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
-import edu.mayo.cts2.framework.filter.match.ResolvablePropertyReference;
+import edu.mayo.cts2.framework.filter.match.ResolvableComponentReference;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
 import edu.mayo.cts2.framework.service.command.restriction.ResolvedValueSetQueryServiceRestrictions;
@@ -65,10 +65,10 @@ public class ResolvedValueSetDirectoryBuilder
 	public ResolvedValueSetDirectoryBuilder(
 			List<ResolvedValueSetDirectoryEntry> allPossibleResults,
 			Set<ResolvableMatchAlgorithmReference> matchAlgorithmReferences,
-			Set<ResolvablePropertyReference<ResolvedValueSetDirectoryEntry>> resolvablePropertyReference) {
+			Set<ResolvableComponentReference<ResolvedValueSetDirectoryEntry>> resolvableComponentReference) {
 		super(allPossibleResults, 
 				matchAlgorithmReferences,
-				resolvablePropertyReference);
+				resolvableComponentReference);
 	}
 	
 	public ResolvedValueSetDirectoryBuilder restrict(ResolvedValueSetQueryServiceRestrictions restrictions){

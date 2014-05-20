@@ -39,9 +39,11 @@ import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueS
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResult;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ValueSetDefinitionResolutionService;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.name.ValueSetDefinitionReadId;
+
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -61,7 +63,7 @@ public class BioportalRestValueSetDefinitionResolutionService extends AbstractBi
 	private BioportalRestResolvedValueSetResolutionService bioportalRestResolvedValueSetResolutionService;
 	
 	@Override
-	public Set<? extends PropertyReference> getSupportedSortReferences() {
+	public Set<? extends ComponentReference> getSupportedSortReferences() {
 		return null;
 	}
 
@@ -81,54 +83,58 @@ public class BioportalRestValueSetDefinitionResolutionService extends AbstractBi
 	}
 
 	@Override
-	public Set<? extends PropertyReference> getSupportedSearchReferences() {
-		HashSet<PropertyReference> returnSet = new HashSet<PropertyReference>();
+	public Set<? extends ComponentReference> getSupportedSearchReferences() {
+		HashSet<ComponentReference> returnSet = new HashSet<ComponentReference>();
 
-		returnSet.add(StandardModelAttributeReference.RESOURCE_SYNOPSIS.getPropertyReference());
+		returnSet.add(StandardModelAttributeReference.RESOURCE_SYNOPSIS.getComponentReference());
 		
 		return returnSet;
 	}
 
 	@Override
-	public ResolvedValueSetResult<EntitySynopsis> resolveDefinition(
-			ValueSetDefinitionReadId definition, 
-			Set<NameOrURI> codeSystemVersions, 
-			NameOrURI tag,
-			ResolvedValueSetResolutionEntityQuery query, 
-			SortCriteria sort,
-			ResolvedReadContext readContext, 
+	public ResolvedValueSetResult<URIAndEntityName> resolveDefinition(
+			ValueSetDefinitionReadId definitionId,
+			Set<NameOrURI> codeSystemVersions, NameOrURI tag,
+			SortCriteria sortCriteria, ResolvedReadContext readContext,
 			Page page) {
 
-		String valueSetDefinitionName = definition.getName();
+		String valueSetDefinitionName = definitionId.getName();
 		
 		IdentityConverter.AcronymAndSubmissionId localId =
 			this.identityConverter.versionNameToAcronymAndSubmissionId(valueSetDefinitionName);
 		
 		ResolvedValueSetReadId id = new ResolvedValueSetReadId(
 				localId.getSubmissionId(),
-				definition.getValueSet(), 
-				definition);
+				definitionId.getValueSet(), 
+				definitionId);
 		
 		return bioportalRestResolvedValueSetResolutionService.
 			getResolution(
-					id, 
-					query != null ? query.getFilterComponent() : null,
+					id,
+					// TODO: Check for correctness - DEEPAK
+					//query != null ? query.getFilterComponent() : null,
+					null,
 					page);
 	}
 
+
+
 	@Override
 	public ResolvedValueSet resolveDefinitionAsCompleteSet(
-			ValueSetDefinitionReadId arg0, Set<NameOrURI> arg1, NameOrURI arg2,
-			ResolvedReadContext arg3) {
+			ValueSetDefinitionReadId definitionId,
+			Set<NameOrURI> codeSystemVersions, NameOrURI tag,
+			SortCriteria sortCriteria, ResolvedReadContext readContext) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public ResolvedValueSetResult<EntityDirectoryEntry> resolveDefinitionAsEntityDirectory(
-			ValueSetDefinitionReadId arg0, Set<NameOrURI> arg1, NameOrURI arg2,
-			ResolvedValueSetResolutionEntityQuery arg3, SortCriteria arg4,
-			ResolvedReadContext arg5, Page arg6) {
+			ValueSetDefinitionReadId definitionId,
+			Set<NameOrURI> codeSystemVersions, NameOrURI tag,
+			ResolvedValueSetResolutionEntityQuery query,
+			SortCriteria sortCriteria, ResolvedReadContext readContext,
+			Page page) {
 		// TODO Auto-generated method stub
 		return null;
 	}

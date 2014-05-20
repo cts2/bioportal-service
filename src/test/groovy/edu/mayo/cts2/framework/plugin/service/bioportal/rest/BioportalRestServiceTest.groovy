@@ -7,7 +7,7 @@ import org.junit.Test
 
 import edu.mayo.cts2.framework.core.config.ConfigConstants
 import edu.mayo.cts2.framework.model.command.ResolvedFilter
-import edu.mayo.cts2.framework.model.core.PropertyReference
+import edu.mayo.cts2.framework.model.core.ComponentReference
 import edu.mayo.cts2.framework.model.core.URIAndEntityName
 import groovy.mock.interceptor.*
 
@@ -23,8 +23,8 @@ class BioportalRestServiceTest {
 	@Test
 	void testGetBioportalQueryStringForFilterDefinitions(){
 		
-		def uriAndName = new PropertyReference(
-				referenceTarget: new URIAndEntityName(
+		def uriAndName = new ComponentReference(
+				propertyReference: new URIAndEntityName(
 					name:BioportalRestService.DEFINITIONS_NAME,
 					uri:BioportalRestService.DEFINITIONS_URI))
 		
@@ -39,8 +39,8 @@ class BioportalRestServiceTest {
 	@Test
 	void testGetBioportalQueryStringForFilterProperties(){
 		
-		def uriAndName = new PropertyReference(
-				referenceTarget: new URIAndEntityName(
+		def uriAndName = new ComponentReference(
+				propertyReference: new URIAndEntityName(
 					name:BioportalRestService.PROPERTIES_NAME,
 					uri:BioportalRestService.PROPERTIES_URI))
 		

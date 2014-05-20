@@ -76,13 +76,13 @@ public class BioportalRestAssociationQueryService
 	private EntityResolver entityResolver;
 
 	@Override
-	public Set<ResolvablePropertyReference<EntityDirectoryEntry>> getSupportedSearchReferences() {
-		Set<ResolvablePropertyReference<EntityDirectoryEntry>> returnSet =
-			new HashSet<ResolvablePropertyReference<EntityDirectoryEntry>>();
+	public Set<ResolvableComponentReference<EntityDirectoryEntry>> getSupportedSearchReferences() {
+		Set<ResolvableComponentReference<EntityDirectoryEntry>> returnSet =
+			new HashSet<ResolvableComponentReference<EntityDirectoryEntry>>();
 		
-		ResolvablePropertyReference<EntityDirectoryEntry> refName = 
-				ResolvablePropertyReference.toPropertyReference(
-					StandardModelAttributeReference.RESOURCE_NAME.getPropertyReference(), 
+		ResolvableComponentReference<EntityDirectoryEntry> refName = 
+				ResolvableComponentReference.toComponentReference(
+					StandardModelAttributeReference.RESOURCE_NAME.getComponentReference(), 
 					new AttributeResolver<EntityDirectoryEntry>(){
 
 						public Iterable<String> resolveAttribute(
@@ -91,9 +91,9 @@ public class BioportalRestAssociationQueryService
 						}
 					});
 		
-		ResolvablePropertyReference<EntityDirectoryEntry> refAbout = 
-				ResolvablePropertyReference.toPropertyReference(
-					StandardModelAttributeReference.ABOUT.getPropertyReference(), 
+		ResolvableComponentReference<EntityDirectoryEntry> refAbout = 
+				ResolvableComponentReference.toComponentReference(
+					StandardModelAttributeReference.ABOUT.getComponentReference(), 
 					new AttributeResolver<EntityDirectoryEntry>(){
 
 						public Iterable<String> resolveAttribute(
@@ -206,7 +206,7 @@ public class BioportalRestAssociationQueryService
 	}
 
 	@Override
-	public Set<? extends PropertyReference> getSupportedSortReferences() {
+	public Set<? extends ComponentReference> getSupportedSortReferences() {
 		return null;
 	}
 

@@ -27,11 +27,12 @@ import edu.mayo.cts2.framework.filter.match.*;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.core.PredicateReference;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
+import edu.mayo.cts2.framework.model.core.ComponentReference;
 import edu.mayo.cts2.framework.model.core.SortCriteria;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntry;
+import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntryListEntry;
 import edu.mayo.cts2.framework.model.valueset.ValueSetCatalogEntrySummary;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
 import edu.mayo.cts2.framework.plugin.service.bioportal.profile.AbstractBioportalRestService;
@@ -43,10 +44,12 @@ import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetQuery;
 import edu.mayo.cts2.framework.service.profile.valueset.ValueSetQueryService;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -73,7 +76,7 @@ public class BioportalRestValueSetQueryService
 	private IdentityConverter identityConverter;
 
 	/* (non-Javadoc)
-	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getPropertyReference(java.lang.String)
+	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getComponentReference(java.lang.String)
 	 */
 	public PredicateReference getPredicateReference(String nameOrUri) {
 		// TODO Auto-generated method stub
@@ -117,13 +120,13 @@ public class BioportalRestValueSetQueryService
 		return returnSet;
 	}
 	
-	public Set<ResolvablePropertyReference<ValueSetCatalogEntry>> getSupportedSearchReferences(){
-		Set<ResolvablePropertyReference<ValueSetCatalogEntry>> returnSet =
-			new HashSet<ResolvablePropertyReference<ValueSetCatalogEntry>>();
+	public Set<ResolvableComponentReference<ValueSetCatalogEntry>> getSupportedSearchReferences(){
+		Set<ResolvableComponentReference<ValueSetCatalogEntry>> returnSet =
+			new HashSet<ResolvableComponentReference<ValueSetCatalogEntry>>();
 		
-		ResolvablePropertyReference<ValueSetCatalogEntry> refName = 
-			ResolvablePropertyReference.toPropertyReference(
-					StandardModelAttributeReference.RESOURCE_NAME.getPropertyReference(), 
+		ResolvableComponentReference<ValueSetCatalogEntry> refName = 
+			ResolvableComponentReference.toComponentReference(
+					StandardModelAttributeReference.RESOURCE_NAME.getComponentReference(), 
 					new AttributeResolver<ValueSetCatalogEntry>(){
 
 						public Iterable<String> resolveAttribute(
@@ -133,9 +136,9 @@ public class BioportalRestValueSetQueryService
 						}
 					});
 		
-		ResolvablePropertyReference<ValueSetCatalogEntry> refAbout = 
-			ResolvablePropertyReference.toPropertyReference(
-					StandardModelAttributeReference.ABOUT.getPropertyReference(), 
+		ResolvableComponentReference<ValueSetCatalogEntry> refAbout = 
+			ResolvableComponentReference.toComponentReference(
+					StandardModelAttributeReference.ABOUT.getComponentReference(), 
 					new AttributeResolver<ValueSetCatalogEntry>(){
 
 						public Iterable<String> resolveAttribute(
@@ -145,9 +148,9 @@ public class BioportalRestValueSetQueryService
 						}
 					});
 		
-		ResolvablePropertyReference<ValueSetCatalogEntry> refSynopsis = 
-			ResolvablePropertyReference.toPropertyReference(
-					StandardModelAttributeReference.RESOURCE_SYNOPSIS.getPropertyReference(), 
+		ResolvableComponentReference<ValueSetCatalogEntry> refSynopsis = 
+			ResolvableComponentReference.toComponentReference(
+					StandardModelAttributeReference.RESOURCE_SYNOPSIS.getComponentReference(), 
 					new AttributeResolver<ValueSetCatalogEntry>(){
 
 						public Iterable<String> resolveAttribute(
@@ -157,9 +160,9 @@ public class BioportalRestValueSetQueryService
 						}
 					});
 		
-		ResolvablePropertyReference<ValueSetCatalogEntry> keyword = 
-			ResolvablePropertyReference.toPropertyReference(
-					StandardModelAttributeReference.KEYWORD.getPropertyReference(), 
+		ResolvableComponentReference<ValueSetCatalogEntry> keyword = 
+			ResolvableComponentReference.toComponentReference(
+					StandardModelAttributeReference.KEYWORD.getComponentReference(), 
 					new AttributeResolver<ValueSetCatalogEntry>(){
 
 						public Iterable<String> resolveAttribute(
@@ -226,7 +229,7 @@ public class BioportalRestValueSetQueryService
 	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getResourceList(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object, edu.mayo.cts2.framework.service.command.Page)
 	 */
 	@Override
-	public DirectoryResult<ValueSetCatalogEntry> getResourceList(
+	public DirectoryResult<ValueSetCatalogEntryListEntry> getResourceList(
 			ValueSetQuery query, 
 			SortCriteria sort,
 			Page page) {
@@ -257,7 +260,7 @@ public class BioportalRestValueSetQueryService
 	}
 
 	@Override
-	public Set<? extends PropertyReference> getSupportedSortReferences() {
+	public Set<? extends ComponentReference> getSupportedSortReferences() {
 		return null;
 	}
 

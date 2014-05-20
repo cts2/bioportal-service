@@ -23,10 +23,23 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.resolvedvalueset;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Component;
+
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.core.*;
+import edu.mayo.cts2.framework.model.core.ComponentReference;
+import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
+import edu.mayo.cts2.framework.model.core.PredicateReference;
+import edu.mayo.cts2.framework.model.core.SortCriteria;
+import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
@@ -48,13 +61,6 @@ import edu.mayo.cts2.framework.service.profile.resolvedvalueset.ResolvedValueSet
 import edu.mayo.cts2.framework.service.profile.resolvedvalueset.name.ResolvedValueSetReadId;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResolutionEntityQuery;
 import edu.mayo.cts2.framework.service.profile.valuesetdefinition.ResolvedValueSetResult;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * The Class BioportalRdfResolvedValueSetResolutionService.
@@ -78,7 +84,7 @@ public class BioportalRestResolvedValueSetResolutionService extends AbstractBiop
 	private BioportalRestEntityDescriptionQueryService bioportalRestEntityDescriptionQueryService;
 	
 	@Override
-	public ResolvedValueSetResult<EntitySynopsis> getResolution(
+	public ResolvedValueSetResult<URIAndEntityName> getResolution(
 			ResolvedValueSetReadId identifier,
 			final Set<ResolvedFilter> filterComponent, 
 			Page page) {
@@ -118,7 +124,8 @@ public class BioportalRestResolvedValueSetResolutionService extends AbstractBiop
 				EntityDescriptionQueryServiceRestrictions restrictions = 
 						new EntityDescriptionQueryServiceRestrictions();
 				
-				restrictions.setCodeSystemVersion(
+				// TODO: Test the following statement (DEEPAK)
+				restrictions.getCodeSystemVersions().add(
 						ModelUtils.nameOrUriFromName(valueSetDefinitionName));
 				
 				return restrictions;
@@ -159,17 +166,17 @@ public class BioportalRestResolvedValueSetResolutionService extends AbstractBiop
 		}	
 	}
 
-	protected ResolvedValueSetResult<EntitySynopsis> toResolvedValueSetResult(DirectoryResult<EntityDirectoryEntry> entities, ResolvedValueSetHeader header){
-		List<EntitySynopsis> list = new ArrayList<EntitySynopsis>();
+	protected ResolvedValueSetResult<URIAndEntityName> toResolvedValueSetResult(DirectoryResult<EntityDirectoryEntry> entities, ResolvedValueSetHeader header){
+		List<URIAndEntityName> list = new ArrayList<URIAndEntityName>();
 		for(EntityDirectoryEntry entry : entities.getEntries()){
 			list.add(this.entityDirectoryEntryToEntitySynopsis(entry));
 		}
 
-		return new ResolvedValueSetResult<EntitySynopsis>(header, list, entities.isAtEnd());
+		return new ResolvedValueSetResult<URIAndEntityName>(header, list, entities.isAtEnd());
 	}
 	
-	protected EntitySynopsis entityDirectoryEntryToEntitySynopsis(EntityDirectoryEntry entry){
-		EntitySynopsis synopsis = new EntitySynopsis();
+	protected URIAndEntityName entityDirectoryEntryToEntitySynopsis(EntityDirectoryEntry entry){
+		URIAndEntityName synopsis = new URIAndEntityName();
 		synopsis.setHref(entry.getHref());
 		synopsis.setDesignation(entry.getKnownEntityDescription(0).getDesignation());
 		synopsis.setName(entry.getName().getName());
@@ -186,7 +193,7 @@ public class BioportalRestResolvedValueSetResolutionService extends AbstractBiop
 	}
 
 	@Override
-	public Set<? extends PropertyReference> getSupportedSortReferences() {
+	public Set<? extends ComponentReference> getSupportedSortReferences() {
 		return null;
 	}
 
@@ -206,10 +213,10 @@ public class BioportalRestResolvedValueSetResolutionService extends AbstractBiop
 	}
 
 	@Override
-	public Set<? extends PropertyReference> getSupportedSearchReferences() {
-		HashSet<PropertyReference> returnSet = new HashSet<PropertyReference>();
+	public Set<? extends ComponentReference> getSupportedSearchReferences() {
+		HashSet<ComponentReference> returnSet = new HashSet<ComponentReference>();
 
-		returnSet.add(StandardModelAttributeReference.RESOURCE_SYNOPSIS.getPropertyReference());
+		returnSet.add(StandardModelAttributeReference.RESOURCE_SYNOPSIS.getComponentReference());
 		
 		return returnSet;
 	}

@@ -23,15 +23,17 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.rest;
 
-import edu.mayo.cts2.framework.core.plugin.PluginConfigManager;
-import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.core.PropertyReference;
-import edu.mayo.cts2.framework.model.core.URIAndEntityName;
-import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
-import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
-import edu.mayo.cts2.framework.service.constant.ExternalCts2Constants;
-import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.LRUMap;
 import org.apache.commons.lang.StringUtils;
@@ -41,19 +43,22 @@ import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.Resource;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
+import edu.mayo.cts2.framework.core.plugin.PluginConfigManager;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.core.ComponentReference;
+import edu.mayo.cts2.framework.model.core.URIAndEntityName;
+import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
+import edu.mayo.cts2.framework.service.constant.ExternalCts2Constants;
+import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 
 /**
  * The Class BioportalRestService.
@@ -105,22 +110,20 @@ public class BioportalRestService extends BaseCacheObservable
 	
 	public static final String PROPERTIES_NAME = "properties";
 	public static final String PROPERTIES_URI = ExternalCts2Constants.buildModelAttributeUri(PROPERTIES_NAME);
-	public static final PropertyReference PROPERTIES = new PropertyReference();
+	public static final ComponentReference PROPERTIES = new ComponentReference();
 	static {
-		PROPERTIES.setReferenceType(TargetReferenceType.PROPERTY);
-		PROPERTIES.setReferenceTarget(new URIAndEntityName());
-		PROPERTIES.getReferenceTarget().setName(PROPERTIES_NAME);
-		PROPERTIES.getReferenceTarget().setUri(PROPERTIES_URI);
+		PROPERTIES.setPropertyReference(new URIAndEntityName());
+		PROPERTIES.getPropertyReference().setName(PROPERTIES_NAME);
+		PROPERTIES.getPropertyReference().setUri(PROPERTIES_URI);
 	};
 	
 	public static final String DEFINITIONS_NAME = "definitions";
 	public static final String DEFINITIONS_URI = ExternalCts2Constants.buildModelAttributeUri(DEFINITIONS_NAME);
-	public static final PropertyReference DEFINITIONS = new PropertyReference();
+	public static final ComponentReference DEFINITIONS = new ComponentReference();
 	static {
-		DEFINITIONS.setReferenceType(TargetReferenceType.PROPERTY);
-		DEFINITIONS.setReferenceTarget(new URIAndEntityName());
-		DEFINITIONS.getReferenceTarget().setName(DEFINITIONS_NAME);
-		DEFINITIONS.getReferenceTarget().setUri(DEFINITIONS_URI);
+		DEFINITIONS.setPropertyReference(new URIAndEntityName());
+		DEFINITIONS.getPropertyReference().setName(DEFINITIONS_NAME);
+		DEFINITIONS.getPropertyReference().setUri(DEFINITIONS_URI);
 	};
 	
 	@Override
@@ -384,7 +387,7 @@ public class BioportalRestService extends BaseCacheObservable
 	protected String getBioportalQueryStringForFilter(ResolvedFilter filter) {
 		StringBuffer sb = new StringBuffer();
 
-		URIAndEntityName target = filter.getPropertyReference().getReferenceTarget();
+		URIAndEntityName target = filter.getComponentReference().getPropertyReference();
 		
 		if(StringUtils.equals(target.getName(),DEFINITIONS_NAME)){
 			sb.append("&require_definition=true");

@@ -23,12 +23,33 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.codesystemversion;
 
-import edu.mayo.cts2.framework.filter.match.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
+import edu.mayo.cts2.framework.filter.match.AttributeResolver;
+import edu.mayo.cts2.framework.filter.match.ContainsMatcher;
+import edu.mayo.cts2.framework.filter.match.ExactMatcher;
+import edu.mayo.cts2.framework.filter.match.ResolvableComponentReference;
+import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntry;
+import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntryListEntry;
 import edu.mayo.cts2.framework.model.codesystemversion.CodeSystemVersionCatalogEntrySummary;
 import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.core.*;
-import edu.mayo.cts2.framework.model.core.types.TargetReferenceType;
+import edu.mayo.cts2.framework.model.core.ComponentReference;
+import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
+import edu.mayo.cts2.framework.model.core.PredicateReference;
+import edu.mayo.cts2.framework.model.core.Property;
+import edu.mayo.cts2.framework.model.core.SortCriteria;
+import edu.mayo.cts2.framework.model.core.StatementTarget;
+import edu.mayo.cts2.framework.model.core.URIAndEntityName;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
 import edu.mayo.cts2.framework.model.util.ModelUtils;
 import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
@@ -42,11 +63,6 @@ import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionQuery;
 import edu.mayo.cts2.framework.service.profile.codesystemversion.CodeSystemVersionQueryService;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
-import java.util.*;
 
 /**
  * The Class BioportalRestCodeSystemVersionQueryService.
@@ -87,12 +103,12 @@ public class BioportalRestCodeSystemVersionQueryService
 	}
 	
 	//TODO: These are not taken into account
-	private Set<ResolvablePropertyReference<CodeSystemVersionCatalogEntry>> getSupportedProperties(){
-		Set<ResolvablePropertyReference<CodeSystemVersionCatalogEntry>> returnSet =
-			new HashSet<ResolvablePropertyReference<CodeSystemVersionCatalogEntry>>();
+	private Set<ResolvableComponentReference<CodeSystemVersionCatalogEntry>> getSupportedProperties(){
+		Set<ResolvableComponentReference<CodeSystemVersionCatalogEntry>> returnSet =
+			new HashSet<ResolvableComponentReference<CodeSystemVersionCatalogEntry>>();
 		
-		ResolvablePropertyReference<CodeSystemVersionCatalogEntry> ref = 
-			new ResolvablePropertyReference<CodeSystemVersionCatalogEntry>(
+		ResolvableComponentReference<CodeSystemVersionCatalogEntry> ref = 
+			new ResolvableComponentReference<CodeSystemVersionCatalogEntry>(
 					
 					new AttributeResolver<CodeSystemVersionCatalogEntry>(){
 
@@ -120,22 +136,20 @@ public class BioportalRestCodeSystemVersionQueryService
 		uriAndName.setUri(BioportalConstants.BIOPORTAL_ONTOLOGY_ID_ABOUT);
 		uriAndName.setNamespace(BioportalConstants.BIOPORTAL_NAMESPACE_NAME);
 		
-		ref.setReferenceTarget(uriAndName);
-		ref.setReferenceType(TargetReferenceType.PROPERTY);
-		
+		ref.setPropertyReference(uriAndName);
 		returnSet.add(ref);
 		
 		return returnSet;
 	}
 	
 	@Override
-	public Set<ResolvablePropertyReference<CodeSystemVersionCatalogEntrySummary>> getSupportedSearchReferences(){
-		Set<ResolvablePropertyReference<CodeSystemVersionCatalogEntrySummary>> returnSet =
-			new HashSet<ResolvablePropertyReference<CodeSystemVersionCatalogEntrySummary>>();
+	public Set<ResolvableComponentReference<CodeSystemVersionCatalogEntrySummary>> getSupportedSearchReferences(){
+		Set<ResolvableComponentReference<CodeSystemVersionCatalogEntrySummary>> returnSet =
+			new HashSet<ResolvableComponentReference<CodeSystemVersionCatalogEntrySummary>>();
 		
-		ResolvablePropertyReference<CodeSystemVersionCatalogEntrySummary> refName = 
-			ResolvablePropertyReference.toPropertyReference(
-					StandardModelAttributeReference.RESOURCE_NAME.getPropertyReference(), 
+		ResolvableComponentReference<CodeSystemVersionCatalogEntrySummary> refName = 
+			ResolvableComponentReference.toComponentReference(
+					StandardModelAttributeReference.RESOURCE_NAME.getComponentReference(), 
 					new AttributeResolver<CodeSystemVersionCatalogEntrySummary>(){
 
 						public Iterable<String> resolveAttribute(
@@ -144,9 +158,9 @@ public class BioportalRestCodeSystemVersionQueryService
 						}
 					});
 		
-		ResolvablePropertyReference<CodeSystemVersionCatalogEntrySummary> refAbout = 
-			ResolvablePropertyReference.toPropertyReference(
-					StandardModelAttributeReference.ABOUT.getPropertyReference(), 
+		ResolvableComponentReference<CodeSystemVersionCatalogEntrySummary> refAbout = 
+			ResolvableComponentReference.toComponentReference(
+					StandardModelAttributeReference.ABOUT.getComponentReference(), 
 					new AttributeResolver<CodeSystemVersionCatalogEntrySummary>(){
 
 						public Iterable<String> resolveAttribute(
@@ -155,9 +169,9 @@ public class BioportalRestCodeSystemVersionQueryService
 						}
 					});
 		
-		ResolvablePropertyReference<CodeSystemVersionCatalogEntrySummary> refSynopsis = 
-			ResolvablePropertyReference.toPropertyReference(
-					StandardModelAttributeReference.RESOURCE_SYNOPSIS.getPropertyReference(), 
+		ResolvableComponentReference<CodeSystemVersionCatalogEntrySummary> refSynopsis = 
+			ResolvableComponentReference.toComponentReference(
+					StandardModelAttributeReference.RESOURCE_SYNOPSIS.getComponentReference(), 
 					new AttributeResolver<CodeSystemVersionCatalogEntrySummary>(){
 
 						public Iterable<String> resolveAttribute(
@@ -175,7 +189,7 @@ public class BioportalRestCodeSystemVersionQueryService
 	}
 
 	@Override
-	public Set<? extends PropertyReference> getSupportedSortReferences() {
+	public Set<? extends ComponentReference> getSupportedSortReferences() {
 		return null;
 	}
 
@@ -221,7 +235,7 @@ public class BioportalRestCodeSystemVersionQueryService
 	 * @see edu.mayo.cts2.framework.service.profile.QueryService#getResourceList(edu.mayo.cts2.framework.model.service.core.Query, edu.mayo.cts2.framework.model.core.FilterComponent, java.lang.Object, edu.mayo.cts2.framework.service.command.Page)
 	 */
 	@Override
-	public DirectoryResult<CodeSystemVersionCatalogEntry> getResourceList(
+	public DirectoryResult<CodeSystemVersionCatalogEntryListEntry> getResourceList(
 			CodeSystemVersionQuery query, 
 			SortCriteria sort,
 			Page page) {
