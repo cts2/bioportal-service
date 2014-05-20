@@ -23,18 +23,17 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.restrict.directory;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.collections.CollectionUtils;
-
 import edu.mayo.cts2.framework.filter.directory.AbstractRemovingDirectoryBuilder;
 import edu.mayo.cts2.framework.filter.match.ResolvableMatchAlgorithmReference;
 import edu.mayo.cts2.framework.filter.match.ResolvableComponentReference;
 import edu.mayo.cts2.framework.model.service.core.NameOrURI;
 import edu.mayo.cts2.framework.model.valuesetdefinition.ResolvedValueSetDirectoryEntry;
 import edu.mayo.cts2.framework.service.command.restriction.ResolvedValueSetQueryServiceRestrictions;
+import org.apache.commons.collections.CollectionUtils;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The Class CodeSystemVersionDirectoryBuilder.
@@ -59,8 +58,7 @@ public class ResolvedValueSetDirectoryBuilder
 	 *
 	 * @param allPossibleResults the all possible results
 	 * @param matchAlgorithmReferences the match algorithm references
-	 * @param resolvableModelAttributeReferences the resolvable model attribute references
-	 * @param resolvablePredicateReferences the resolvable predicate references
+	 * @param resolvableComponentReference the resolvable predicate references
 	 */
 	public ResolvedValueSetDirectoryBuilder(
 			List<ResolvedValueSetDirectoryEntry> allPossibleResults,
@@ -90,7 +88,7 @@ public class ResolvedValueSetDirectoryBuilder
 		/**
 		 * Instantiates a new code system restriction.
 		 *
-		 * @param codeSystems the code systems
+		 * @param valueSets the value set
 		 */
 		public ValueSetRestriction(Set<NameOrURI> valueSets){
 			this.valueSets = new HashSet<String>();

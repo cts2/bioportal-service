@@ -1,16 +1,10 @@
-package edu.mayo.cts2.framework.plugin.service.bioportal.identity;
-
-import static org.hamcrest.CoreMatchers.*
-import static org.junit.Assert.*
-import edu.mayo.cts2.framework.plugin.service.bioportal.identity.IdentityConverter;
+package edu.mayo.cts2.framework.plugin.service.bioportal.identity
 import groovy.xml.XmlUtil
-
-import javax.xml.transform.*
-import javax.xml.transform.dom.*
-import javax.xml.transform.stream.*
-
+import org.junit.Ignore
 import org.junit.Test
-import org.w3c.dom.*
+
+import static org.hamcrest.CoreMatchers.is
+import static org.junit.Assert.assertThat
 
 @Ignore
 class IdentityConverterTest {
