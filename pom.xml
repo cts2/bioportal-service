@@ -201,18 +201,19 @@
 			<version>${develpment.framework.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>edu.mayo.cts2.framework</groupId>
-			<artifactId>cts2-core</artifactId>
-			<version>${develpment.framework.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>edu.mayo.cts2.framework</groupId>
+            <artifactId>cts2-core</artifactId>
+            <version>${develpment.framework.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
 
 		<dependency>
 			<groupId>edu.mayo.cts2.framework</groupId>
 			<artifactId>cts2-plugin-util</artifactId>
 			<version>${develpment.framework.version}</version>
 		</dependency>
-
 	</dependencies>
 
 	<repositories>

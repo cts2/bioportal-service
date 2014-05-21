@@ -167,7 +167,7 @@ public class BioportalRestService extends BaseCacheObservable
 	/**
 	 * Gets the entity by ontology version id and entity id.
 	 *
-	 * @param ontologyVersionId the ontology version id
+	 * @param acronym the ontology acronym
 	 * @param entityId the entity id
 	 * @return the entity by ontology version id and entity id
 	 */

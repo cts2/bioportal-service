@@ -30,7 +30,7 @@
 
 	<bean class="edu.mayo.cts2.framework.util.spring.UrlConstructorSpringFactory" />
 	
-	<bean class="edu.mayo.cts2.framework.core.config.TestServerContext"	/>
+	<bean id="serverContext" class="edu.mayo.cts2.framework.core.config.TestServerContext"	/>
 		
 	<bean id="cts2Marshaller" class="edu.mayo.cts2.framework.core.xml.DelegatingMarshaller"/>
 		
