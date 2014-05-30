@@ -23,17 +23,14 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.rest;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
+import edu.mayo.cts2.framework.core.plugin.PluginConfigManager;
+import edu.mayo.cts2.framework.model.command.Page;
+import edu.mayo.cts2.framework.model.command.ResolvedFilter;
+import edu.mayo.cts2.framework.model.core.ComponentReference;
+import edu.mayo.cts2.framework.model.core.URIAndEntityName;
+import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
+import edu.mayo.cts2.framework.service.constant.ExternalCts2Constants;
+import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.LRUMap;
 import org.apache.commons.lang.StringUtils;
@@ -43,22 +40,19 @@ import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
-import edu.mayo.cts2.framework.core.plugin.PluginConfigManager;
-import edu.mayo.cts2.framework.model.command.Page;
-import edu.mayo.cts2.framework.model.command.ResolvedFilter;
-import edu.mayo.cts2.framework.model.core.ComponentReference;
-import edu.mayo.cts2.framework.model.core.URIAndEntityName;
-import edu.mayo.cts2.framework.model.exception.ExceptionFactory;
-import edu.mayo.cts2.framework.service.constant.ExternalCts2Constants;
-import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
+import javax.annotation.Resource;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * The Class BioportalRestService.
@@ -88,8 +82,8 @@ public class BioportalRestService extends BaseCacheObservable
 	private DB db;
 	
 	private String apiKey;
-	
-	private static final String API_KEY_PARAM = "apikey";
+
+    private static final String API_KEY_PARAM = "apikey";
 	
 	/* every hour default */
 	private static final int DEFAULT_CACHE_UPDATE_PERIOD = 60;
@@ -218,7 +212,7 @@ public class BioportalRestService extends BaseCacheObservable
 	/**
 	 * Gets the ontology by ontology version id.
 	 *
-	 * @param ontologyVersionId the ontology version id
+	 * @param acronym the acronym
 	 * @return the ontology by ontology version id
 	 */
 	public String getOntologySubmissionByAcronymAndSubmissionId(String acronym, String submissionId){
@@ -287,7 +281,7 @@ public class BioportalRestService extends BaseCacheObservable
 	/**
 	 * Gets the all entities by ontology version id.
 	 *
-	 * @param ontologyVersionId the ontology version id
+	 * @param acronym the acronym
 	 * @param page the page
 	 * @return the all entities by ontology version id
 	 */
@@ -602,6 +596,7 @@ public class BioportalRestService extends BaseCacheObservable
 	}
 
 	public String getApiKey() {
+
 		return apiKey;
 	}
 

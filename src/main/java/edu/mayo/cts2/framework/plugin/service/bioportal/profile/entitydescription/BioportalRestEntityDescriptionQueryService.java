@@ -23,26 +23,12 @@
  */
 package edu.mayo.cts2.framework.plugin.service.bioportal.profile.entitydescription;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Component;
-import org.w3c.dom.Document;
-
 import edu.mayo.cts2.framework.filter.directory.AbstractCallbackDirectoryBuilder.Callback;
 import edu.mayo.cts2.framework.model.command.Page;
 import edu.mayo.cts2.framework.model.command.ResolvedFilter;
 import edu.mayo.cts2.framework.model.command.ResolvedReadContext;
-import edu.mayo.cts2.framework.model.core.EntityReferenceList;
-import edu.mayo.cts2.framework.model.core.MatchAlgorithmReference;
-import edu.mayo.cts2.framework.model.core.PredicateReference;
-import edu.mayo.cts2.framework.model.core.ComponentReference;
-import edu.mayo.cts2.framework.model.core.SortCriteria;
-import edu.mayo.cts2.framework.model.core.VersionTagReference;
+import edu.mayo.cts2.framework.model.core.*;
 import edu.mayo.cts2.framework.model.directory.DirectoryResult;
-import edu.mayo.cts2.framework.model.entity.EntityDescription;
 import edu.mayo.cts2.framework.model.entity.EntityDirectoryEntry;
 import edu.mayo.cts2.framework.model.entity.EntityListEntry;
 import edu.mayo.cts2.framework.model.entity.NamedEntityDescription;
@@ -64,6 +50,12 @@ import edu.mayo.cts2.framework.service.meta.StandardMatchAlgorithmReference;
 import edu.mayo.cts2.framework.service.meta.StandardModelAttributeReference;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQuery;
 import edu.mayo.cts2.framework.service.profile.entitydescription.EntityDescriptionQueryService;
+import org.springframework.stereotype.Component;
+import org.w3c.dom.Document;
+
+import javax.annotation.Resource;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The Class BioportalRestEntityDescriptionQueryService.
@@ -527,8 +519,8 @@ public class BioportalRestEntityDescriptionQueryService
 				throw new UnsupportedOperationException("Only CHILDREN queries supported.");
 			}
 			
-			// TODO: Check this - DEEPAK
-			String codeSystemVersionName = restrictions.getHierarchyRestriction().getEntity().getEntityName().getName();
+			// TODO: Check this - DEEPAK  : do the loop fix the code below.
+			String codeSystemVersionName = restrictions.getCodeSystemVersions().iterator().next().getName();
 			
 			String codeSystemName = this.identityConverter.versionNameToAcronymAndSubmissionId(codeSystemVersionName).getAcronym();
 			
@@ -545,8 +537,7 @@ public class BioportalRestEntityDescriptionQueryService
 			DirectoryResult<EntityDirectoryEntry> results = null;
 			
 			// TODO : Check for correctness - DEEPAK
-			for (NameOrURI codeSystemVersion : restrictions.getCodeSystemVersions())
-			{
+			for (NameOrURI codeSystemVersion : restrictions.getCodeSystemVersions()){
 				String codeSystemVersionName = codeSystemVersion.getName();
 
 				String codeSystemName = this.identityConverter.versionNameToAcronymAndSubmissionId(codeSystemVersionName).getAcronym();
@@ -561,10 +552,11 @@ public class BioportalRestEntityDescriptionQueryService
 				if (temp == null)
 					continue;
 				
-				if (results == null)
+				if (results == null){
 					results = temp;
-				else
+                } else {
 					results.getEntries().addAll(temp.getEntries());
+                }
 			}
 			
 			return results;
